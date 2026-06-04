@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, TreePine, Trash2, Hammer, CheckCircle2, Snowflake, PaintBucket, Users, ChevronDown } from 'lucide-react';
+import { ArrowRight, ShieldCheck, TreePine, Trash2, Hammer, CheckCircle2, Users, ChevronDown } from 'lucide-react';
 import TiltCard from '../components/TiltCard';
 import BeforeAfterSlider from '../components/BeforeAfterSlider';
 import MagneticButton from '../components/MagneticButton';
@@ -71,8 +71,6 @@ export default function HomePage() {
     { title: 'Lawn & Landscape', icon: <TreePine size={32} />, desc: 'Regular maintenance, mowing, and tree trimming.' },
     { title: 'Debris Removal', icon: <Trash2 size={32} />, desc: 'Interior and exterior trash outs and dumping.' },
     { title: 'General Repairs', icon: <Hammer size={32} />, desc: 'Safety repairs, winterization, and structural fixes.' },
-    { title: 'Winterization', icon: <Snowflake size={32} />, desc: 'System draining and anti-freeze application.' },
-    { title: 'Renovation', icon: <PaintBucket size={32} />, desc: 'Full painting, flooring, and property upgrades.' },
   ];
 
   return (
