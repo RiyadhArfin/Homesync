@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, TreePine, Trash2, Hammer, CheckCircle2, Snowflake, PaintBucket, Users } from 'lucide-react';
+import { ArrowRight, ShieldCheck, TreePine, Trash2, Hammer, CheckCircle2, Snowflake, PaintBucket, Users, ChevronDown } from 'lucide-react';
 import TiltCard from '../components/TiltCard';
 import BeforeAfterSlider from '../components/BeforeAfterSlider';
 import MagneticButton from '../components/MagneticButton';
 import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
+import heroVideo from '../assets/videos/hero-video.webm';
 import heroBg from '../assets/images/hero-main.png';
 import ctaBg from '../assets/images/cta-keys.png';
 import trustBadge from '../assets/images/trust-badge.png';
@@ -36,34 +37,85 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      {/* Hero Section */}
+      {/* ── CINEMATIC VIDEO HERO ── */}
       <section className="hero">
-        <div className="hero-overlay"></div>
-        <div className="hero-parallax-bg" style={{ position: 'absolute', inset: 0, backgroundImage: `url(${heroBg})`, backgroundSize: 'cover', backgroundPosition: 'center', zIndex: 0 }} />
+
+        {/* Video layer */}
+        <video
+          className="hero-video"
+          src={heroVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={heroBg}
+        />
+
+        {/* Cinematic letterbox bars */}
+        <div className="hero-letterbox hero-letterbox--top" />
+        <div className="hero-letterbox hero-letterbox--bottom" />
+
+        {/* Gradient overlays — depth + brand colour wash */}
+        <div className="hero-overlay hero-overlay--dark" />
+        <div className="hero-overlay hero-overlay--brand" />
+        <div className="hero-overlay hero-overlay--vignette" />
+
+        {/* Film grain noise (CSS animated) */}
+        <div className="hero-grain" aria-hidden="true" />
+
+        {/* Glowing horizontal accent line */}
+        <div className="hero-accent-line" aria-hidden="true" />
+
+        {/* Main content */}
         <div
           className="container hero-content"
           style={{
-            transform: `translate3d(${mousePos.x * -20}px, ${mousePos.y * -10}px, 0)`,
-            transition: 'transform 0.1s ease-out'
+            transform: `translate3d(${mousePos.x * -14}px, ${mousePos.y * -7}px, 0)`,
+            transition: 'transform 0.15s ease-out'
           }}
         >
-          <h1 className="hero-title reveal" data-delay="0">
-            Professional Property <span className="highlight-text">Solutions</span>
+          {/* Animated live badge */}
+          <div className="hero-badge">
+            <span className="hero-badge-dot" />
+            Richmond, VA · Licensed &amp; Insured
+          </div>
+
+          <h1 className="hero-title">
+            Professional Property{' '}
+            <span className="highlight-text">Solutions</span>
           </h1>
-          <p className="hero-subtitle reveal" data-delay="120">
-            Trusted preservation types: Banks, Asset Managers, and Property Owners in Richmond, VA. We secure, maintain, and renovate your assets.
+
+          <p className="hero-subtitle">
+            Trusted by Banks, Asset Managers, and Property Owners across Virginia.
+            We secure, maintain, and renovate your assets — fast.
           </p>
-          <div className="hero-cta-group reveal" data-delay="240">
-            <MagneticButton as="div" className="btn btn-primary btn-large" strength={0.3}>
+
+          <div className="hero-cta-group">
+            <MagneticButton as="div" className="btn btn-hero-primary" strength={0.3}>
               <Link to="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'inherit', textDecoration: 'none' }}>
-                Get A Quote <ArrowRight size={20} className="btn-icon" />
+                Get A Free Quote <ArrowRight size={20} />
               </Link>
             </MagneticButton>
-            <Link to="/services" className="btn btn-outline-white btn-large">
+            <Link to="/services" className="btn btn-hero-ghost">
               View Services
             </Link>
           </div>
+
+          {/* Stats row */}
+          <div className="hero-stats">
+            <div className="hero-stat"><span className="hero-stat-num">500+</span><span>Properties Served</span></div>
+            <div className="hero-stat-divider" />
+            <div className="hero-stat"><span className="hero-stat-num">24/7</span><span>Response Time</span></div>
+            <div className="hero-stat-divider" />
+            <div className="hero-stat"><span className="hero-stat-num">100%</span><span>Satisfaction</span></div>
+          </div>
         </div>
+
+        {/* Scroll indicator */}
+        <a href="#services-preview" className="hero-scroll-indicator" aria-label="Scroll down">
+          <ChevronDown size={22} />
+        </a>
+
       </section>
 
       {/* Services Preview */}
@@ -178,86 +230,247 @@ export default function HomePage() {
           overflow-x: hidden;
         }
 
+        /* ─── HERO ─────────────────────────────────── */
         .hero {
           position: relative;
-          min-height: 85vh;
-          overflow: hidden;
+          min-height: 100vh;
           display: flex;
           align-items: center;
+          justify-content: center;
+          overflow: hidden;
           color: white;
-          padding: 120px 0;
         }
 
-        .hero-overlay {
+        /* Video fills the frame */
+        .hero-video {
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.6));
-          z-index: 1;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          z-index: 0;
+          transform: scale(1.06); /* slight zoom so letterbox edges are hidden */
         }
 
+        /* Letterbox cinema bars */
+        .hero-letterbox {
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: clamp(24px, 4vw, 56px);
+          background: #000;
+          z-index: 3;
+          animation: letterbox-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .hero-letterbox--top    { top: 0; transform-origin: top; }
+        .hero-letterbox--bottom { bottom: 0; transform-origin: bottom; }
+
+        @keyframes letterbox-in {
+          from { transform: scaleY(3); }
+          to   { transform: scaleY(1); }
+        }
+
+        /* Overlay layers */
+        .hero-overlay { position: absolute; inset: 0; }
+        .hero-overlay--dark   { background: linear-gradient(180deg, rgba(5,10,24,0.55) 0%, rgba(5,10,24,0.72) 100%); z-index: 1; }
+        .hero-overlay--brand  { background: linear-gradient(135deg, rgba(10,28,58,0.65) 0%, transparent 60%); z-index: 1; }
+        .hero-overlay--vignette { background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%); z-index: 1; }
+
+        /* Film grain */
+        .hero-grain {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          opacity: 0.04;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+          background-size: 180px;
+          animation: grain-shift 0.4s steps(1) infinite;
+          pointer-events: none;
+        }
+        @keyframes grain-shift {
+          0%  { background-position: 0 0; }
+          25% { background-position: -30px 10px; }
+          50% { background-position: 10px -20px; }
+          75% { background-position: -20px 30px; }
+        }
+
+        /* Horizontal glowing accent line */
+        .hero-accent-line {
+          position: absolute;
+          bottom: 35%;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent 0%, var(--accent) 30%, #00aaff 50%, var(--accent) 70%, transparent 100%);
+          opacity: 0.25;
+          z-index: 3;
+          animation: accent-line-in 2s ease-out 0.5s both;
+        }
+        @keyframes accent-line-in {
+          from { opacity: 0; transform: scaleX(0); }
+          to   { opacity: 0.25; transform: scaleX(1); }
+        }
+
+        /* Content */
         .hero-content {
           position: relative;
-          z-index: 2;
-          max-width: 900px;
+          z-index: 4;
+          max-width: 920px;
           margin: 0 auto;
           text-align: center;
+          padding-top: 80px;
+        }
+
+        /* Live badge */
+        .hero-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.18);
+          backdrop-filter: blur(8px);
+          border-radius: 100px;
+          padding: 8px 20px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.9);
+          margin-bottom: 28px;
+          animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+        .hero-badge-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #22c55e;
+          box-shadow: 0 0 0 0 rgba(34,197,94,0.5);
+          animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+          0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+          50%      { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
         }
 
         .hero-title {
-          font-size: 3rem;
-          font-weight: 800;
+          font-size: clamp(2.6rem, 6vw, 5rem);
+          font-weight: 900;
+          line-height: 1.05;
+          letter-spacing: -0.03em;
           margin-bottom: 24px;
-          line-height: 1.1;
-          letter-spacing: -0.02em;
-          animation: fadeInUp 0.8s ease-out;
-        }
-        
-        @media (min-width: 768px) {
-          .hero-title {
-            font-size: 4.5rem;
-          }
+          animation: fadeInUp 0.8s ease-out 0.5s both;
+          text-shadow: 0 4px 32px rgba(0,0,0,0.5);
         }
 
         .highlight-text {
-          color: var(--accent);
+          color: transparent;
+          background: linear-gradient(90deg, #60b4ff, #0063a6);
+          -webkit-background-clip: text;
+          background-clip: text;
           display: inline-block;
           position: relative;
         }
-        
-        .highlight-text::after {
-            content: '';
-            position: absolute;
-            bottom: 8px;
-            left: 0;
-            width: 100%;
-            height: 12px;
-            background: var(--accent);
-            opacity: 0.2;
-            z-index: -1;
-            transform: skewX(-12deg);
-        }
 
         .hero-subtitle {
-          font-size: 1.25rem;
-          color: var(--text-dark-secondary);
-          margin-bottom: 48px;
-          max-width: 650px;
-          margin-left: auto;
-          margin-right: auto;
-          animation: fadeInUp 0.8s ease-out 0.2s backwards;
+          font-size: clamp(1rem, 2vw, 1.25rem);
+          color: rgba(255,255,255,0.8);
+          max-width: 640px;
+          margin: 0 auto 40px;
+          line-height: 1.7;
+          animation: fadeInUp 0.8s ease-out 0.7s both;
         }
 
         .hero-cta-group {
           display: flex;
-          gap: 20px;
+          gap: 16px;
           justify-content: center;
           flex-wrap: wrap;
-          animation: fadeInUp 0.8s ease-out 0.4s backwards;
+          margin-bottom: 60px;
+          animation: fadeInUp 0.8s ease-out 0.9s both;
         }
-        
-        .btn-large {
-            padding: 16px 36px;
-            font-size: 1.125rem;
+
+        .btn-hero-primary {
+          background: var(--accent);
+          color: white;
+          padding: 16px 36px;
+          border-radius: 8px;
+          font-size: 1.05rem;
+          font-weight: 700;
+          box-shadow: 0 0 32px rgba(0,99,166,0.5);
+          transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
+          cursor: pointer;
+        }
+        .btn-hero-primary:hover {
+          background: #0079cc;
+          box-shadow: 0 0 48px rgba(0,99,166,0.8);
+          transform: translateY(-2px);
+        }
+
+        .btn-hero-ghost {
+          background: rgba(255,255,255,0.08);
+          color: white;
+          border: 1.5px solid rgba(255,255,255,0.35);
+          backdrop-filter: blur(8px);
+          padding: 16px 36px;
+          border-radius: 8px;
+          font-size: 1.05rem;
+          font-weight: 600;
+          transition: all 0.3s ease;
+        }
+        .btn-hero-ghost:hover {
+          background: rgba(255,255,255,0.18);
+          border-color: rgba(255,255,255,0.7);
+        }
+
+        /* Stats row */
+        .hero-stats {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 32px;
+          flex-wrap: wrap;
+          animation: fadeInUp 0.8s ease-out 1.1s both;
+        }
+        .hero-stat {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2px;
+        }
+        .hero-stat-num {
+          font-size: 1.6rem;
+          font-weight: 800;
+          color: #60b4ff;
+          line-height: 1;
+        }
+        .hero-stat span:last-child {
+          font-size: 0.78rem;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: rgba(255,255,255,0.55);
+          font-weight: 500;
+        }
+        .hero-stat-divider {
+          width: 1px;
+          height: 36px;
+          background: rgba(255,255,255,0.2);
+        }
+
+        /* Scroll indicator */
+        .hero-scroll-indicator {
+          position: absolute;
+          bottom: 32px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 4;
+          color: rgba(255,255,255,0.5);
+          animation: scroll-bounce 2s ease-in-out infinite, fadeIn 1s ease-out 1.5s both;
+          transition: color 0.2s;
+        }
+        .hero-scroll-indicator:hover { color: white; }
+        @keyframes scroll-bounce {
+          0%,100% { transform: translateX(-50%) translateY(0); }
+          50%      { transform: translateX(-50%) translateY(8px); }
         }
 
         /* Sections */
