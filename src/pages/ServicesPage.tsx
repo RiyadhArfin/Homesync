@@ -113,7 +113,7 @@ export default function ServicesPage() {
         /* ─── SERVICES VIDEO HERO ─────────────────── */
         .svc-hero {
           position: relative;
-          min-height: 80vh;
+          min-height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
