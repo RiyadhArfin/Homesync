@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, TreePine, Trash2, Hammer, CheckCircle2, Snowflake, PaintBucket, Users } from 'lucide-react';
 import TiltCard from '../components/TiltCard';
 import BeforeAfterSlider from '../components/BeforeAfterSlider';
+import MagneticButton from '../components/MagneticButton';
+import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
 import heroBg from '../assets/images/hero-main.png';
 import ctaBg from '../assets/images/cta-keys.png';
 import trustBadge from '../assets/images/trust-badge.png';
 
 export default function HomePage() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  useRevealOnScroll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -36,6 +39,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-overlay"></div>
+        <div className="hero-parallax-bg" style={{ position: 'absolute', inset: 0, backgroundImage: `url(${heroBg})`, backgroundSize: 'cover', backgroundPosition: 'center', zIndex: 0 }} />
         <div
           className="container hero-content"
           style={{
@@ -43,16 +47,18 @@ export default function HomePage() {
             transition: 'transform 0.1s ease-out'
           }}
         >
-          <h1 className="hero-title">
+          <h1 className="hero-title reveal" data-delay="0">
             Professional Property <span className="highlight-text">Solutions</span>
           </h1>
-          <p className="hero-subtitle">
+          <p className="hero-subtitle reveal" data-delay="120">
             Trusted preservation types: Banks, Asset Managers, and Property Owners in Richmond, VA. We secure, maintain, and renovate your assets.
           </p>
-          <div className="hero-cta-group">
-            <Link to="/contact" className="btn btn-primary btn-large">
-              Get A Quote <ArrowRight size={20} className="btn-icon" />
-            </Link>
+          <div className="hero-cta-group reveal" data-delay="240">
+            <MagneticButton as="div" className="btn btn-primary btn-large" strength={0.3}>
+              <Link to="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'inherit', textDecoration: 'none' }}>
+                Get A Quote <ArrowRight size={20} className="btn-icon" />
+              </Link>
+            </MagneticButton>
             <Link to="/services" className="btn btn-outline-white btn-large">
               View Services
             </Link>
@@ -63,7 +69,7 @@ export default function HomePage() {
       {/* Services Preview */}
       <section className="section services-preview">
         <div className="container">
-          <div className="section-header">
+          <div className="section-header reveal">
             <h2>Our Core Services</h2>
             <p>Comprehensive property preservation and maintenance solutions.</p>
           </div>
@@ -90,14 +96,14 @@ export default function HomePage() {
       {/* Trust / About Preview */}
       <section className="section trust-section">
         <div className="container">
-          <div className="section-header">
+          <div className="section-header reveal">
             <h2>Why Choose Homesync?</h2>
             <p>We deliver LLC-grade professionalism with every work order.</p>
             <p className="trust-lead-centered">Our team is dedicated to speed, compliance, and quality across all services.</p>
           </div>
 
           <div className="grid-2-col">
-            <div className="trust-content">
+            <div className="trust-content reveal-left">
               <ul className="trust-list">
                 <li>
                   <CheckCircle2 size={24} className="trust-icon" />
@@ -123,7 +129,7 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div className="trust-visual">
+            <div className="trust-visual reveal-right">
               <div className="trust-badge-container">
                 <img src={trustBadge} alt="Certified Professional" className="trust-badge-img" />
               </div>
@@ -157,9 +163,13 @@ export default function HomePage() {
       <section className="cta-strip">
         <div className="cta-overlay"></div>
         <div className="container cta-content">
-          <h2>Ready to secure your property?</h2>
-          <p>Contact us today for a free consultation or quote.</p>
-          <Link to="/contact" className="btn btn-primary-inverse">Contact Us Now</Link>
+          <h2 className="reveal" data-delay="0">Ready to secure your property?</h2>
+          <p className="reveal" data-delay="100">Contact us today for a free consultation or quote.</p>
+          <div className="reveal" data-delay="200">
+            <MagneticButton as="div" strength={0.25}>
+              <Link to="/contact" className="btn btn-primary-inverse">Contact Us Now</Link>
+            </MagneticButton>
+          </div>
         </div>
       </section>
 
@@ -171,9 +181,7 @@ export default function HomePage() {
         .hero {
           position: relative;
           min-height: 85vh;
-          background-image: url(${heroBg});
-          background-size: cover;
-          background-position: center;
+          overflow: hidden;
           display: flex;
           align-items: center;
           color: white;

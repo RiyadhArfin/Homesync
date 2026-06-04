@@ -285,3 +285,103 @@ body.dark .btn-outline-strong:hover {
         opacity: 1;
     }
 }
+
+/* =====================================================
+   REVEAL ON SCROLL ANIMATIONS
+   ===================================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Directional variants */
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-left.revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-right.revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-scale {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-scale.revealed {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* =====================================================
+   VIEW TRANSITIONS API
+   ===================================================== */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root) {
+    animation: vt-fade-out 0.25s ease-out both;
+}
+
+::view-transition-new(root) {
+    animation: vt-fade-in 0.3s ease-out both;
+}
+
+@keyframes vt-fade-out {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-12px); }
+}
+
+@keyframes vt-fade-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================================================
+   HERO PARALLAX (CSS Scroll-Driven)
+   ===================================================== */
+@supports (animation-timeline: scroll()) {
+    .hero-parallax-bg {
+        animation: hero-parallax linear both;
+        animation-timeline: scroll(root block);
+        animation-range: 0% 50%;
+    }
+    @keyframes hero-parallax {
+        from { transform: translateY(0); }
+        to   { transform: translateY(120px); }
+    }
+}
+
+/* =====================================================
+   COUNTING STAT ANIMATION
+   ===================================================== */
+@keyframes count-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.stat-reveal {
+    animation: count-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}

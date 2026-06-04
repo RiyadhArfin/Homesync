@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Target, Shield, Users } from 'lucide-react';
+import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
 import aboutTeam from '../assets/images/about-team.png';
 import officeInterior from '../assets/images/office-interior.png';
 
 export default function AboutPage() {
+  useRevealOnScroll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
   return (
     <div className="about-page">
       <section className="page-header">
@@ -15,14 +17,14 @@ export default function AboutPage() {
 
       <section className="section">
         <div className="container">
-          <div className="section-header">
+          <div className="section-header reveal">
             <h2>Who We Are</h2>
           </div>
           <div className="about-content">
-            <div className="about-visual">
+            <div className="about-visual reveal-left">
               <img src={aboutTeam} alt="Our Team" className="about-img" />
             </div>
-            <div className="about-text text-content">
+            <div className="about-text text-content reveal-right">
               <p>
                 Homesync LLC is a premier property preservation and maintenance company based in Richmond, VA.
                 We specialize in protecting and maintaining assets for banks, asset management companies, and individual investors.
@@ -53,7 +55,7 @@ export default function AboutPage() {
 
       <section className="section bg-off-white">
         <div className="container">
-          <div className="section-header">
+          <div className="section-header reveal">
             <h2>Our Core Values</h2>
           </div>
           <div className="values-grid">

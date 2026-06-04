@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ShieldCheck, TreePine, Trash2, Hammer, ClipboardCheck, Home, Ruler, Snowflake, PaintBucket, HardHat, Key } from 'lucide-react';
+import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
 import serviceLock from '../assets/images/service-lock.png';
 import serviceLawn from '../assets/images/service-lawn.png';
 import serviceDebris from '../assets/images/service-debris.png';
@@ -12,6 +13,7 @@ import servicePaint from '../assets/images/service-paint.png';
 import heroMain from '../assets/images/hero-main.png';
 
 export default function ServicesPage() {
+    useRevealOnScroll('.reveal, .reveal-scale');
     const allServices = [
         { title: 'Securing & Lock Services', icon: <Key size={24} />, img: serviceLock, desc: 'Complete property securing including re-keying, lock changes, board-ups, and lockbox installation to prevent unauthorized access.' },
         { title: 'Lawn & Landscape Care', icon: <TreePine size={24} />, img: serviceLawn, desc: 'Regular grass cuts, tree trimming, shrub maintenance, and seasonal yard cleanups to maintain curb appeal.' },
@@ -41,7 +43,7 @@ export default function ServicesPage() {
                 <div className="container">
                     <div className="services-grid-large">
                         {allServices.map((service, index) => (
-                            <div key={index} className="service-card-large">
+                            <div key={index} className="service-card-large reveal-scale" data-delay={`${index * 80}`}>
                                 <div className="service-img-container">
                                     <img src={service.img} alt={service.title} />
                                     <div className="service-icon-overlay">{service.icon}</div>
@@ -54,7 +56,7 @@ export default function ServicesPage() {
                         ))}
                     </div>
 
-                    <div className="additional-info">
+                    <div className="additional-info reveal" data-delay="100">
                         <h3>Need a custom solution?</h3>
                         <p>We also offer additional property solutions tailored to your specific asset needs.</p>
                         <Link to="/contact" className="btn btn-primary">Contact Our Team</Link>
