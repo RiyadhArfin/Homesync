@@ -2,16 +2,16 @@
 
 :root {
     /* Premium Color Palette */
-    --primary: #0F172A;
-    /* Slate 900 */
-    --primary-light: #1E293B;
-    /* Slate 800 */
-    --accent: #F59E0B;
-    /* Amber 500 */
-    --accent-hover: #D97706;
-    /* Amber 600 */
-    --accent-light: #FEF3C7;
-    /* Amber 100 */
+    --primary: #0a1c3a;
+    /* Navy Blue */
+    --primary-light: #15325c;
+    /* Lighter Navy */
+    --accent: #0063a6;
+    /* Light Blue */
+    --accent-hover: #004d80;
+    /* Darker Blue */
+    --accent-light: #e6f3ff;
+    /* Pale Blue */
 
     --bg-light: #F8FAFC;
     /* Slate 50 */
