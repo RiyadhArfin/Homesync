@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, TreePine, Trash2, Hammer, ClipboardCheck, Home, Ruler, Snowflake, PaintBucket, HardHat, Key, ChevronDown } from 'lucide-react';
+import { TreePine, Trash2, Hammer, ClipboardCheck, Home, Key, ChevronDown } from 'lucide-react';
 import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
 import handymanVideo from '../assets/videos/handyman-service.webm';
 import serviceLock from '../assets/images/service-lock.png';
@@ -9,10 +9,6 @@ import serviceDebris from '../assets/images/service-debris.png';
 import featureInspection from '../assets/images/feature-inspection.png';
 import serviceRepair from '../assets/images/service-repair.png';
 import heroServices from '../assets/images/hero-services.png';
-import officeInterior from '../assets/images/office-interior.png';
-import serviceWinter from '../assets/images/service-winter.png';
-import servicePaint from '../assets/images/service-paint.png';
-import heroMain from '../assets/images/hero-main.png';
 
 const mockOrders = [
   { id: 1, type: 'Initial Inspection', loc: 'Richmond, VA', time: '8m ago', status: 'Completed' },
@@ -78,11 +74,6 @@ export default function ServicesPage() {
         { title: 'Initial Inspections & Reports', icon: <ClipboardCheck size={24} />, img: featureInspection, desc: 'Comprehensive property condition reports, occupancy verification, and damage assessment within 24-48 hours.' },
         { title: 'General Repairs', icon: <Hammer size={24} />, img: serviceRepair, desc: 'Handyman services covering drywall, plumbing leaks, electrical safety checks, and structural repairs.' },
         { title: 'Exterior Maintenance', icon: <Home size={24} />, img: heroServices, desc: 'Siding repairs, gutter cleaning, pressure washing, and roof tarping/patching.' },
-        { title: 'Interior Maintenance', icon: <Ruler size={24} />, img: officeInterior, desc: 'Janitorial services, deep cleaning, carpet removal, and system checks.' },
-        { title: 'Winterization', icon: <Snowflake size={24} />, img: serviceWinter, desc: 'Plumbing system draining, anti-freeze application, and dry heat system testing to prevent freeze damage.' },
-        { title: 'Renovation & Refresh', icon: <PaintBucket size={24} />, img: servicePaint, desc: 'Full painting, flooring replacement, and kitchen/bath upgrades to increase property value.' },
-        { title: 'Health & Safety Repairs', icon: <ShieldCheck size={24} />, img: serviceRepair, desc: 'Mold remediation, trip hazard removal, railing installation, and code compliance fixes.' },
-        { title: 'Full Unit Turnovers', icon: <HardHat size={24} />, img: heroMain, desc: 'End-to-end preparation of rental units for new tenants, including cleaning, repairs, and painting.' },
     ];
 
     return (
