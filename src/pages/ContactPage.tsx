@@ -1,19 +1,147 @@
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, ChevronDown } from 'lucide-react';
+import contactVideo from '../assets/videos/contract-us.webm';
 import contactSupport from '../assets/images/contact-support.png';
 import featureInspection from '../assets/images/feature-inspection.png';
 
+const mockOrders = [
+  { id: 1, type: 'Quote Request', loc: 'Richmond, VA', time: '5m ago', status: 'Active' },
+  { id: 2, type: 'Callback Scheduled', loc: 'Henrico, VA', time: '18m ago', status: 'Completed' },
+  { id: 3, type: 'Preservation Inquiry', loc: 'Midlothian, VA', time: '35m ago', status: 'Completed' },
+  { id: 4, type: 'Quote Dispatched', loc: 'Glen Allen, VA', time: '1h ago', status: 'Completed' },
+];
+
 export default function ContactPage() {
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const [currentOrder, setCurrentOrder] = useState(0);
+    const heroRef = useRef<HTMLElement>(null);
+    const spotlightRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const handleMouseMove = (e: MouseEvent) => {
+        setMousePos({
+          x: (e.clientX / window.innerWidth - 0.5) * 2,
+          y: (e.clientY / window.innerHeight - 0.5) * 2,
+        });
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+      return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
+
+    useEffect(() => {
+      const timer = setInterval(() => {
+        setCurrentOrder((prev) => (prev + 1) % mockOrders.length);
+      }, 4500);
+      return () => clearInterval(timer);
+    }, []);
+
+    // @property Spotlight tracker
+    useEffect(() => {
+      const hero = heroRef.current;
+      const spotlight = spotlightRef.current;
+      if (!hero || !spotlight) return;
+      const handleSpotlight = (e: MouseEvent) => {
+        const rect = hero.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        spotlight.style.setProperty('--spotlight-x-ctc', `${x}%`);
+        spotlight.style.setProperty('--spotlight-y-ctc', `${y}%`);
+        spotlight.style.opacity = '1';
+      };
+      const handleLeave = () => { spotlight.style.opacity = '0'; };
+      hero.addEventListener('mousemove', handleSpotlight);
+      hero.addEventListener('mouseleave', handleLeave);
+      return () => {
+        hero.removeEventListener('mousemove', handleSpotlight);
+        hero.removeEventListener('mouseleave', handleLeave);
+      };
+    }, []);
+
     return (
         <div className="contact-page">
-            <section className="page-header">
-                <div className="container">
-                    <h1>Contact Us</h1>
-                    <p>Get in touch for a free quote or service inquiry. We respond within 24 hours.</p>
+            {/* ── CINEMATIC VIDEO HERO ── */}
+            <section className="ctc-hero" ref={heroRef}>
+
+                {/* Video */}
+                <video
+                    className="ctc-hero-video"
+                    src={contactVideo}
+                    autoPlay muted loop playsInline
+                    poster={featureInspection}
+                />
+
+                {/* Letterbox bars */}
+                <div className="ctc-hero-lb ctc-hero-lb--top" />
+                <div className="ctc-hero-lb ctc-hero-lb--bottom" />
+
+                {/* Overlay layers */}
+                <div className="ctc-hero-overlay ctc-hero-overlay--dark" />
+                <div className="ctc-hero-overlay ctc-hero-overlay--brand" />
+                <div className="ctc-hero-overlay ctc-hero-overlay--vignette" />
+
+                {/* Film grain */}
+                <div className="ctc-hero-grain" aria-hidden="true" />
+
+                {/* Glowing accent line */}
+                <div className="ctc-hero-accent-line" aria-hidden="true" />
+
+                {/* @property Mouse Spotlight */}
+                <div ref={spotlightRef} className="ctc-hero-spotlight" aria-hidden="true" />
+
+                {/* Live Dispatch Ticker Widget (Covers corner watermark/sparkle) */}
+                <div className="ctc-dispatch-widget">
+                    <div className="ctc-dispatch-header">
+                        <span className="ctc-dispatch-pulse-dot" />
+                        <span className="ctc-dispatch-title">LIVE PORTAL DECK</span>
+                    </div>
+                    <div className="ctc-dispatch-body">
+                        <div className="ctc-dispatch-meta">
+                            <span className="ctc-dispatch-type">{mockOrders[currentOrder].type}</span>
+                            <span className="ctc-dispatch-time">{mockOrders[currentOrder].time}</span>
+                        </div>
+                        <div className="ctc-location">
+                            {mockOrders[currentOrder].loc}
+                        </div>
+                        <div className={`ctc-dispatch-status-badge status-${mockOrders[currentOrder].status.toLowerCase()}`}>
+                            {mockOrders[currentOrder].status}
+                        </div>
+                    </div>
                 </div>
+
+                {/* Frosted glass exit strip */}
+                <div className="ctc-hero-frost-exit" aria-hidden="true" />
+
+                {/* Content */}
+                <div 
+                    className="container ctc-hero-content"
+                    style={{
+                        transform: `translate3d(${mousePos.x * -14}px, ${mousePos.y * -7}px, 0)`,
+                        transition: 'transform 0.15s ease-out'
+                    }}
+                >
+                    <div className="ctc-hero-badge">
+                        <span className="ctc-hero-badge-dot" />
+                        24/7 Dispatch · Online Support
+                    </div>
+
+                    <h1 className="ctc-hero-title">
+                        Contact <span className="ctc-highlight">Homesync</span>
+                    </h1>
+
+                    <p className="ctc-hero-subtitle">
+                        Get in touch for a free preservation, maintenance, or renovation quote. We respond within 24 hours.
+                    </p>
+                </div>
+
+                {/* Scroll indicator */}
+                <a href="#contact-grid" className="ctc-scroll-indicator" aria-label="Scroll to contact details">
+                    <ChevronDown size={22} />
+                </a>
             </section>
 
-            <section className="section">
+            <section className="section" id="contact-grid">
                 <div className="container">
                     <div className="contact-grid">
                         <div className="contact-info">
@@ -87,46 +215,310 @@ export default function ContactPage() {
             </section>
 
             <style>{`
-        .page-header {
+        /* ─── CONTACT VIDEO HERO ──────────────────── */
+        .ctc-hero {
           position: relative;
-          background-image: url(${featureInspection});
-          background-size: cover;
-          background-position: center;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
           color: white;
-          padding: 140px 0 100px;
-          text-align: center;
-        }
-        
-        .page-header::before {
-             content: '';
-             position: absolute;
-             inset: 0;
-             background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7));
-             z-index: 1;
-        }
-        
-        .page-header .container {
-            position: relative;
-            z-index: 2;
         }
 
-        .page-header h1 {
-          font-size: 3rem;
-          margin-bottom: 24px;
-          animation: fadeInUp 0.8s ease-out;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        @media (min-width: 768px) {
-            .page-header h1 { font-size: 4rem; }
+        .ctc-hero-video {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          z-index: 0;
+          /* Technique 1: iris clip-path reveal */
+          animation: iris-open-ctc 1.4s cubic-bezier(0.22, 1, 0.36, 1) both,
+                     hero-zoom-scroll-ctc linear both;
         }
 
-        .page-header p {
-          font-size: 1.25rem;
-          color: var(--text-dark-secondary);
-          max-width: 700px;
-          margin: 0 auto;
-          animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        @keyframes iris-open-ctc {
+          0%   { clip-path: inset(48% 48% round 50%); opacity: 0.4; }
+          60%  { clip-path: inset(2% 2% round 4px); opacity: 1; }
+          100% { clip-path: inset(0% 0% round 0px); opacity: 1; }
+        }
+
+        /* Technique 3: scroll-driven zoom-out */
+        @supports (animation-timeline: scroll()) {
+          .ctc-hero-video {
+            animation-name: iris-open-ctc, hero-zoom-scroll-ctc;
+            animation-duration: 1.4s, auto;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), linear;
+            animation-fill-mode: both, both;
+            animation-timeline: auto, scroll(root block);
+            animation-range: auto, 0% 55%;
+          }
+          @keyframes hero-zoom-scroll-ctc {
+            from { transform: scale(1.06); filter: brightness(1); }
+            to   { transform: scale(1.22); filter: brightness(0.45); }
+          }
+        }
+
+        /* Letterbox bars */
+        .ctc-hero-lb {
+          position: absolute; left: 0; right: 0;
+          height: clamp(20px, 3.5vw, 48px);
+          background: #000;
+          z-index: 3;
+          animation: ctc-lb-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .ctc-hero-lb--top    { top: 0;    transform-origin: top; }
+        .ctc-hero-lb--bottom { bottom: 0; transform-origin: bottom; }
+        @keyframes ctc-lb-in {
+          from { transform: scaleY(3); }
+          to   { transform: scaleY(1); }
+        }
+
+        /* Overlay layers */
+        .ctc-hero-overlay { position: absolute; inset: 0; }
+        .ctc-hero-overlay--dark    { background: linear-gradient(180deg, rgba(5,10,24,0.5) 0%, rgba(5,10,24,0.75) 100%); z-index: 1; }
+        .ctc-hero-overlay--brand   { background: linear-gradient(135deg, rgba(10,28,58,0.6) 0%, transparent 55%); z-index: 1; }
+        .ctc-hero-overlay--vignette{ background: radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.65) 100%); z-index: 1; }
+
+        /* Film grain */
+        .ctc-hero-grain {
+          position: absolute; inset: 0; z-index: 2;
+          opacity: 0.04;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+          background-size: 180px;
+          animation: grain-shift 0.4s steps(1) infinite;
+          pointer-events: none;
+        }
+
+        /* Glowing accent line */
+        .ctc-hero-accent-line {
+          position: absolute; bottom: 38%; left: 0; right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent 0%, #6366f1 30%, #818cf8 50%, #6366f1 70%, transparent 100%);
+          opacity: 0.22; z-index: 3;
+          animation: accent-line-in-ctc 2s ease-out 0.5s both;
+        }
+        @keyframes accent-line-in-ctc {
+          from { opacity: 0; transform: scaleX(0); }
+          to   { opacity: 0.22; transform: scaleX(1); }
+        }
+
+        /* Content */
+        .ctc-hero-content {
+          position: relative; z-index: 4;
+          max-width: 800px; margin: 0 auto;
+          text-align: center; padding: 100px 24px 80px;
+        }
+
+        /* Badge */
+        .ctc-hero-badge {
+          display: inline-flex; align-items: center; gap: 8px;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.18);
+          backdrop-filter: blur(8px);
+          border-radius: 100px; padding: 7px 18px;
+          font-size: 0.82rem; font-weight: 600;
+          letter-spacing: 0.05em; text-transform: uppercase;
+          color: rgba(255,255,255,0.9); margin-bottom: 24px;
+          animation: fadeInUp 0.7s ease-out 0.3s both;
+        }
+        .ctc-hero-badge-dot {
+          width: 8px; height: 8px; border-radius: 50%;
+          background: #6366f1;
+          box-shadow: 0 0 0 0 rgba(99,102,241,0.5);
+          animation: pulse-indigo-ctc 2s ease-in-out infinite;
+        }
+        @keyframes pulse-indigo-ctc {
+          0%,100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.5); }
+          50%      { box-shadow: 0 0 0 6px rgba(99,102,241,0); }
+        }
+
+        /* Title */
+        .ctc-hero-title {
+          font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+          font-weight: 900; line-height: 1.05;
+          letter-spacing: -0.03em; margin-bottom: 20px;
+          animation: fadeInUp 0.7s ease-out 0.5s both,
+                     text-shimmer-ctc 5s linear 1.5s infinite;
+          /* Technique 4: shimmer sweep */
+          background: linear-gradient(
+            90deg,
+            rgba(255,255,255,0.95) 20%,
+            rgba(224,231,255,1)    40%,
+            rgba(255,255,255,1)    50%,
+            rgba(224,231,255,1)    60%,
+            rgba(255,255,255,0.95) 80%
+          );
+          background-size: 250% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          text-shadow: none;
+        }
+
+        @keyframes text-shimmer-ctc {
+          from { background-position: 200% center; }
+          to   { background-position: -200% center; }
+        }
+
+        .ctc-highlight {
+          color: transparent;
+          background: linear-gradient(90deg, #6366f1, #818cf8);
+          -webkit-background-clip: text;
+          background-clip: text;
+          display: inline-block;
+          position: relative;
+        }
+
+        /* Technique 2: @property Spotlight */
+        @property --spotlight-x-ctc { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+        @property --spotlight-y-ctc { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+
+        .ctc-hero-spotlight {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.6s ease, --spotlight-x-ctc 0.08s ease-out, --spotlight-y-ctc 0.08s ease-out;
+          background: radial-gradient(
+            circle 380px at var(--spotlight-x-ctc) var(--spotlight-y-ctc),
+            rgba(99, 102, 241, 0.08) 0%,
+            rgba(99, 102, 241, 0.03) 50%,
+            transparent 100%
+          );
+        }
+
+        /* Technique 5: frosted glass exit strip */
+        .ctc-hero-frost-exit {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 180px;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+          z-index: 5;
+          pointer-events: none;
+        }
+
+        /* Subtitle */
+        .ctc-hero-subtitle {
+          font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+          color: rgba(255,255,255,0.78);
+          max-width: 580px; margin: 0 auto 36px;
+          line-height: 1.7;
+          animation: fadeInUp 0.7s ease-out 0.7s both;
+        }
+
+        /* Scroll indicator */
+        .ctc-scroll-indicator {
+          position: absolute; bottom: 28px; left: 50%;
+          transform: translateX(-50%); z-index: 4;
+          color: rgba(255,255,255,0.45);
+          animation: scroll-bounce 2s ease-in-out infinite, fadeIn 1s ease-out 1.2s both;
+          transition: color 0.2s;
+        }
+        .ctc-scroll-indicator:hover { color: white; }
+
+        /* ─── LIVE DISPATCH WIDGET ────────────────── */
+        .ctc-dispatch-widget {
+          position: absolute;
+          bottom: clamp(64px, 6vw, 85px);
+          right: clamp(20px, 4vw, 48px);
+          z-index: 10;
+          width: 250px;
+          background: rgba(10, 25, 50, 0.55);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid rgba(99, 102, 241, 0.25);
+          border-radius: 12px;
+          padding: 14px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(99, 102, 241, 0.15);
+          animation: fadeInUp 0.3s ease-out both;
+          text-align: left;
+        }
+
+        .ctc-dispatch-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding-bottom: 8px;
+          margin-bottom: 10px;
+        }
+
+        .ctc-dispatch-pulse-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #6366f1;
+          box-shadow: 0 0 8px #6366f1;
+          animation: dispatch-pulse-ctc 1.8s ease-in-out infinite;
+        }
+
+        @keyframes dispatch-pulse-ctc {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.35); opacity: 0.45; }
+        }
+
+        .ctc-dispatch-title {
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .ctc-dispatch-body {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .ctc-dispatch-meta {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .ctc-dispatch-type {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: #fff;
+        }
+
+        .ctc-dispatch-time {
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.55);
+        }
+
+        .ctc-location {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .ctc-dispatch-status-badge {
+          align-self: flex-start;
+          font-size: 0.68rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          padding: 3px 8px;
+          border-radius: 4px;
+          margin-top: 4px;
+        }
+
+        .ctc-dispatch-status-badge.status-completed {
+          background: rgba(34, 197, 94, 0.15);
+          color: #4ade80;
+          border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .ctc-dispatch-status-badge.status-active {
+          background: rgba(99, 102, 241, 0.15);
+          color: #818cf8;
+          border: 1px solid rgba(99, 102, 241, 0.3);
         }
 
         .section {
