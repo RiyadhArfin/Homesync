@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, TreePine, Trash2, Hammer, CheckCircle2, Snowflake, PaintBucket, Users } from 'lucide-react';
 import TiltCard from '../components/TiltCard';
-import QuoteEstimator from '../components/QuoteEstimator';
 import BeforeAfterSlider from '../components/BeforeAfterSlider';
 import heroBg from '../assets/images/hero-main.png';
 import ctaBg from '../assets/images/cta-keys.png';
@@ -58,13 +57,6 @@ export default function HomePage() {
               View Services
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* Quote Estimator Section */}
-      <section className="section" style={{ backgroundColor: 'var(--surface-2)', padding: '80px 0' }}>
-        <div className="container">
-          <QuoteEstimator />
         </div>
       </section>
 
