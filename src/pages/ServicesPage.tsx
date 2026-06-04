@@ -396,7 +396,7 @@ export default function ServicesPage() {
           border-radius: 12px;
           padding: 14px;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 158, 11, 0.15);
-          animation: fadeInUp 0.8s ease-out 1s both;
+          animation: fadeInUp 0.3s ease-out both;
           text-align: left;
         }
 
