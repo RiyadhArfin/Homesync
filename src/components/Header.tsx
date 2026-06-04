@@ -87,19 +87,25 @@ export default function Header() {
       <style>{`
         .header {
           position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: calc(100% - 40px);
+          max-width: 1200px;
           height: var(--header-height);
-          background-color: var(--bg-light);
+          background-color: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
           z-index: 1000;
           transition: all var(--transition-medium);
-          border-bottom: 1px solid transparent;
+          border-radius: 100px;
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
         }
 
         .header.scrolled {
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-          border-bottom-color: rgba(0,0,0,0.05);
+          background-color: rgba(255, 255, 255, 0.9);
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
         }
 
         .header-content {
@@ -107,6 +113,7 @@ export default function Header() {
           align-items: center;
           justify-content: space-between;
           height: 100%;
+          padding: 0 24px;
         }
 
         .logo-container {
@@ -236,7 +243,13 @@ export default function Header() {
         }
         
         /* Dark Mode Header */
-        body.dark .header,
+        body.dark .header {
+          background-color: rgba(15, 23, 42, 0.7);
+          border-color: rgba(255, 255, 255, 0.15);
+        }
+        body.dark .header.scrolled {
+          background-color: rgba(15, 23, 42, 0.85);
+        }
         body.dark .mobile-nav {
           background-color: var(--bg-dark);
           border-bottom-color: rgba(255,255,255,0.05);

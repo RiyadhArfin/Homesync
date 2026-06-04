@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, TreePine, Trash2, Hammer, CheckCircle2, Snowflake, PaintBucket, Users } from 'lucide-react';
 import TiltCard from '../components/TiltCard';
+import QuoteEstimator from '../components/QuoteEstimator';
+import BeforeAfterSlider from '../components/BeforeAfterSlider';
 import heroBg from '../assets/images/hero-main.png';
 import ctaBg from '../assets/images/cta-keys.png';
 import trustBadge from '../assets/images/trust-badge.png';
@@ -56,6 +58,13 @@ export default function HomePage() {
               View Services
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Quote Estimator Section */}
+      <section className="section" style={{ backgroundColor: 'var(--surface-2)', padding: '80px 0' }}>
+        <div className="container">
+          <QuoteEstimator />
         </div>
       </section>
 
@@ -142,6 +151,13 @@ export default function HomePage() {
               Meet The Team <Users size={20} />
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Before/After Section */}
+      <section className="section" style={{ padding: '40px 0 100px 0' }}>
+        <div className="container">
+          <BeforeAfterSlider />
         </div>
       </section>
 
@@ -299,6 +315,25 @@ export default function HomePage() {
         body.dark .service-card {
             background: var(--surface-dark-2);
             border-color: var(--glass-border-dark);
+        }
+
+        @supports (animation-timeline: view()) {
+          .service-card {
+            animation: fade-in-up linear both;
+            animation-timeline: view();
+            animation-range: entry 10% cover 30%;
+          }
+        }
+
+        @keyframes fade-in-up {
+          0% {
+            opacity: 0;
+            transform: translateY(100px) scale(0.9);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
         }
 
         .service-card:hover {
