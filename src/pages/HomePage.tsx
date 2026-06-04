@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, TreePine, Trash2, Hammer, CheckCircle2, Snowflake, PaintBucket, Users, ChevronDown } from 'lucide-react';
 import TiltCard from '../components/TiltCard';
@@ -12,6 +12,8 @@ import trustBadge from '../assets/images/trust-badge.png';
 
 export default function HomePage() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const heroRef = useRef<HTMLElement>(null);
+  const spotlightRef = useRef<HTMLDivElement>(null);
   useRevealOnScroll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
 
   useEffect(() => {
@@ -26,6 +28,28 @@ export default function HomePage() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // @property Spotlight tracker
+  useEffect(() => {
+    const hero = heroRef.current;
+    const spotlight = spotlightRef.current;
+    if (!hero || !spotlight) return;
+    const handleSpotlight = (e: MouseEvent) => {
+      const rect = hero.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      spotlight.style.setProperty('--spotlight-x', `${x}%`);
+      spotlight.style.setProperty('--spotlight-y', `${y}%`);
+      spotlight.style.opacity = '1';
+    };
+    const handleLeave = () => { spotlight.style.opacity = '0'; };
+    hero.addEventListener('mousemove', handleSpotlight);
+    hero.addEventListener('mouseleave', handleLeave);
+    return () => {
+      hero.removeEventListener('mousemove', handleSpotlight);
+      hero.removeEventListener('mouseleave', handleLeave);
+    };
+  }, []);
+
   const services = [
     { title: 'Securing & Locks', icon: <ShieldCheck size={32} />, desc: 'Board-ups, re-keying, and lockbox installation.' },
     { title: 'Lawn & Landscape', icon: <TreePine size={32} />, desc: 'Regular maintenance, mowing, and tree trimming.' },
@@ -38,7 +62,7 @@ export default function HomePage() {
   return (
     <div className="home-page">
       {/* ── CINEMATIC VIDEO HERO ── */}
-      <section className="hero">
+      <section className="hero" ref={heroRef}>
 
         {/* Video layer */}
         <video
@@ -65,6 +89,12 @@ export default function HomePage() {
 
         {/* Glowing horizontal accent line */}
         <div className="hero-accent-line" aria-hidden="true" />
+
+        {/* @property Mouse Spotlight */}
+        <div ref={spotlightRef} className="hero-spotlight" aria-hidden="true" />
+
+        {/* Frosted glass exit strip */}
+        <div className="hero-frost-exit" aria-hidden="true" />
 
         {/* Main content */}
         <div
@@ -249,7 +279,31 @@ export default function HomePage() {
           height: 100%;
           object-fit: cover;
           z-index: 0;
-          transform: scale(1.06); /* slight zoom so letterbox edges are hidden */
+          /* Technique 1: iris clip-path reveal */
+          animation: iris-open 1.4s cubic-bezier(0.22, 1, 0.36, 1) both,
+                     hero-zoom-scroll linear both;
+        }
+
+        @keyframes iris-open {
+          0%   { clip-path: inset(48% 48% round 50%); opacity: 0.4; }
+          60%  { clip-path: inset(2% 2% round 4px); opacity: 1; }
+          100% { clip-path: inset(0% 0% round 0px); opacity: 1; }
+        }
+
+        /* Technique 3: scroll-driven zoom-out */
+        @supports (animation-timeline: scroll()) {
+          .hero-video {
+            animation-name: iris-open, hero-zoom-scroll;
+            animation-duration: 1.4s, auto;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), linear;
+            animation-fill-mode: both, both;
+            animation-timeline: auto, scroll(root block);
+            animation-range: auto, 0% 55%;
+          }
+          @keyframes hero-zoom-scroll {
+            from { transform: scale(1.06); filter: brightness(1); }
+            to   { transform: scale(1.22); filter: brightness(0.45); }
+          }
         }
 
         /* Letterbox cinema bars */
@@ -358,17 +412,68 @@ export default function HomePage() {
           line-height: 1.05;
           letter-spacing: -0.03em;
           margin-bottom: 24px;
-          animation: fadeInUp 0.8s ease-out 0.5s both;
-          text-shadow: 0 4px 32px rgba(0,0,0,0.5);
+          animation: fadeInUp 0.8s ease-out 0.5s both,
+                     text-shimmer 5s linear 1.5s infinite;
+          /* Technique 4: shimmer sweep */
+          background: linear-gradient(
+            90deg,
+            rgba(255,255,255,0.95) 20%,
+            rgba(147,210,255,1)    40%,
+            rgba(255,255,255,1)    50%,
+            rgba(147,210,255,1)    60%,
+            rgba(255,255,255,0.95) 80%
+          );
+          background-size: 250% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          text-shadow: none;
+        }
+
+        @keyframes text-shimmer {
+          from { background-position: 200% center; }
+          to   { background-position: -200% center; }
         }
 
         .highlight-text {
           color: transparent;
-          background: linear-gradient(90deg, #60b4ff, #0063a6);
+          background: linear-gradient(90deg, #60b4ff 0%, #a8d8ff 50%, #0063a6 100%);
           -webkit-background-clip: text;
           background-clip: text;
           display: inline-block;
           position: relative;
+        }
+
+        /* Technique 2: @property Spotlight */
+        @property --spotlight-x { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+        @property --spotlight-y { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+
+        .hero-spotlight {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.6s ease, --spotlight-x 0.08s ease-out, --spotlight-y 0.08s ease-out;
+          background: radial-gradient(
+            circle 380px at var(--spotlight-x) var(--spotlight-y),
+            rgba(100, 180, 255, 0.12) 0%,
+            rgba(100, 180, 255, 0.04) 50%,
+            transparent 100%
+          );
+        }
+
+        /* Technique 5: frosted glass exit strip */
+        .hero-frost-exit {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 180px;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+          z-index: 5;
+          pointer-events: none;
         }
 
         .hero-subtitle {

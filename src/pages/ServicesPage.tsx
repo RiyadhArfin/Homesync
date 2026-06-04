@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, TreePine, Trash2, Hammer, ClipboardCheck, Home, Ruler, Snowflake, PaintBucket, HardHat, Key, ChevronDown } from 'lucide-react';
 import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
@@ -14,7 +15,46 @@ import servicePaint from '../assets/images/service-paint.png';
 import heroMain from '../assets/images/hero-main.png';
 
 export default function ServicesPage() {
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const heroRef = useRef<HTMLElement>(null);
+    const spotlightRef = useRef<HTMLDivElement>(null);
+
     useRevealOnScroll('.reveal, .reveal-scale');
+
+    useEffect(() => {
+      const handleMouseMove = (e: MouseEvent) => {
+        setMousePos({
+          x: (e.clientX / window.innerWidth - 0.5) * 2,
+          y: (e.clientY / window.innerHeight - 0.5) * 2,
+        });
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+      return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
+
+    // @property Spotlight tracker
+    useEffect(() => {
+      const hero = heroRef.current;
+      const spotlight = spotlightRef.current;
+      if (!hero || !spotlight) return;
+      const handleSpotlight = (e: MouseEvent) => {
+        const rect = hero.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        spotlight.style.setProperty('--spotlight-x-svc', `${x}%`);
+        spotlight.style.setProperty('--spotlight-y-svc', `${y}%`);
+        spotlight.style.opacity = '1';
+      };
+      const handleLeave = () => { spotlight.style.opacity = '0'; };
+      hero.addEventListener('mousemove', handleSpotlight);
+      hero.addEventListener('mouseleave', handleLeave);
+      return () => {
+        hero.removeEventListener('mousemove', handleSpotlight);
+        hero.removeEventListener('mouseleave', handleLeave);
+      };
+    }, []);
+
     const allServices = [
         { title: 'Securing & Lock Services', icon: <Key size={24} />, img: serviceLock, desc: 'Complete property securing including re-keying, lock changes, board-ups, and lockbox installation to prevent unauthorized access.' },
         { title: 'Lawn & Landscape Care', icon: <TreePine size={24} />, img: serviceLawn, desc: 'Regular grass cuts, tree trimming, shrub maintenance, and seasonal yard cleanups to maintain curb appeal.' },
@@ -32,7 +72,7 @@ export default function ServicesPage() {
     return (
         <div className="services-page">
             {/* ── CINEMATIC VIDEO HERO ── */}
-            <section className="svc-hero">
+            <section className="svc-hero" ref={heroRef}>
 
                 {/* Video */}
                 <video
@@ -57,8 +97,20 @@ export default function ServicesPage() {
                 {/* Glowing accent line */}
                 <div className="svc-hero-accent-line" aria-hidden="true" />
 
+                {/* @property Mouse Spotlight */}
+                <div ref={spotlightRef} className="svc-hero-spotlight" aria-hidden="true" />
+
+                {/* Frosted glass exit strip */}
+                <div className="svc-hero-frost-exit" aria-hidden="true" />
+
                 {/* Content */}
-                <div className="container svc-hero-content">
+                <div 
+                    className="container svc-hero-content"
+                    style={{
+                        transform: `translate3d(${mousePos.x * -14}px, ${mousePos.y * -7}px, 0)`,
+                        transition: 'transform 0.15s ease-out'
+                    }}
+                >
                     <div className="svc-hero-badge">
                         <span className="svc-hero-badge-dot" />
                         11 Expert Services · Richmond, VA
@@ -128,7 +180,31 @@ export default function ServicesPage() {
           height: 100%;
           object-fit: cover;
           z-index: 0;
-          transform: scale(1.06);
+          /* Technique 1: iris clip-path reveal */
+          animation: iris-open-svc 1.4s cubic-bezier(0.22, 1, 0.36, 1) both,
+                     hero-zoom-scroll-svc linear both;
+        }
+
+        @keyframes iris-open-svc {
+          0%   { clip-path: inset(48% 48% round 50%); opacity: 0.4; }
+          60%  { clip-path: inset(2% 2% round 4px); opacity: 1; }
+          100% { clip-path: inset(0% 0% round 0px); opacity: 1; }
+        }
+
+        /* Technique 3: scroll-driven zoom-out */
+        @supports (animation-timeline: scroll()) {
+          .svc-hero-video {
+            animation-name: iris-open-svc, hero-zoom-scroll-svc;
+            animation-duration: 1.4s, auto;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), linear;
+            animation-fill-mode: both, both;
+            animation-timeline: auto, scroll(root block);
+            animation-range: auto, 0% 55%;
+          }
+          @keyframes hero-zoom-scroll-svc {
+            from { transform: scale(1.06); filter: brightness(1); }
+            to   { transform: scale(1.22); filter: brightness(0.45); }
+          }
         }
 
         /* Letterbox bars */
@@ -206,14 +282,68 @@ export default function ServicesPage() {
           font-size: clamp(2.4rem, 5.5vw, 4.5rem);
           font-weight: 900; line-height: 1.05;
           letter-spacing: -0.03em; margin-bottom: 20px;
-          animation: fadeInUp 0.7s ease-out 0.5s both;
-          text-shadow: 0 4px 32px rgba(0,0,0,0.5);
+          animation: fadeInUp 0.7s ease-out 0.5s both,
+                     text-shimmer-svc 5s linear 1.5s infinite;
+          /* Technique 4: shimmer sweep */
+          background: linear-gradient(
+            90deg,
+            rgba(255,255,255,0.95) 20%,
+            rgba(254,243,199,1)    40%,
+            rgba(255,255,255,1)    50%,
+            rgba(254,243,199,1)    60%,
+            rgba(255,255,255,0.95) 80%
+          );
+          background-size: 250% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          text-shadow: none;
         }
+
+        @keyframes text-shimmer-svc {
+          from { background-position: 200% center; }
+          to   { background-position: -200% center; }
+        }
+
         .svc-highlight {
           color: transparent;
           background: linear-gradient(90deg, #f59e0b, #fbbf24);
           -webkit-background-clip: text;
           background-clip: text;
+          display: inline-block;
+          position: relative;
+        }
+
+        /* Technique 2: @property Spotlight */
+        @property --spotlight-x-svc { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+        @property --spotlight-y-svc { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+
+        .svc-hero-spotlight {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.6s ease, --spotlight-x-svc 0.08s ease-out, --spotlight-y-svc 0.08s ease-out;
+          background: radial-gradient(
+            circle 380px at var(--spotlight-x-svc) var(--spotlight-y-svc),
+            rgba(245, 158, 11, 0.1) 0%,
+            rgba(245, 158, 11, 0.03) 50%,
+            transparent 100%
+          );
+        }
+
+        /* Technique 5: frosted glass exit strip */
+        .svc-hero-frost-exit {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 180px;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+          z-index: 5;
+          pointer-events: none;
         }
 
         /* Subtitle */
