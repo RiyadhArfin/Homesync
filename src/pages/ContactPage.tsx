@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import contactSupport from '../assets/images/contact-support.png';
 import featureInspection from '../assets/images/feature-inspection.png';
@@ -75,6 +76,10 @@ export default function ContactPage() {
                                 <button type="submit" className="btn btn-primary btn-block">
                                     Send Message <Send size={18} />
                                 </button>
+                                
+                                <div className="sms-consent-disclaimer">
+                                    By submitting this form you allow consent to receive SMS from (Homesync LLC). Frequency may vary. Message & data rates may apply. Reply STOP to opt out of further messaging or reply HELP for more information. View our terms and privacy policy at our website <Link to="/privacy">Privacy Policy</Link>.
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -312,6 +317,28 @@ export default function ContactPage() {
             width: 100%;
             padding: 16px;
             font-size: 1.1rem;
+        }
+
+        .sms-consent-disclaimer {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.6;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        body.dark .sms-consent-disclaimer {
+            color: #aaa;
+        }
+
+        .sms-consent-disclaimer a {
+            color: #0056b3;
+            text-decoration: underline;
+            font-style: normal;
+        }
+
+        body.dark .sms-consent-disclaimer a {
+            color: #60b4ff;
         }
       `}</style>
         </div>
