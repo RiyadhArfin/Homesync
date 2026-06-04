@@ -10,8 +10,17 @@ import heroBg from '../assets/images/hero-main.png';
 import ctaBg from '../assets/images/cta-keys.png';
 import trustBadge from '../assets/images/trust-badge.png';
 
+const mockOrders = [
+  { id: 1, type: 'Property Securing', loc: 'Richmond, VA', time: '12m ago', status: 'Completed' },
+  { id: 2, type: 'Lawn Mowing', loc: 'Henrico, VA', time: 'Just now', status: 'Active' },
+  { id: 3, type: 'Winterization', loc: 'Midlothian, VA', time: '1h ago', status: 'Completed' },
+  { id: 4, type: 'Debris Removal', loc: 'Glen Allen, VA', time: '45m ago', status: 'Completed' },
+  { id: 5, type: 'Paint Refresh', loc: 'Chesterfield, VA', time: '2h ago', status: 'Active' },
+];
+
 export default function HomePage() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [currentOrder, setCurrentOrder] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
   useRevealOnScroll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
@@ -26,6 +35,13 @@ export default function HomePage() {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentOrder((prev) => (prev + 1) % mockOrders.length);
+    }, 4500);
+    return () => clearInterval(timer);
   }, []);
 
   // @property Spotlight tracker
@@ -92,6 +108,26 @@ export default function HomePage() {
 
         {/* @property Mouse Spotlight */}
         <div ref={spotlightRef} className="hero-spotlight" aria-hidden="true" />
+
+        {/* Live Dispatch Ticker Widget (Covers corner watermark/sparkle) */}
+        <div className="hero-dispatch-widget">
+          <div className="dispatch-header">
+            <span className="dispatch-pulse-dot" />
+            <span className="dispatch-title">LIVE DISPATCH FEED</span>
+          </div>
+          <div className="dispatch-body">
+            <div className="dispatch-meta">
+              <span className="dispatch-type">{mockOrders[currentOrder].type}</span>
+              <span className="dispatch-time">{mockOrders[currentOrder].time}</span>
+            </div>
+            <div className="dispatch-location">
+              {mockOrders[currentOrder].loc}
+            </div>
+            <div className={`dispatch-status-badge status-${mockOrders[currentOrder].status.toLowerCase()}`}>
+              {mockOrders[currentOrder].status}
+            </div>
+          </div>
+        </div>
 
         {/* Frosted glass exit strip */}
         <div className="hero-frost-exit" aria-hidden="true" />
@@ -474,6 +510,105 @@ export default function HomePage() {
           -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
           z-index: 5;
           pointer-events: none;
+        }
+
+        /* ─── LIVE DISPATCH WIDGET ────────────────── */
+        .hero-dispatch-widget {
+          position: absolute;
+          bottom: clamp(64px, 6vw, 85px);
+          right: clamp(20px, 4vw, 48px);
+          z-index: 10;
+          width: 250px;
+          background: rgba(10, 25, 50, 0.55);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid rgba(147, 210, 255, 0.25);
+          border-radius: 12px;
+          padding: 14px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(96, 180, 255, 0.15);
+          animation: fadeInUp 0.8s ease-out 1s both;
+          text-align: left;
+        }
+
+        .dispatch-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding-bottom: 8px;
+          margin-bottom: 10px;
+        }
+
+        .dispatch-pulse-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #60b4ff;
+          box-shadow: 0 0 8px #60b4ff;
+          animation: dispatch-pulse 1.8s ease-in-out infinite;
+        }
+
+        @keyframes dispatch-pulse {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.35); opacity: 0.45; }
+        }
+
+        .dispatch-title {
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .dispatch-body {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .dispatch-meta {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .dispatch-type {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: #fff;
+        }
+
+        .dispatch-time {
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.55);
+        }
+
+        .dispatch-location {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .dispatch-status-badge {
+          align-self: flex-start;
+          font-size: 0.68rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          padding: 3px 8px;
+          border-radius: 4px;
+          margin-top: 4px;
+        }
+
+        .dispatch-status-badge.status-completed {
+          background: rgba(34, 197, 94, 0.15);
+          color: #4ade80;
+          border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .dispatch-status-badge.status-active {
+          background: rgba(96, 180, 255, 0.15);
+          color: #60b4ff;
+          border: 1px solid rgba(96, 180, 255, 0.3);
         }
 
         .hero-subtitle {

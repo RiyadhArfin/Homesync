@@ -14,8 +14,17 @@ import serviceWinter from '../assets/images/service-winter.png';
 import servicePaint from '../assets/images/service-paint.png';
 import heroMain from '../assets/images/hero-main.png';
 
+const mockOrders = [
+  { id: 1, type: 'Initial Inspection', loc: 'Richmond, VA', time: '8m ago', status: 'Completed' },
+  { id: 2, type: 'Lock Re-Keying', loc: 'Chesterfield, VA', time: 'Just now', status: 'Active' },
+  { id: 3, type: 'Roof Tarping', loc: 'Henrico, VA', time: '30m ago', status: 'Completed' },
+  { id: 4, type: 'Debris Trash-out', loc: 'Petersburg, VA', time: '1h ago', status: 'Completed' },
+  { id: 5, type: 'Gutter Cleaning', loc: 'Midlothian, VA', time: '3h ago', status: 'Completed' },
+];
+
 export default function ServicesPage() {
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const [currentOrder, setCurrentOrder] = useState(0);
     const heroRef = useRef<HTMLElement>(null);
     const spotlightRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +40,13 @@ export default function ServicesPage() {
 
       window.addEventListener('mousemove', handleMouseMove);
       return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
+
+    useEffect(() => {
+      const timer = setInterval(() => {
+        setCurrentOrder((prev) => (prev + 1) % mockOrders.length);
+      }, 4500);
+      return () => clearInterval(timer);
     }, []);
 
     // @property Spotlight tracker
@@ -99,6 +115,26 @@ export default function ServicesPage() {
 
                 {/* @property Mouse Spotlight */}
                 <div ref={spotlightRef} className="svc-hero-spotlight" aria-hidden="true" />
+
+                {/* Live Dispatch Ticker Widget (Covers corner watermark/sparkle) */}
+                <div className="svc-dispatch-widget">
+                  <div className="svc-dispatch-header">
+                    <span className="svc-dispatch-pulse-dot" />
+                    <span className="svc-dispatch-title">LIVE DISPATCH FEED</span>
+                  </div>
+                  <div className="svc-dispatch-body">
+                    <div className="svc-dispatch-meta">
+                      <span className="svc-dispatch-type">{mockOrders[currentOrder].type}</span>
+                      <span className="svc-dispatch-time">{mockOrders[currentOrder].time}</span>
+                    </div>
+                    <div className="svc-dispatch-location">
+                      {mockOrders[currentOrder].loc}
+                    </div>
+                    <div className={`svc-dispatch-status-badge status-${mockOrders[currentOrder].status.toLowerCase()}`}>
+                      {mockOrders[currentOrder].status}
+                    </div>
+                  </div>
+                </div>
 
                 {/* Frosted glass exit strip */}
                 <div className="svc-hero-frost-exit" aria-hidden="true" />
@@ -344,6 +380,105 @@ export default function ServicesPage() {
           -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
           z-index: 5;
           pointer-events: none;
+        }
+
+        /* ─── LIVE DISPATCH WIDGET ────────────────── */
+        .svc-dispatch-widget {
+          position: absolute;
+          bottom: clamp(64px, 6vw, 85px);
+          right: clamp(20px, 4vw, 48px);
+          z-index: 10;
+          width: 250px;
+          background: rgba(10, 25, 50, 0.55);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid rgba(245, 158, 11, 0.25);
+          border-radius: 12px;
+          padding: 14px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 158, 11, 0.15);
+          animation: fadeInUp 0.8s ease-out 1s both;
+          text-align: left;
+        }
+
+        .svc-dispatch-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding-bottom: 8px;
+          margin-bottom: 10px;
+        }
+
+        .svc-dispatch-pulse-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #f59e0b;
+          box-shadow: 0 0 8px #f59e0b;
+          animation: dispatch-pulse-svc 1.8s ease-in-out infinite;
+        }
+
+        @keyframes dispatch-pulse-svc {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.35); opacity: 0.45; }
+        }
+
+        .svc-dispatch-title {
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .svc-dispatch-body {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .svc-dispatch-meta {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .svc-dispatch-type {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: #fff;
+        }
+
+        .svc-dispatch-time {
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.55);
+        }
+
+        .svc-dispatch-location {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .svc-dispatch-status-badge {
+          align-self: flex-start;
+          font-size: 0.68rem;
+          font-weight: 800;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          padding: 3px 8px;
+          border-radius: 4px;
+          margin-top: 4px;
+        }
+
+        .svc-dispatch-status-badge.status-completed {
+          background: rgba(34, 197, 94, 0.15);
+          color: #4ade80;
+          border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .svc-dispatch-status-badge.status-active {
+          background: rgba(245, 158, 11, 0.15);
+          color: #f59e0b;
+          border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         /* Subtitle */
