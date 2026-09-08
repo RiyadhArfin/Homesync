@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Sun, Moon, Phone } from 'lucide-react';
-import logo from '../assets/logo_icon_transparent.png';
+import logo from '../assets/logo.png';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
