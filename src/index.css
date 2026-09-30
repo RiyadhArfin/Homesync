@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1e293b;
+    background-color: #ffffff;
+  }
+}
+
+/* Subtle modern Virginia lattice & matrix patterns */
+.bg-pattern-matrix-homesync {
+  background-color: #ffffff;
+  background-image: radial-gradient(rgba(79, 70, 229, 0.08) 1px, transparent 1px), radial-gradient(rgba(22, 163, 74, 0.08) 1px, #ffffff 1px);
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+}
+
+.bg-pattern-grid-homesync {
+  background-size: 38px 38px;
+  background-image: 
+    linear-gradient(to right, rgba(79, 70, 229, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(79, 70, 229, 0.04) 1px, transparent 1px);
+}
+
+.bg-pattern-dots-homesync {
+  background-image: radial-gradient(rgba(49, 46, 129, 0.08) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
