@@ -28,11 +28,11 @@ export default function ScrollProgressBar() {
           top: 0;
           left: 0;
           height: 3px;
-          background: linear-gradient(90deg, #0063a6, #00aaff, #0a1c3a);
+          background: linear-gradient(90deg, #F97316, #FB923C, #0F172A);
           z-index: 9999;
           transition: width 0.05s linear;
           border-radius: 0 2px 2px 0;
-          box-shadow: 0 0 8px rgba(0, 99, 166, 0.6);
+          box-shadow: 0 0 8px rgba(249, 115, 22, 0.6);
         }
       `}</style>
     </>

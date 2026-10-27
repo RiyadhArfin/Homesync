@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
     /* Premium Color Palette */
@@ -59,8 +59,13 @@
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
+
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: var(--bg-light);
     color: var(--text-primary);
     line-height: 1.5;
@@ -385,3 +390,329 @@ body.dark .btn-outline-strong:hover {
 .stat-reveal {
     animation: count-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* =====================================================
+   PURE WHITE BLUEPRINT GRID & TACTILE CRAFT UTILITIES
+   ===================================================== */
+.bg-blueprint-grid {
+    background-color: #ffffff;
+    background-image: 
+        linear-gradient(to right, rgba(226, 232, 240, 0.65) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(226, 232, 240, 0.65) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+.tactile-button-primary {
+    background-color: #f97316;
+    color: #ffffff !important;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 12px 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid #ea580c;
+    box-shadow: 0 2px 0 #EA580C;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+.tactile-button-primary:hover {
+    background-color: #ea580c;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 0 #c2410c;
+}
+.tactile-button-primary:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 #EA580C;
+}
+
+.bg-dot-grid {
+    background-color: #ffffff;
+    background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+    background-size: 24px 24px;
+}
+
+.btn-amber {
+    background-color: #f97316;
+    color: #ffffff !important;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 12px 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid #ea580c;
+    box-shadow: 0 2px 4px rgba(249, 115, 22, 0.25);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+.btn-amber:hover {
+    background-color: #ea580c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(249, 115, 22, 0.35);
+}
+
+.btn-outline-navy {
+    background-color: #ffffff;
+    color: #0f172a;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 12px 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid #cbd5e1;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+.btn-outline-navy:hover {
+    background-color: #f8fafc;
+    border-color: #0f172a;
+    transform: translateY(-2px);
+}
+
+.btn-outline-dark-surface {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff !important;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+.btn-outline-dark-surface:hover {
+    background-color: rgba(255, 255, 255, 0.16);
+    border-color: #94a3b8;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
+.badge-amber {
+    background-color: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #fdba74;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge-navy {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.white-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.white-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.08);
+}
+
+.architectural-matrix {
+    background-color: #ffffff;
+    background-image: radial-gradient(rgba(15, 23, 42, 0.07) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.tactile-card-shadow {
+    box-shadow: 0 2px 4px -1px rgba(15, 23, 42, 0.04), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
+}
+
+.tactile-card-shadow-hover {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.tactile-card-shadow-hover:hover {
+    box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+    transform: translateY(-2px);
+}
+
+/* =====================================================
+   AREAS SINGLE LINE GRID (5 EQUAL COLUMNS)
+   ===================================================== */
+.areas-single-line-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+}
+
+@media (max-width: 1080px) {
+    .areas-single-line-grid {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 12px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 14px;
+    }
+    .areas-single-line-grid > * {
+        min-width: 220px;
+        flex: 0 0 220px;
+        scroll-snap-align: start;
+    }
+}
+
+/* =====================================================
+   ABOUT PAGE RESPONSIVE GRIDS (STITCH PARITY)
+   ===================================================== */
+.about-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+@media (min-width: 1024px) {
+    .about-hero-grid {
+        grid-template-columns: 7fr 5fr;
+        gap: 48px;
+    }
+}
+
+.about-bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    align-items: stretch;
+}
+
+@media (min-width: 768px) {
+    .about-bento-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.about-transformation-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+}
+
+@media (min-width: 1024px) {
+    .about-transformation-grid {
+        grid-template-columns: 5fr 7fr;
+    }
+}
+
+.about-commitments-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+@media (min-width: 640px) {
+    .about-commitments-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .about-commitments-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.about-coverage-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+@media (min-width: 1024px) {
+    .about-coverage-grid {
+        grid-template-columns: 7fr 5fr;
+    }
+}
+
+.about-areas-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+@media (min-width: 640px) {
+    .about-areas-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.about-banner-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+}
+
+@media (min-width: 1024px) {
+    .about-banner-grid {
+        grid-template-columns: 8fr 4fr;
+    }
+}
+
+/* =====================================================
+   STITCH EXACT COLOR TOKENS
+   ===================================================== */
+.bg-surface-container-low {
+    background-color: #eff4ff;
+}
+
+.bg-surface-container {
+    background-color: #e5eeff;
+}
+
+.border-surface-container-highest {
+    border-color: #d3e4fe;
+}
+
+.border-outline-variant {
+    border-color: #cbd5e1;
+}
+
+.text-on-surface {
+    color: #0b1c30;
+}
+
+.text-on-surface-variant {
+    color: #475569;
+}
+
+.img-zoom-hover {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.img-zoom-hover:hover {
+    transform: scale(1.03);
+}
+

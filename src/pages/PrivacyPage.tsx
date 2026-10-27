@@ -115,7 +115,7 @@ export default function PrivacyPage() {
               <div className="contact-details-box">
                 <strong>Homesync LLC</strong><br />
                 Richmond, VA<br />
-                Email: <a href="mailto:info@homesyncllc.org">info@homesyncllc.org</a><br />
+                Email: <a href="mailto:contact@homesyncllc.org">contact@homesyncllc.org</a><br />
                 Phone: <a href="tel:8042922009">(804) 292-2009</a>
               </div>
             </div>

@@ -1,749 +1,693 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Target, Shield, Users, ChevronDown } from 'lucide-react';
-import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
-import aboutVideo from '../assets/videos/about-us.webm';
-import aboutTeam from '../assets/images/about-team.png';
-import officeInterior from '../assets/images/office-interior.png';
-
-const mockOrders = [
-  { id: 1, type: 'Field Inspection', loc: 'Glen Allen, VA', time: '14m ago', status: 'Completed' },
-  { id: 2, type: 'Hazard Assessment', loc: 'Richmond, VA', time: 'Just now', status: 'Active' },
-  { id: 3, type: 'Compliance Review', loc: 'Henrico, VA', time: '40m ago', status: 'Completed' },
-  { id: 4, type: 'Occupancy Check', loc: 'Midlothian, VA', time: '2h ago', status: 'Completed' },
-];
+import {
+  ShieldCheck,
+  Clock,
+  MapPin,
+  Phone,
+  Building2,
+  XCircle,
+  X,
+  CheckCircle2,
+  Camera,
+  Receipt,
+  Check,
+  Info,
+  Store,
+  Handshake,
+  Quote,
+  FileText,
+} from 'lucide-react';
+import { companyInfo } from '../data/friendlyContent';
+import contractorPhoto from '../assets/images/contractor-hero.jpg';
+import turnoverTransformation from '../assets/images/turnover-transformation.jpg';
 
 export default function AboutPage() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [currentOrder, setCurrentOrder] = useState(0);
-  const heroRef = useRef<HTMLElement>(null);
-  const spotlightRef = useRef<HTMLDivElement>(null);
-
-  useRevealOnScroll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 2,
-        y: (e.clientY / window.innerHeight - 0.5) * 2,
-      });
+    const handleScroll = () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      if (height > 0) {
+        setScrollProgress((winScroll / height) * 100);
+      }
     };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentOrder((prev) => (prev + 1) % mockOrders.length);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, []);
-
-  // @property Spotlight tracker
-  useEffect(() => {
-    const hero = heroRef.current;
-    const spotlight = spotlightRef.current;
-    if (!hero || !spotlight) return;
-    const handleSpotlight = (e: MouseEvent) => {
-      const rect = hero.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      spotlight.style.setProperty('--spotlight-x-abt', `${x}%`);
-      spotlight.style.setProperty('--spotlight-y-abt', `${y}%`);
-      spotlight.style.opacity = '1';
-    };
-    const handleLeave = () => { spotlight.style.opacity = '0'; };
-    hero.addEventListener('mousemove', handleSpotlight);
-    hero.addEventListener('mouseleave', handleLeave);
-    return () => {
-      hero.removeEventListener('mousemove', handleSpotlight);
-      hero.removeEventListener('mouseleave', handleLeave);
-    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <div className="about-page">
-      {/* ── CINEMATIC VIDEO HERO ── */}
-      <section className="abt-hero" ref={heroRef}>
+    <div className="about-page architectural-matrix" style={{ minHeight: '100vh', paddingTop: '20px' }}>
+      
+      {/* ── Scroll Progress Bar ── */}
+      <div
+        id="scroll-progress"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          height: '4px',
+          backgroundColor: '#f97316',
+          zIndex: 60,
+          width: `${scrollProgress}%`,
+          transition: 'width 75ms ease-out',
+        }}
+      />
 
-        {/* Video */}
-        <video
-          className="abt-hero-video"
-          src={aboutVideo}
-          autoPlay muted loop playsInline
-          poster={officeInterior}
-        />
+      {/* ── 1. HERO SECTION (7:5 RESPONSIVE GRID) ── */}
+      <section style={{ padding: '36px 0 68px' }}>
+        <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+          <div className="about-hero-grid">
+            
+            {/* Left Hero Content (7 Cols) */}
+            <div>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  alignSelf: 'flex-start',
+                  background: '#eff4ff',
+                  border: '1px solid #cbd5e1',
+                  padding: '5px 14px',
+                  borderRadius: '9999px',
+                  marginBottom: '18px',
+                }}
+              >
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f97316' }} />
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#9d4300', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                  ABOUT HOMESYNC LLC
+                </span>
+              </div>
 
-        {/* Letterbox bars */}
-        <div className="abt-hero-lb abt-hero-lb--top" />
-        <div className="abt-hero-lb abt-hero-lb--bottom" />
+              <h1 style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.25rem)', fontWeight: 800, color: '#0b1c30', lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '18px' }}>
+                Real Craftsmanship. Honest Service. Local to Richmond.
+              </h1>
 
-        {/* Overlay layers */}
-        <div className="abt-hero-overlay abt-hero-overlay--dark" />
-        <div className="abt-hero-overlay abt-hero-overlay--brand" />
-        <div className="abt-hero-overlay abt-hero-overlay--vignette" />
+              <p style={{ fontSize: '1.15rem', color: '#475569', lineHeight: 1.6, maxWidth: '640px', marginBottom: '24px' }}>
+                Connecting homeowners, landlords, and property managers with dependable, friendly trade professionals who show up on time and do the job right.
+              </p>
 
-        {/* Film grain */}
-        <div className="abt-hero-grain" aria-hidden="true" />
+              {/* Badges Cluster */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '28px' }}>
+                <div className="white-card tactile-card-shadow" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 600, color: '#0b1c30' }}>
+                  <ShieldCheck size={16} color="#f97316" />
+                  <span>Licensed &amp; Insured Residential Contractor</span>
+                </div>
+                <div className="white-card tactile-card-shadow" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 600, color: '#0b1c30' }}>
+                  <MapPin size={16} color="#f97316" />
+                  <span>Local Richmond Crew</span>
+                </div>
+                <div className="white-card tactile-card-shadow" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 600, color: '#0b1c30' }}>
+                  <Clock size={16} color="#f97316" />
+                  <span>Mon–Sat 7am–7pm</span>
+                </div>
+              </div>
 
-        {/* Glowing accent line */}
-        <div className="abt-hero-accent-line" aria-hidden="true" />
-
-        {/* @property Mouse Spotlight */}
-        <div ref={spotlightRef} className="abt-hero-spotlight" aria-hidden="true" />
-
-        {/* Live Dispatch Ticker Widget (Covers corner watermark/sparkle) */}
-        <div className="abt-dispatch-widget">
-          <div className="abt-dispatch-header">
-            <span className="abt-dispatch-pulse-dot" />
-            <span className="abt-dispatch-title">LIVE OPERATIONS FEED</span>
-          </div>
-          <div className="abt-dispatch-body">
-            <div className="abt-dispatch-meta">
-              <span className="abt-dispatch-type">{mockOrders[currentOrder].type}</span>
-              <span className="abt-dispatch-time">{mockOrders[currentOrder].time}</span>
+              {/* Quick Action Buttons */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '14px' }}>
+                <a href="#quote-cta" className="tactile-button-primary" style={{ padding: '12px 26px', fontSize: '1rem', fontWeight: 700 }}>
+                  Get a Free Estimate
+                </a>
+                <a href={`tel:${companyInfo.phoneRaw}`} className="btn-outline-navy" style={{ padding: '12px 24px', fontSize: '1rem' }}>
+                  <Phone size={18} /> Call {companyInfo.phone}
+                </a>
+              </div>
             </div>
-            <div className="abt-location">
-              {mockOrders[currentOrder].loc}
+
+            {/* Right Hero Visual with Inset Overlay (5 Cols) */}
+            <div>
+              <div
+                style={{
+                  position: 'relative',
+                  backgroundColor: '#ffffff',
+                  padding: '8px',
+                  borderRadius: '20px',
+                  border: '1px solid #cbd5e1',
+                  boxShadow: '0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.03)',
+                  overflow: 'hidden',
+                }}
+              >
+                <img
+                  src={contractorPhoto}
+                  alt="Homesync field contractor technician in front of a Richmond, VA home"
+                  style={{ width: '100%', height: '440px', objectFit: 'cover', borderRadius: '14px', display: 'block' }}
+                />
+
+                {/* Inset Badge Overlay */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '20px',
+                    left: '20px',
+                    right: '20px',
+                    backgroundColor: 'rgba(33, 49, 69, 0.95)',
+                    backdropFilter: 'blur(8px)',
+                    color: '#ffffff',
+                    padding: '16px',
+                    borderRadius: '12px',
+                    border: '1px solid #565e74',
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.35)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div
+                      style={{
+                        padding: '10px',
+                        borderRadius: '8px',
+                        backgroundColor: '#f97316',
+                        color: '#ffffff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <Building2 size={22} />
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>
+                        Serving Greater Richmond
+                      </h4>
+                      <p style={{ fontSize: '0.825rem', color: '#bec6e0', margin: '2px 0 0' }}>
+                        Henrico, Chesterfield, Midlothian &amp; Hanover
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className={`abt-dispatch-status-badge status-${mockOrders[currentOrder].status.toLowerCase()}`}>
-              {mockOrders[currentOrder].status}
-            </div>
+
           </div>
         </div>
-
-        {/* Frosted glass exit strip */}
-        <div className="abt-hero-frost-exit" aria-hidden="true" />
-
-        {/* Content */}
-        <div 
-          className="container abt-hero-content"
-          style={{
-            transform: `translate3d(${mousePos.x * -14}px, ${mousePos.y * -7}px, 0)`,
-            transition: 'transform 0.15s ease-out'
-          }}
-        >
-          <div className="abt-hero-badge">
-            <span className="abt-hero-badge-dot" />
-            Operational Excellence · Richmond, VA
-          </div>
-
-          <h1 className="abt-hero-title">
-            About <span className="abt-highlight">Homesync</span>
-          </h1>
-
-          <p className="abt-hero-subtitle">
-            Setting the industry standard for property preservation, compliance, and asset protection.
-          </p>
-        </div>
-
-        {/* Scroll indicator */}
-        <a href="#about-info" className="abt-scroll-indicator" aria-label="Scroll to details">
-          <ChevronDown size={22} />
-        </a>
       </section>
 
-      <section className="section" id="about-info">
-        <div className="container">
-          <div className="section-header reveal">
-            <h2>Who We Are</h2>
-          </div>
-          <div className="about-content">
-            <div className="about-visual reveal-left">
-              <img src={aboutTeam} alt="Our Team" className="about-img" />
+      {/* ── 2. WHY WE STARTED HOMESYNC & BENTO PROBLEM/SOLUTION GRID ── */}
+      <section style={{ backgroundColor: '#eff4ff', borderTop: '1px solid #d3e4fe', borderBottom: '1px solid #d3e4fe', padding: '72px 0 84px' }}>
+        <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+          
+          <div style={{ maxWidth: '820px', marginBottom: '36px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+              <span style={{ width: '24px', height: '6px', backgroundColor: '#f97316', borderRadius: '9999px' }} />
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#9d4300', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Our Mission &amp; Background
+              </span>
             </div>
-            <div className="about-text text-content reveal-right">
-              <p>
-                Homesync LLC is a premier property preservation and maintenance company based in Richmond, VA.
-                We specialize in protecting and maintaining assets for banks, asset management companies, and individual investors.
-              </p>
-              <p>
-                Our mission is to provide "LLC-grade" professional services that go beyond the typical handyman approach.
-                We understand the strict compliance requirements, timelines, and quality standards demanded by the industry.
-                Whether it's a simple lock change or a full renovation for a rental turnover, we treat every property as if it were our own.
-              </p>
+            <h2 style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#0b1c30', marginBottom: '10px' }}>
+              Why We Started Homesync
+            </h2>
+            <p style={{ fontSize: '1.15rem', color: '#475569', margin: '0 0 16px' }}>
+              Taking the stress out of home repairs, vacant property care, and rental turnovers across Richmond.
+            </p>
+            <div className="white-card tactile-card-shadow" style={{ padding: '24px 28px', borderRadius: '12px', border: '1px solid #cbd5e1', color: '#0b1c30', lineHeight: 1.65, fontSize: '1rem' }}>
+              Homesync was started with a simple goal: take the stress out of home repairs and property care. Homeowners and landlords are tired of calling five different contractors for five small repairs—only to have half of them never show up or return calls. We brought everything under one reliable roof: quality handyman work, vacant property preservation, and fast rental turnovers.
             </div>
           </div>
 
-          <div className="highlight-section">
-            <div className="highlight-box">
-              <div className="highlight-content">
-                <h2>Operational Excellence</h2>
-                <p>
-                  We leverage advanced tracking and reporting to ensure every work order is documented, verified, and completed on time.
+          {/* Problem vs. Solution Bento Comparison Grid */}
+          <div className="about-bento-grid" style={{ marginBottom: '36px' }}>
+            
+            {/* The Old Headaches Card */}
+            <div className="white-card tactile-card-shadow" style={{ padding: '28px', borderRadius: '16px', border: '1px solid #cbd5e1', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', paddingBottom: '16px', borderBottom: '1px solid #d3e4fe' }}>
+                  <div style={{ padding: '10px', borderRadius: '10px', background: '#eff4ff', border: '1px solid #cbd5e1', color: '#565e74', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <XCircle size={22} />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0b1c30', margin: 0 }}>The Old Headaches</h3>
+                    <p style={{ fontSize: '0.85rem', color: '#584237', margin: '2px 0 0' }}>The frustrating reality with typical handymen</p>
+                  </div>
+                </div>
+
+                <ul style={{ listStyle: 'none', padding: 0, margin: '20px 0 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  {[
+                    'Calling multiple unvetted contractors for small punch-list items',
+                    'No price transparency or sudden surprise charges on invoice day',
+                    'Missed appointment windows with vague 8-hour waiting ranges',
+                    'Zero photo documentation or proof of finished repair work',
+                    'Unpredictable delays that leave rental vacancies sitting empty',
+                  ].map((pain, idx) => (
+                    <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                      <X size={18} color="#ba1a1a" style={{ marginTop: '3px', flexShrink: 0 }} />
+                      <span style={{ fontSize: '0.925rem', color: '#0b1c30', lineHeight: 1.5 }}>{pain}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div style={{ borderTop: '1px solid #d3e4fe', paddingTop: '16px', marginTop: '24px', fontSize: '0.85rem', color: '#565e74' }}>
+                Result: Wasted afternoons, delayed leases, and unnecessary frustration.
+              </div>
+            </div>
+
+            {/* The Homesync Way Card (Highlighted) */}
+            <div
+              className="white-card tactile-card-shadow"
+              style={{
+                padding: '28px',
+                borderRadius: '16px',
+                border: '2px solid #f97316',
+                position: 'relative',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxShadow: '0 8px 24px rgba(249, 115, 22, 0.08)',
+              }}
+            >
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '8px', backgroundColor: '#f97316' }} />
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', paddingBottom: '16px', borderBottom: '1px solid #d3e4fe' }}>
+                  <div style={{ padding: '10px', borderRadius: '10px', background: '#e5eeff', border: '1px solid #cbd5e1', color: '#9d4300', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <ShieldCheck size={22} />
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0b1c30', margin: 0 }}>The Homesync Way</h3>
+                      <span style={{ background: '#f97316', color: '#ffffff', fontSize: '0.75rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px' }}>
+                        Preferred
+                      </span>
+                    </div>
+                    <p style={{ fontSize: '0.85rem', color: '#9d4300', fontWeight: 600, margin: '2px 0 0' }}>
+                      Reliable care built for Richmond homes &amp; rentals
+                    </p>
+                  </div>
+                </div>
+
+                <ul style={{ listStyle: 'none', padding: 0, margin: '20px 0 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  {[
+                    'One trusted local team handling punch-lists, upkeep, and turnovers',
+                    'Clear, upfront written estimates before any work starts',
+                    'Friendly punctual pros who respect your schedule and arrive on time',
+                    'Clear photo proof of completed work delivered directly to your phone',
+                    'Prompt walkthroughs and rapid turnarounds for landlord peace of mind',
+                  ].map((benefit, idx) => (
+                    <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                      <CheckCircle2 size={18} color="#f97316" style={{ marginTop: '3px', flexShrink: 0 }} />
+                      <span style={{ fontSize: '0.925rem', color: '#0b1c30', fontWeight: 500, lineHeight: 1.5 }}>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div style={{ borderTop: '1px solid #d3e4fe', paddingTop: '16px', marginTop: '24px', fontSize: '0.85rem', color: '#9d4300', fontWeight: 700 }}>
+                Result: Total confidence, well-maintained homes, and stress-free communication.
+              </div>
+            </div>
+
+          </div>
+
+          {/* Visual Proof of Quality (5:7 Responsive Grid) */}
+          <div className="white-card tactile-card-shadow" style={{ padding: '28px', borderRadius: '16px', border: '1px solid #cbd5e1' }}>
+            <div className="about-transformation-grid">
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 700, color: '#9d4300', textTransform: 'uppercase', marginBottom: '10px' }}>
+                  <Camera size={16} /> Documented Work Quality
+                </div>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0b1c30', marginBottom: '12px' }}>
+                  See the Homesync Transformation
+                </h3>
+                <p style={{ fontSize: '0.95rem', color: '#475569', lineHeight: 1.6, marginBottom: '20px' }}>
+                  From worn, damaged rooms to move-in ready living areas. We handle wall repair, fresh paint, hardware upgrades, and complete rental turnovers with meticulous craftsmanship.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {[
+                    'Drywall & water stain restoration',
+                    'Flooring, trim & fixture refreshes',
+                    'Detailed before-and-after photo logs',
+                  ].map((item, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', color: '#0b1c30', fontWeight: 500 }}>
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f97316', flexShrink: 0 }} />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', border: '1px solid #cbd5e1' }}>
+                  <img
+                    src={turnoverTransformation}
+                    alt="Side-by-side room repair showing before and after property turnover transformation"
+                    className="img-zoom-hover"
+                    style={{ width: '100%', height: '340px', objectFit: 'cover', display: 'block' }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '12px',
+                      right: '12px',
+                      background: 'rgba(33, 49, 69, 0.92)',
+                      color: '#ffffff',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      padding: '6px 12px',
+                      borderRadius: '8px',
+                      border: '1px solid #565e74',
+                    }}
+                  >
+                    Real Richmond Turnover Project
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── 3. WHAT YOU CAN COUNT ON EVERY SINGLE TIME (4 COMMITMENTS) ── */}
+      <section style={{ padding: '72px 0 84px' }}>
+        <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+          
+          <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 48px' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#9d4300', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Our Standards
+            </span>
+            <h2 style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#0b1c30', marginTop: '8px', marginBottom: '12px' }}>
+              What You Can Count On Every Single Time
+            </h2>
+            <p style={{ fontSize: '1rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>
+              We treat your property with the same care and respect we give our own homes. Here is our pledge to every Richmond client.
+            </p>
+          </div>
+
+          <div className="about-commitments-grid">
+            {[
+              {
+                icon: Clock,
+                title: 'We Show Up on Time',
+                desc: 'We respect your busy schedule and keep you updated every step of the way. No vague 8-hour waiting windows or unexpected no-shows.',
+              },
+              {
+                icon: Receipt,
+                title: 'Clear, Upfront Pricing',
+                desc: 'No hidden fees or surprise add-ons. What we estimate is what you pay. You always approve scope changes before any additional work begins.',
+              },
+              {
+                icon: Camera,
+                title: 'Photo Proof on Every Job',
+                desc: 'You receive clear before-and-after photos of every repair so you know it was done right, whether you\'re at home, at work, or out of town.',
+              },
+              {
+                icon: ShieldCheck,
+                title: 'Licensed & Insured',
+                desc: 'Full commercial liability coverage for total peace of mind on your personal residence, apartment building, or rental portfolio.',
+              },
+            ].map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={idx}
+                  className="white-card tactile-card-shadow tactile-card-shadow-hover"
+                  style={{ padding: '28px', borderRadius: '16px', border: '1px solid #cbd5e1', display: 'flex', flexDirection: 'column' }}
+                >
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '12px',
+                      background: '#e5eeff',
+                      border: '1px solid #cbd5e1',
+                      color: '#f97316',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: '20px',
+                    }}
+                  >
+                    <Icon size={26} />
+                  </div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0b1c30', marginBottom: '8px' }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ fontSize: '0.9rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>
+                    {item.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── 4. ROOTED IN RICHMOND, VIRGINIA (COVERAGE & OPERATIONS 7:5) ── */}
+      <section style={{ backgroundColor: '#eff4ff', borderTop: '1px solid #d3e4fe', borderBottom: '1px solid #d3e4fe', padding: '72px 0 84px' }}>
+        <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+          
+          <div style={{ maxWidth: '820px', marginBottom: '36px' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#9d4300', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Service Coverage
+            </span>
+            <h2 style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#0b1c30', marginTop: '6px', marginBottom: '8px' }}>
+              Rooted in Richmond, Virginia
+            </h2>
+            <p style={{ fontSize: '1.05rem', color: '#475569', margin: 0 }}>
+              Dependable service throughout Richmond City and all surrounding suburban counties.
+            </p>
+          </div>
+
+          <div className="about-coverage-grid">
+            
+            {/* Left Card: Regular Service Areas (7 Cols) */}
+            <div className="white-card tactile-card-shadow" style={{ padding: '32px', borderRadius: '16px', border: '1px solid #cbd5e1' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0b1c30', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <MapPin size={22} color="#f97316" />
+                <span>Our Regular Service Areas</span>
+              </h3>
+              <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.6, marginBottom: '20px' }}>
+                Our service vans are on the road six days a week throughout the Richmond metropolitan area. We serve homeowners, rental landlords, and property management associations across these communities:
+              </p>
+              
+              <div className="about-areas-grid">
+                {[
+                  'Richmond City & The Fan',
+                  'Henrico County & Short Pump',
+                  'Chesterfield & Midlothian',
+                  'Glen Allen & Tuckahoe',
+                  'Mechanicsville',
+                  'Hanover County',
+                  'Petersburg & Tri-Cities Corridor',
+                ].map((area, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '12px 14px',
+                      borderRadius: '8px',
+                      background: '#eff4ff',
+                      border: '1px solid #d3e4fe',
+                      gridColumn: idx === 6 ? 'span 2' : undefined,
+                    }}
+                  >
+                    <Check size={18} color="#9d4300" style={{ flexShrink: 0 }} />
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#0b1c30' }}>{area}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  marginTop: '22px',
+                  padding: '14px 18px',
+                  borderRadius: '10px',
+                  background: '#e5eeff',
+                  border: '1px solid #d3e4fe',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '12px',
+                }}
+              >
+                <Info size={20} color="#f97316" style={{ marginTop: '2px', flexShrink: 0 }} />
+                <p style={{ fontSize: '0.875rem', color: '#0b1c30', margin: 0, lineHeight: 1.5 }}>
+                  <strong>Don't see your specific neighborhood?</strong> If you're anywhere in the Greater Richmond footprint, give us a call. We're happy to confirm crew availability.
                 </p>
               </div>
-              <div className="highlight-visual">
-                <img src={officeInterior} alt="Office" className="highlight-img" />
+            </div>
+
+            {/* Right Card: Homesync Operations (5 Cols) */}
+            <div className="white-card tactile-card-shadow" style={{ padding: '32px', borderRadius: '16px', border: '1px solid #cbd5e1' }}>
+              <div style={{ borderBottom: '1px solid #d3e4fe', paddingBottom: '16px', marginBottom: '22px' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#9d4300', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Local Shop &amp; Dispatch
+                </span>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0b1c30', marginTop: '4px', margin: 0 }}>
+                  Homesync Operations
+                </h3>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                {/* Base Office */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                    <Store size={20} />
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0b1c30', margin: 0 }}>Base Office</h4>
+                    <p style={{ fontSize: '0.875rem', color: '#475569', margin: '2px 0 0' }}>3540 Pump Rd, Richmond, VA 23233</p>
+                    <span style={{ fontSize: '0.8rem', color: '#565e74' }}>Short Pump / West End Area</span>
+                  </div>
+                </div>
+
+                {/* Direct Line */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                    <Phone size={20} />
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0b1c30', margin: 0 }}>Direct Line</h4>
+                    <a href={`tel:${companyInfo.phoneRaw}`} style={{ fontSize: '0.9rem', color: '#9d4300', fontWeight: 700, textDecoration: 'none' }}>
+                      {companyInfo.phone}
+                    </a>
+                    <p style={{ fontSize: '0.8rem', color: '#584237', margin: '2px 0 0' }}>Call or text anytime during work hours</p>
+                  </div>
+                </div>
+
+                {/* Operating Hours */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                    <Clock size={20} />
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0b1c30', margin: 0 }}>Operating Hours</h4>
+                    <p style={{ fontSize: '0.875rem', color: '#0b1c30', fontWeight: 600, margin: '2px 0 0' }}>Monday – Saturday: 7:00 AM – 7:00 PM</p>
+                    <p style={{ fontSize: '0.8rem', color: '#565e74', margin: '2px 0 0' }}>Sunday: Closed for family &amp; worship</p>
+                  </div>
+                </div>
+
+                {/* Neighborhood Service Note */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                    <Handshake size={20} />
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0b1c30', margin: 0 }}>Neighborhood Service Note</h4>
+                    <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, margin: '4px 0 0' }}>
+                      Prompt walkthroughs and friendly written estimates scheduled throughout the week with clean, uniformed crew technicians.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. FIELD TEAM & LEADERSHIP COMMITMENT QUOTE ── */}
+      <section style={{ padding: '68px 0 76px' }}>
+        <div className="container" style={{ maxWidth: '960px', margin: '0 auto', padding: '0 24px' }}>
+          <div
+            className="white-card tactile-card-shadow"
+            style={{
+              border: '2px solid #d3e4fe',
+              borderRadius: '24px',
+              padding: '48px 36px',
+              position: 'relative',
+              textAlign: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            <Quote
+              size={64}
+              color="#cbd5e1"
+              style={{
+                position: 'absolute',
+                top: '20px',
+                left: '20px',
+                opacity: 0.3,
+                pointerEvents: 'none',
+              }}
+            />
+            <div style={{ position: 'relative', zIndex: 1, maxWidth: '750px', margin: '0 auto' }}>
+              <blockquote style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.5rem)', fontWeight: 600, color: '#0b1c30', lineHeight: 1.45, margin: '0 auto 24px' }}>
+                “We treat every home like our own. Whether it’s fixing a broken door or preparing an apartment for new renters, our reputation is built on doing honest, quality work for our neighbors.”
+              </blockquote>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '48px', height: '4px', backgroundColor: '#f97316', borderRadius: '9999px', marginBottom: '12px' }} />
+                <p style={{ fontSize: '1rem', fontWeight: 700, color: '#0b1c30', margin: 0 }}>
+                  The Homesync Field Team &amp; Leadership
+                </p>
+                <p style={{ fontSize: '0.875rem', color: '#565e74', marginTop: '4px', margin: 0 }}>
+                  Richmond, Virginia
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section bg-off-white">
-        <div className="container">
-          <div className="section-header reveal">
-            <h2>Our Core Values</h2>
-          </div>
-          <div className="values-grid">
-            <div className="value-card">
-              <div className="value-icon">
-                <Shield size={32} />
+      {/* ── 6. BOTTOM CLOSING CTA BANNER (#quote-cta 8:4) ── */}
+      <section id="quote-cta" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px 84px' }}>
+        <div
+          style={{
+            backgroundColor: '#213145',
+            color: '#eaf1ff',
+            borderRadius: '24px',
+            padding: '48px 40px',
+            border: '1px solid #565e74',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 20px 35px -5px rgba(15, 23, 42, 0.4)',
+          }}
+        >
+          {/* Subtle amber accent top border */}
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '8px', backgroundColor: '#f97316' }} />
+          
+          <div className="about-banner-grid" style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  backgroundColor: 'rgba(86, 94, 116, 0.3)',
+                  border: '1px solid #565e74',
+                  padding: '4px 12px',
+                  borderRadius: '9999px',
+                  fontSize: '0.8rem',
+                  color: '#ffdcc3',
+                  alignSelf: 'flex-start',
+                }}
+              >
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f97316' }} />
+                Get in Touch with Our Richmond Team
               </div>
-              <h3>Integrity & Compliance</h3>
-              <p>We strictly adhere to all local codes and client-specific guidelines to ensure your asset is protected and compliant.</p>
+
+              <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.25rem)', fontWeight: 800, color: '#ffffff', lineHeight: 1.2, margin: 0 }}>
+                Ready to get started on your home project?
+              </h2>
+
+              <p style={{ fontSize: '1.05rem', color: '#dae2fd', lineHeight: 1.6, margin: 0 }}>
+                Call or text us at <strong style={{ color: '#ffffff' }}>{companyInfo.phone}</strong> or request a free estimate online. We're here Monday–Saturday, 7am–7pm.
+              </p>
             </div>
-            <div className="value-card">
-              <div className="value-icon">
-                <Target size={32} />
-              </div>
-              <h3>Speed & Efficiency</h3>
-              <p>Time is money in property management. We pride ourselves on rapid response times and meeting every deadline.</p>
-            </div>
-            <div className="value-card">
-              <div className="value-icon">
-                <Users size={32} />
-              </div>
-              <h3>Partnership Focus</h3>
-              <p>We view ourselves as partners in your success, providing transparent reporting and communication at every step.</p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', alignItems: 'stretch', justifyContent: 'center' }}>
+              <Link
+                to="/get-quote"
+                className="tactile-button-primary"
+                style={{ width: '100%', padding: '14px 28px', fontSize: '1.05rem', fontWeight: 700, borderRadius: '10px' }}
+              >
+                <FileText size={18} /> Get a Free Estimate
+              </Link>
+              <a
+                href={`tel:${companyInfo.phoneRaw}`}
+                className="btn-outline-dark-surface"
+                style={{ width: '100%', padding: '14px 28px', fontSize: '1.05rem', fontWeight: 600, borderRadius: '10px' }}
+              >
+                <Phone size={18} /> Call {companyInfo.phone}
+              </a>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="cta-strip">
-        <div className="container cta-content">
-          <h2>Looking for a reliable partner?</h2>
-          <p>Let's discuss how we can help manage your portfolio.</p>
-          <Link to="/contact" className="btn btn-primary-inverse">Contact Us</Link>
-        </div>
-      </section>
-
-      <style>{`
-        .about-page {
-            overflow-x: hidden;
-        }
-        
-        /* ─── ABOUT VIDEO HERO ────────────────────── */
-        .abt-hero {
-          position: relative;
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          color: white;
-        }
-
-        .abt-hero-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          z-index: 0;
-          /* Technique 1: iris clip-path reveal */
-          animation: iris-open-abt 1.4s cubic-bezier(0.22, 1, 0.36, 1) both,
-                     hero-zoom-scroll-abt linear both;
-        }
-
-        @keyframes iris-open-abt {
-          0%   { clip-path: inset(48% 48% round 50%); opacity: 0.4; }
-          60%  { clip-path: inset(2% 2% round 4px); opacity: 1; }
-          100% { clip-path: inset(0% 0% round 0px); opacity: 1; }
-        }
-
-        /* Technique 3: scroll-driven zoom-out */
-        @supports (animation-timeline: scroll()) {
-          .abt-hero-video {
-            animation-name: iris-open-abt, hero-zoom-scroll-abt;
-            animation-duration: 1.4s, auto;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), linear;
-            animation-fill-mode: both, both;
-            animation-timeline: auto, scroll(root block);
-            animation-range: auto, 0% 55%;
-          }
-          @keyframes hero-zoom-scroll-abt {
-            from { transform: scale(1.06); filter: brightness(1); }
-            to   { transform: scale(1.22); filter: brightness(0.45); }
-          }
-        }
-
-        /* Letterbox bars */
-        .abt-hero-lb {
-          position: absolute; left: 0; right: 0;
-          height: clamp(20px, 3.5vw, 48px);
-          background: #000;
-          z-index: 3;
-          animation: abt-lb-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-        .abt-hero-lb--top    { top: 0;    transform-origin: top; }
-        .abt-hero-lb--bottom { bottom: 0; transform-origin: bottom; }
-        @keyframes abt-lb-in {
-          from { transform: scaleY(3); }
-          to   { transform: scaleY(1); }
-        }
-
-        /* Overlay layers */
-        .abt-hero-overlay { position: absolute; inset: 0; }
-        .abt-hero-overlay--dark    { background: linear-gradient(180deg, rgba(5,10,24,0.5) 0%, rgba(5,10,24,0.75) 100%); z-index: 1; }
-        .abt-hero-overlay--brand   { background: linear-gradient(135deg, rgba(10,28,58,0.6) 0%, transparent 55%); z-index: 1; }
-        .abt-hero-overlay--vignette{ background: radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.65) 100%); z-index: 1; }
-
-        /* Film grain */
-        .abt-hero-grain {
-          position: absolute; inset: 0; z-index: 2;
-          opacity: 0.04;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-          background-size: 180px;
-          animation: grain-shift 0.4s steps(1) infinite;
-          pointer-events: none;
-        }
-
-        /* Glowing accent line */
-        .abt-hero-accent-line {
-          position: absolute; bottom: 38%; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent 0%, #10b981 30%, #34d399 50%, #10b981 70%, transparent 100%);
-          opacity: 0.22; z-index: 3;
-          animation: accent-line-in-abt 2s ease-out 0.5s both;
-        }
-        @keyframes accent-line-in-abt {
-          from { opacity: 0; transform: scaleX(0); }
-          to   { opacity: 0.22; transform: scaleX(1); }
-        }
-
-        /* Content */
-        .abt-hero-content {
-          position: relative; z-index: 4;
-          max-width: 800px; margin: 0 auto;
-          text-align: center; padding: 100px 24px 80px;
-        }
-
-        /* Badge */
-        .abt-hero-badge {
-          display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.18);
-          backdrop-filter: blur(8px);
-          border-radius: 100px; padding: 7px 18px;
-          font-size: 0.82rem; font-weight: 600;
-          letter-spacing: 0.05em; text-transform: uppercase;
-          color: rgba(255,255,255,0.9); margin-bottom: 24px;
-          animation: fadeInUp 0.7s ease-out 0.3s both;
-        }
-        .abt-hero-badge-dot {
-          width: 8px; height: 8px; border-radius: 50%;
-          background: #10b981;
-          box-shadow: 0 0 0 0 rgba(16,185,129,0.5);
-          animation: pulse-green-abt 2s ease-in-out infinite;
-        }
-        @keyframes pulse-green-abt {
-          0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
-          50%      { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
-        }
-
-        /* Title */
-        .abt-hero-title {
-          font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-          font-weight: 900; line-height: 1.05;
-          letter-spacing: -0.03em; margin-bottom: 20px;
-          animation: fadeInUp 0.7s ease-out 0.5s both,
-                     text-shimmer-abt 5s linear 1.5s infinite;
-          /* Technique 4: shimmer sweep */
-          background: linear-gradient(
-            90deg,
-            rgba(255,255,255,0.95) 20%,
-            rgba(209,250,229,1)    40%,
-            rgba(255,255,255,1)    50%,
-            rgba(209,250,229,1)    60%,
-            rgba(255,255,255,0.95) 80%
-          );
-          background-size: 250% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          text-shadow: none;
-        }
-
-        @keyframes text-shimmer-abt {
-          from { background-position: 200% center; }
-          to   { background-position: -200% center; }
-        }
-
-        .abt-highlight {
-          color: transparent;
-          background: linear-gradient(90deg, #10b981, #34d399);
-          -webkit-background-clip: text;
-          background-clip: text;
-          display: inline-block;
-          position: relative;
-        }
-
-        /* Technique 2: @property Spotlight */
-        @property --spotlight-x-abt { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
-        @property --spotlight-y-abt { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
-
-        .abt-hero-spotlight {
-          position: absolute;
-          inset: 0;
-          z-index: 2;
-          pointer-events: none;
-          opacity: 0;
-          transition: opacity 0.6s ease, --spotlight-x-abt 0.08s ease-out, --spotlight-y-abt 0.08s ease-out;
-          background: radial-gradient(
-            circle 380px at var(--spotlight-x-abt) var(--spotlight-y-abt),
-            rgba(16, 185, 129, 0.08) 0%,
-            rgba(16, 185, 129, 0.03) 50%,
-            transparent 100%
-          );
-        }
-
-        /* Technique 5: frosted glass exit strip */
-        .abt-hero-frost-exit {
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          height: 180px;
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
-          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
-          z-index: 5;
-          pointer-events: none;
-        }
-
-        /* Subtitle */
-        .abt-hero-subtitle {
-          font-size: clamp(0.95rem, 1.8vw, 1.15rem);
-          color: rgba(255,255,255,0.78);
-          max-width: 580px; margin: 0 auto 36px;
-          line-height: 1.7;
-          animation: fadeInUp 0.7s ease-out 0.7s both;
-        }
-
-        /* Scroll indicator */
-        .abt-scroll-indicator {
-          position: absolute; bottom: 28px; left: 50%;
-          transform: translateX(-50%); z-index: 4;
-          color: rgba(255,255,255,0.45);
-          animation: scroll-bounce 2s ease-in-out infinite, fadeIn 1s ease-out 1.2s both;
-          transition: color 0.2s;
-        }
-        .abt-scroll-indicator:hover { color: white; }
-
-        /* ─── LIVE DISPATCH WIDGET ────────────────── */
-        .abt-dispatch-widget {
-          position: absolute;
-          bottom: clamp(64px, 6vw, 85px);
-          right: clamp(20px, 4vw, 48px);
-          z-index: 10;
-          width: 250px;
-          background: rgba(10, 25, 50, 0.55);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          border: 1px solid rgba(16, 185, 129, 0.25);
-          border-radius: 12px;
-          padding: 14px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(16, 185, 129, 0.15);
-          animation: fadeInUp 0.3s ease-out both;
-          text-align: left;
-        }
-
-        .abt-dispatch-header {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          padding-bottom: 8px;
-          margin-bottom: 10px;
-        }
-
-        .abt-dispatch-pulse-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #10b981;
-          box-shadow: 0 0 8px #10b981;
-          animation: dispatch-pulse-abt 1.8s ease-in-out infinite;
-        }
-
-        @keyframes dispatch-pulse-abt {
-          0%, 100% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.35); opacity: 0.45; }
-        }
-
-        .abt-dispatch-title {
-          font-size: 0.72rem;
-          font-weight: 800;
-          letter-spacing: 0.08em;
-          color: rgba(255, 255, 255, 0.7);
-        }
-
-        .abt-dispatch-body {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-
-        .abt-dispatch-meta {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .abt-dispatch-type {
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #fff;
-        }
-
-        .abt-dispatch-time {
-          font-size: 0.75rem;
-          color: rgba(255, 255, 255, 0.55);
-        }
-
-        .abt-location {
-          font-size: 0.8rem;
-          color: rgba(255, 255, 255, 0.8);
-        }
-
-        .abt-dispatch-status-badge {
-          align-self: flex-start;
-          font-size: 0.68rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          padding: 3px 8px;
-          border-radius: 4px;
-          margin-top: 4px;
-        }
-
-        .abt-dispatch-status-badge.status-completed {
-          background: rgba(34, 197, 94, 0.15);
-          color: #4ade80;
-          border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-
-        .abt-dispatch-status-badge.status-active {
-          background: rgba(16, 185, 129, 0.15);
-          color: #34d399;
-          border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .section {
-          padding: 100px 0;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .section-header h2 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 16px;
-        }
-        
-        body.dark .section-header h2 {
-            color: var(--text-light);
-        }
-
-        .about-content {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 60px;
-          align-items: center;
-          margin-bottom: 80px;
-        }
-
-        @media (min-width: 992px) {
-          .about-content {
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-        
-        .about-img {
-            width: 100%;
-            border-radius: 16px;
-            box-shadow: var(--shadow-xl);
-            border: 1px solid var(--surface-2);
-        }
-
-        .highlight-section {
-            margin-top: 80px;
-        }
-
-        .highlight-box {
-          background: white;
-          border: 1px solid var(--surface-2);
-          border-radius: 16px;
-          box-shadow: var(--shadow-lg);
-          overflow: hidden;
-          display: grid;
-          grid-template-columns: 1fr;
-        }
-        
-        @media (min-width: 768px) {
-            .highlight-box {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        
-        body.dark .highlight-box {
-          background: var(--surface-dark-2);
-          border-color: var(--glass-border-dark);
-        }
-        
-        .highlight-content {
-            padding: 48px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .highlight-box h2 {
-          font-size: 2rem;
-          margin-bottom: 24px;
-          color: var(--accent);
-        }
-
-        .highlight-visual {
-            height: 100%;
-            min-height: 300px;
-        }
-        
-        .highlight-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .text-content h2 {
-          font-size: 2.5rem;
-          margin-bottom: 24px;
-          color: var(--primary);
-        }
-        
-        body.dark .text-content h2 {
-            color: var(--text-light);
-        }
-
-        .text-content p {
-          font-size: 1.125rem;
-          line-height: 1.8;
-          color: var(--text-secondary);
-          margin-bottom: 24px;
-        }
-        
-        body.dark .text-content p {
-            color: var(--text-dark-secondary);
-        }
-        
-        .bg-off-white {
-            background-color: var(--bg-light);
-            border-top: 1px solid var(--surface-2);
-            border-bottom: 1px solid var(--surface-2);
-        }
-        
-        body.dark .bg-off-white {
-            background-color: var(--bg-dark);
-            border-color: var(--glass-border-dark);
-        }
-
-        .values-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 40px;
-          margin-top: 60px;
-        }
-
-        .value-card {
-          text-align: center;
-          padding: 40px;
-          background: white;
-          border-radius: 12px;
-          transition: transform 0.3s ease;
-          border: 1px solid var(--surface-2);
-          box-shadow: var(--shadow-sm);
-        }
-        
-        body.dark .value-card {
-            background: var(--surface-dark-2);
-            border-color: var(--glass-border-dark);
-        }
-
-        .value-card:hover {
-          transform: translateY(-5px);
-          border-color: var(--accent);
-          box-shadow: var(--shadow-md);
-        }
-
-        .value-icon {
-          color: var(--accent);
-          margin-bottom: 24px;
-          background: var(--accent-light);
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        body.dark .value-icon {
-            background: rgba(245, 158, 11, 0.1);
-        }
-
-        .value-card h3 {
-          font-size: 1.5rem;
-          margin-bottom: 16px;
-        }
-
-        .value-card p {
-          color: var(--text-secondary);
-          line-height: 1.6;
-        }
-        
-        body.dark .value-card p {
-            color: var(--text-dark-secondary);
-        }
-        
-        .cta-strip {
-          padding: 100px 0;
-          background: linear-gradient(135deg, var(--primary), var(--primary-light));
-          color: white;
-          text-align: center;
-          position: relative;
-        }
-
-        .cta-content h2 {
-          font-size: 3rem;
-          margin-bottom: 24px;
-        }
-
-        .cta-content p {
-          margin-bottom: 40px;
-          font-size: 1.5rem;
-          color: var(--text-dark-secondary);
-        }
-        
-        .btn-primary-inverse {
-          background-color: white;
-          color: var(--primary);
-          padding: 16px 32px;
-          border-radius: 4px;
-          font-weight: 700;
-          transition: all 0.2s;
-        }
-
-        .btn-primary-inverse:hover {
-          background-color: var(--accent);
-          color: white;
-        }
-      `}</style>
     </div>
   );
 }

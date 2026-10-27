@@ -1,738 +1,420 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Send, ChevronDown } from 'lucide-react';
-import contactVideo from '../assets/videos/contract-us.webm';
-import contactSupport from '../assets/images/contact-support.png';
-import featureInspection from '../assets/images/feature-inspection.png';
-
-const mockOrders = [
-  { id: 1, type: 'Quote Request', loc: 'Richmond, VA', time: '5m ago', status: 'Active' },
-  { id: 2, type: 'Callback Scheduled', loc: 'Henrico, VA', time: '18m ago', status: 'Completed' },
-  { id: 3, type: 'Preservation Inquiry', loc: 'Midlothian, VA', time: '35m ago', status: 'Completed' },
-  { id: 4, type: 'Quote Dispatched', loc: 'Glen Allen, VA', time: '1h ago', status: 'Completed' },
-];
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Send,
+  CheckCircle2,
+  Camera,
+  ShieldCheck,
+} from 'lucide-react';
+import { companyInfo, serviceAreas } from '../data/friendlyContent';
+import contractorPhoto from '../assets/images/contractor-hero.jpg';
 
 export default function ContactPage() {
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-    const [currentOrder, setCurrentOrder] = useState(0);
-    const heroRef = useRef<HTMLElement>(null);
-    const spotlightRef = useRef<HTMLDivElement>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    service: 'Maintenance & Handyman Repairs',
+    address: '',
+    message: '',
+    smsConsent: true,
+  });
 
-    useEffect(() => {
-      const handleMouseMove = (e: MouseEvent) => {
-        setMousePos({
-          x: (e.clientX / window.innerWidth - 0.5) * 2,
-          y: (e.clientY / window.innerHeight - 0.5) * 2,
-        });
-      };
+  const [isSent, setIsSent] = useState(false);
 
-      window.addEventListener('mousemove', handleMouseMove);
-      return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
+  const mailSubject = encodeURIComponent(`Service Inquiry from ${formData.name || 'Website Visitor'}`);
+  const mailBody = encodeURIComponent(
+`Full Name: ${formData.name}
+Phone: ${formData.phone}
+Email: ${formData.email}
+Service Needed: ${formData.service}
+Property Address / Neighborhood: ${formData.address}
+Message / Punch-List Details:
+${formData.message}
 
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setCurrentOrder((prev) => (prev + 1) % mockOrders.length);
-      }, 4500);
-      return () => clearInterval(timer);
-    }, []);
+SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
+  );
+  const mailtoUrl = `mailto:${companyInfo.email}?subject=${mailSubject}&body=${mailBody}`;
 
-    // @property Spotlight tracker
-    useEffect(() => {
-      const hero = heroRef.current;
-      const spotlight = spotlightRef.current;
-      if (!hero || !spotlight) return;
-      const handleSpotlight = (e: MouseEvent) => {
-        const rect = hero.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        spotlight.style.setProperty('--spotlight-x-ctc', `${x}%`);
-        spotlight.style.setProperty('--spotlight-y-ctc', `${y}%`);
-        spotlight.style.opacity = '1';
-      };
-      const handleLeave = () => { spotlight.style.opacity = '0'; };
-      hero.addEventListener('mousemove', handleSpotlight);
-      hero.addEventListener('mouseleave', handleLeave);
-      return () => {
-        hero.removeEventListener('mousemove', handleSpotlight);
-        hero.removeEventListener('mouseleave', handleLeave);
-      };
-    }, []);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
 
-    return (
-        <div className="contact-page">
-            {/* ── CINEMATIC VIDEO HERO ── */}
-            <section className="ctc-hero" ref={heroRef}>
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSent(true);
+    // Direct mailto invocation
+    window.location.href = mailtoUrl;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
-                {/* Video */}
-                <video
-                    className="ctc-hero-video"
-                    src={contactVideo}
-                    autoPlay muted loop playsInline
-                    poster={featureInspection}
-                />
-
-                {/* Letterbox bars */}
-                <div className="ctc-hero-lb ctc-hero-lb--top" />
-                <div className="ctc-hero-lb ctc-hero-lb--bottom" />
-
-                {/* Overlay layers */}
-                <div className="ctc-hero-overlay ctc-hero-overlay--dark" />
-                <div className="ctc-hero-overlay ctc-hero-overlay--brand" />
-                <div className="ctc-hero-overlay ctc-hero-overlay--vignette" />
-
-                {/* Film grain */}
-                <div className="ctc-hero-grain" aria-hidden="true" />
-
-                {/* Glowing accent line */}
-                <div className="ctc-hero-accent-line" aria-hidden="true" />
-
-                {/* @property Mouse Spotlight */}
-                <div ref={spotlightRef} className="ctc-hero-spotlight" aria-hidden="true" />
-
-                {/* Live Dispatch Ticker Widget (Covers corner watermark/sparkle) */}
-                <div className="ctc-dispatch-widget">
-                    <div className="ctc-dispatch-header">
-                        <span className="ctc-dispatch-pulse-dot" />
-                        <span className="ctc-dispatch-title">LIVE PORTAL DECK</span>
-                    </div>
-                    <div className="ctc-dispatch-body">
-                        <div className="ctc-dispatch-meta">
-                            <span className="ctc-dispatch-type">{mockOrders[currentOrder].type}</span>
-                            <span className="ctc-dispatch-time">{mockOrders[currentOrder].time}</span>
-                        </div>
-                        <div className="ctc-location">
-                            {mockOrders[currentOrder].loc}
-                        </div>
-                        <div className={`ctc-dispatch-status-badge status-${mockOrders[currentOrder].status.toLowerCase()}`}>
-                            {mockOrders[currentOrder].status}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Frosted glass exit strip */}
-                <div className="ctc-hero-frost-exit" aria-hidden="true" />
-
-                {/* Content */}
-                <div 
-                    className="container ctc-hero-content"
-                    style={{
-                        transform: `translate3d(${mousePos.x * -14}px, ${mousePos.y * -7}px, 0)`,
-                        transition: 'transform 0.15s ease-out'
-                    }}
-                >
-                    <div className="ctc-hero-badge">
-                        <span className="ctc-hero-badge-dot" />
-                        24/7 Dispatch · Online Support
-                    </div>
-
-                    <h1 className="ctc-hero-title">
-                        Contact <span className="ctc-highlight">Homesync</span>
-                    </h1>
-
-                    <p className="ctc-hero-subtitle">
-                        Get in touch for a free preservation, maintenance, or renovation quote. We respond within 24 hours.
-                    </p>
-                </div>
-
-                {/* Scroll indicator */}
-                <a href="#contact-grid" className="ctc-scroll-indicator" aria-label="Scroll to contact details">
-                    <ChevronDown size={22} />
-                </a>
-            </section>
-
-            <section className="section" id="contact-grid">
-                <div className="container">
-                    <div className="contact-grid">
-                        <div className="contact-info">
-                            <div className="support-visual">
-                                <img src={contactSupport} alt="Customer Support" className="support-img" />
-                            </div>
-                            <div className="info-card">
-                                <h2>Get In Touch</h2>
-                                <p className="info-intro">
-                                    We are ready to assist with all your property preservation needs.
-                                    Reach out directly or use the form to send us a message.
-                                </p>
-
-                                <ul className="info-list">
-                                    <li>
-                                        <div className="icon-box"><Phone size={24} /></div>
-                                        <div>
-                                            <strong>Phone</strong>
-                                            <a href="tel:8042922009">(804) 292-2009</a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="icon-box"><Mail size={24} /></div>
-                                        <div>
-                                            <strong>Email</strong>
-                                            <a href="mailto:info@homesyncllc.org">info@homesyncllc.org</a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="icon-box"><MapPin size={24} /></div>
-                                        <div>
-                                            <strong>Service Area</strong>
-                                            <span>Richmond, VA & Surrounding Areas</span>
-                                        </div>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div className="contact-form-wrapper">
-                            <form className="contact-form" action="mailto:info@homesyncllc.org" method="post" encType="text/plain">
-                                <h3>Send a Message</h3>
-                                <div className="form-group">
-                                    <label htmlFor="name">Full Name</label>
-                                    <input type="text" id="name" name="name" className="form-input" required placeholder="John Doe" />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="email">Email Address</label>
-                                    <input type="email" id="email" name="email" className="form-input" required placeholder="john@example.com" />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="phone">Phone Number</label>
-                                    <input type="tel" id="phone" name="phone" className="form-input" placeholder="(555) 123-4567" />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="message">Message</label>
-                                    <textarea id="message" name="message" rows={5} className="form-textarea" required placeholder="Tell us about your property needs..."></textarea>
-                                </div>
-                                <button type="submit" className="btn btn-primary btn-block">
-                                    Send Message <Send size={18} />
-                                </button>
-                                
-                                <div className="sms-consent-disclaimer">
-                                    By submitting this form you allow consent to receive SMS from (Homesync LLC). Frequency may vary. Message & data rates may apply. Reply STOP to opt out of further messaging or reply HELP for more information. View our terms and privacy policy at our website <Link to="/privacy">Privacy Policy</Link>.
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <style>{`
-        /* ─── CONTACT VIDEO HERO ──────────────────── */
-        .ctc-hero {
-          position: relative;
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          color: white;
-        }
-
-        .ctc-hero-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          z-index: 0;
-          /* Technique 1: iris clip-path reveal */
-          animation: iris-open-ctc 1.4s cubic-bezier(0.22, 1, 0.36, 1) both,
-                     hero-zoom-scroll-ctc linear both;
-        }
-
-        @keyframes iris-open-ctc {
-          0%   { clip-path: inset(48% 48% round 50%); opacity: 0.4; }
-          60%  { clip-path: inset(2% 2% round 4px); opacity: 1; }
-          100% { clip-path: inset(0% 0% round 0px); opacity: 1; }
-        }
-
-        /* Technique 3: scroll-driven zoom-out */
-        @supports (animation-timeline: scroll()) {
-          .ctc-hero-video {
-            animation-name: iris-open-ctc, hero-zoom-scroll-ctc;
-            animation-duration: 1.4s, auto;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), linear;
-            animation-fill-mode: both, both;
-            animation-timeline: auto, scroll(root block);
-            animation-range: auto, 0% 55%;
-          }
-          @keyframes hero-zoom-scroll-ctc {
-            from { transform: scale(1.06); filter: brightness(1); }
-            to   { transform: scale(1.22); filter: brightness(0.45); }
-          }
-        }
-
-        /* Letterbox bars */
-        .ctc-hero-lb {
-          position: absolute; left: 0; right: 0;
-          height: clamp(20px, 3.5vw, 48px);
-          background: #000;
-          z-index: 3;
-          animation: ctc-lb-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-        .ctc-hero-lb--top    { top: 0;    transform-origin: top; }
-        .ctc-hero-lb--bottom { bottom: 0; transform-origin: bottom; }
-        @keyframes ctc-lb-in {
-          from { transform: scaleY(3); }
-          to   { transform: scaleY(1); }
-        }
-
-        /* Overlay layers */
-        .ctc-hero-overlay { position: absolute; inset: 0; }
-        .ctc-hero-overlay--dark    { background: linear-gradient(180deg, rgba(5,10,24,0.5) 0%, rgba(5,10,24,0.75) 100%); z-index: 1; }
-        .ctc-hero-overlay--brand   { background: linear-gradient(135deg, rgba(10,28,58,0.6) 0%, transparent 55%); z-index: 1; }
-        .ctc-hero-overlay--vignette{ background: radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.65) 100%); z-index: 1; }
-
-        /* Film grain */
-        .ctc-hero-grain {
-          position: absolute; inset: 0; z-index: 2;
-          opacity: 0.04;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-          background-size: 180px;
-          animation: grain-shift 0.4s steps(1) infinite;
-          pointer-events: none;
-        }
-
-        /* Glowing accent line */
-        .ctc-hero-accent-line {
-          position: absolute; bottom: 38%; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent 0%, #6366f1 30%, #818cf8 50%, #6366f1 70%, transparent 100%);
-          opacity: 0.22; z-index: 3;
-          animation: accent-line-in-ctc 2s ease-out 0.5s both;
-        }
-        @keyframes accent-line-in-ctc {
-          from { opacity: 0; transform: scaleX(0); }
-          to   { opacity: 0.22; transform: scaleX(1); }
-        }
-
-        /* Content */
-        .ctc-hero-content {
-          position: relative; z-index: 4;
-          max-width: 800px; margin: 0 auto;
-          text-align: center; padding: 100px 24px 80px;
-        }
-
-        /* Badge */
-        .ctc-hero-badge {
-          display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.18);
-          backdrop-filter: blur(8px);
-          border-radius: 100px; padding: 7px 18px;
-          font-size: 0.82rem; font-weight: 600;
-          letter-spacing: 0.05em; text-transform: uppercase;
-          color: rgba(255,255,255,0.9); margin-bottom: 24px;
-          animation: fadeInUp 0.7s ease-out 0.3s both;
-        }
-        .ctc-hero-badge-dot {
-          width: 8px; height: 8px; border-radius: 50%;
-          background: #6366f1;
-          box-shadow: 0 0 0 0 rgba(99,102,241,0.5);
-          animation: pulse-indigo-ctc 2s ease-in-out infinite;
-        }
-        @keyframes pulse-indigo-ctc {
-          0%,100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.5); }
-          50%      { box-shadow: 0 0 0 6px rgba(99,102,241,0); }
-        }
-
-        /* Title */
-        .ctc-hero-title {
-          font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-          font-weight: 900; line-height: 1.05;
-          letter-spacing: -0.03em; margin-bottom: 20px;
-          animation: fadeInUp 0.7s ease-out 0.5s both,
-                     text-shimmer-ctc 5s linear 1.5s infinite;
-          /* Technique 4: shimmer sweep */
-          background: linear-gradient(
-            90deg,
-            rgba(255,255,255,0.95) 20%,
-            rgba(224,231,255,1)    40%,
-            rgba(255,255,255,1)    50%,
-            rgba(224,231,255,1)    60%,
-            rgba(255,255,255,0.95) 80%
-          );
-          background-size: 250% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          text-shadow: none;
-        }
-
-        @keyframes text-shimmer-ctc {
-          from { background-position: 200% center; }
-          to   { background-position: -200% center; }
-        }
-
-        .ctc-highlight {
-          color: transparent;
-          background: linear-gradient(90deg, #6366f1, #818cf8);
-          -webkit-background-clip: text;
-          background-clip: text;
-          display: inline-block;
-          position: relative;
-        }
-
-        /* Technique 2: @property Spotlight */
-        @property --spotlight-x-ctc { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
-        @property --spotlight-y-ctc { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
-
-        .ctc-hero-spotlight {
-          position: absolute;
-          inset: 0;
-          z-index: 2;
-          pointer-events: none;
-          opacity: 0;
-          transition: opacity 0.6s ease, --spotlight-x-ctc 0.08s ease-out, --spotlight-y-ctc 0.08s ease-out;
-          background: radial-gradient(
-            circle 380px at var(--spotlight-x-ctc) var(--spotlight-y-ctc),
-            rgba(99, 102, 241, 0.08) 0%,
-            rgba(99, 102, 241, 0.03) 50%,
-            transparent 100%
-          );
-        }
-
-        /* Technique 5: frosted glass exit strip */
-        .ctc-hero-frost-exit {
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          height: 180px;
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
-          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
-          z-index: 5;
-          pointer-events: none;
-        }
-
-        /* Subtitle */
-        .ctc-hero-subtitle {
-          font-size: clamp(0.95rem, 1.8vw, 1.15rem);
-          color: rgba(255,255,255,0.78);
-          max-width: 580px; margin: 0 auto 36px;
-          line-height: 1.7;
-          animation: fadeInUp 0.7s ease-out 0.7s both;
-        }
-
-        /* Scroll indicator */
-        .ctc-scroll-indicator {
-          position: absolute; bottom: 28px; left: 50%;
-          transform: translateX(-50%); z-index: 4;
-          color: rgba(255,255,255,0.45);
-          animation: scroll-bounce 2s ease-in-out infinite, fadeIn 1s ease-out 1.2s both;
-          transition: color 0.2s;
-        }
-        .ctc-scroll-indicator:hover { color: white; }
-
-        /* ─── LIVE DISPATCH WIDGET ────────────────── */
-        .ctc-dispatch-widget {
-          position: absolute;
-          bottom: clamp(64px, 6vw, 85px);
-          right: clamp(20px, 4vw, 48px);
-          z-index: 10;
-          width: 250px;
-          background: rgba(10, 25, 50, 0.55);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          border: 1px solid rgba(99, 102, 241, 0.25);
-          border-radius: 12px;
-          padding: 14px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(99, 102, 241, 0.15);
-          animation: fadeInUp 0.3s ease-out both;
-          text-align: left;
-        }
-
-        .ctc-dispatch-header {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          padding-bottom: 8px;
-          margin-bottom: 10px;
-        }
-
-        .ctc-dispatch-pulse-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #6366f1;
-          box-shadow: 0 0 8px #6366f1;
-          animation: dispatch-pulse-ctc 1.8s ease-in-out infinite;
-        }
-
-        @keyframes dispatch-pulse-ctc {
-          0%, 100% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.35); opacity: 0.45; }
-        }
-
-        .ctc-dispatch-title {
-          font-size: 0.72rem;
-          font-weight: 800;
-          letter-spacing: 0.08em;
-          color: rgba(255, 255, 255, 0.7);
-        }
-
-        .ctc-dispatch-body {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-
-        .ctc-dispatch-meta {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .ctc-dispatch-type {
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #fff;
-        }
-
-        .ctc-dispatch-time {
-          font-size: 0.75rem;
-          color: rgba(255, 255, 255, 0.55);
-        }
-
-        .ctc-location {
-          font-size: 0.8rem;
-          color: rgba(255, 255, 255, 0.8);
-        }
-
-        .ctc-dispatch-status-badge {
-          align-self: flex-start;
-          font-size: 0.68rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          padding: 3px 8px;
-          border-radius: 4px;
-          margin-top: 4px;
-        }
-
-        .ctc-dispatch-status-badge.status-completed {
-          background: rgba(34, 197, 94, 0.15);
-          color: #4ade80;
-          border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-
-        .ctc-dispatch-status-badge.status-active {
-          background: rgba(99, 102, 241, 0.15);
-          color: #818cf8;
-          border: 1px solid rgba(99, 102, 241, 0.3);
-        }
-
-        .section {
-            padding: 100px 0;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 60px;
-        }
-        
-        @media (min-width: 992px) {
-            .contact-grid {
-                grid-template-columns: 1fr 1.2fr;
-                gap: 80px;
-            }
-        }
-        
-        .support-visual {
-            margin-bottom: 32px;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--surface-2);
-        }
-        
-        .support-img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .info-card {
-            background: white;
-            padding: 40px;
-            border-radius: 16px;
-            border: 1px solid var(--surface-2);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        body.dark .info-card {
-            background: var(--surface-dark-2);
-            border-color: var(--glass-border-dark);
-        }
-        
-        .info-card h2 {
-            font-size: 2rem;
-            margin-bottom: 16px;
-            color: var(--primary);
-        }
-        
-        body.dark .info-card h2 {
-            color: var(--text-light);
-        }
-        
-        .info-intro {
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
-        
-        body.dark .info-intro {
-            color: var(--text-dark-secondary);
-        }
-        
-        .info-list {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-        }
-        
-        .info-list li {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-        
-        .icon-box {
-            background: var(--accent-light);
-            color: var(--accent);
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        
-        body.dark .icon-box {
-            background: rgba(245, 158, 11, 0.1);
-        }
-        
-        .info-list strong {
-            display: block;
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-            color: var(--primary);
-        }
-        
-        body.dark .info-list strong {
-            color: var(--text-light);
-        }
-        
-        .info-list span, .info-list a {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-        
-        body.dark .info-list span, body.dark .info-list a {
-            color: var(--text-dark-secondary);
-        }
-        
-        .info-list a:hover {
-            color: var(--accent);
-        }
-
-        .contact-form-wrapper {
-            background: white;
-            padding: 48px;
-            border-radius: 16px;
-            box-shadow: var(--shadow-xl);
-            border: 1px solid var(--surface-2);
-        }
-        
-        body.dark .contact-form-wrapper {
-            background: var(--surface-dark-2);
-            border-color: var(--glass-border-dark);
-        }
-        
-        .contact-form h3 {
-            font-size: 2rem;
-            margin-bottom: 32px;
-            color: var(--primary);
-        }
-        
-        body.dark .contact-form h3 {
-            color: var(--text-light);
-        }
-        
-        .form-group {
-            margin-bottom: 24px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-        
-        body.dark .form-group label {
-            color: var(--text-light);
-        }
-        
-        .form-input, .form-textarea {
-          width: 100%;
-          padding: 16px;
-          border: 2px solid var(--surface-2);
-          border-radius: 8px;
-          font-size: 1rem;
-          transition: all 0.2s;
-          background-color: var(--bg-light);
-          color: var(--text-primary);
-          font-family: inherit;
-        }
-        
-        body.dark .form-input, body.dark .form-textarea {
-            background-color: var(--bg-dark);
-            border-color: var(--surface-dark-2);
-            color: var(--text-light);
-        }
-
-        .form-input:focus, .form-textarea:focus {
-          outline: none;
-          border-color: var(--accent);
-          background-color: white;
-          box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
-        }
-        
-        body.dark .form-input:focus, body.dark .form-textarea:focus {
-            background-color: var(--surface-dark-1);
-        }
-        
-        .btn-block {
-            width: 100%;
-            padding: 16px;
-            font-size: 1.1rem;
-        }
-
-        .sms-consent-disclaimer {
-            font-size: 0.85rem;
-            color: #555;
-            line-height: 1.6;
-            margin-top: 20px;
-            font-style: italic;
-        }
-
-        body.dark .sms-consent-disclaimer {
-            color: #aaa;
-        }
-
-        .sms-consent-disclaimer a {
-            color: #0056b3;
-            text-decoration: underline;
-            font-style: normal;
-        }
-
-        body.dark .sms-consent-disclaimer a {
-            color: #60b4ff;
-        }
-      `}</style>
+  return (
+    <div className="contact-page bg-blueprint-grid" style={{ minHeight: '100vh', paddingTop: '32px', paddingBottom: '80px' }}>
+      
+      {/* ── 1. HERO ── */}
+      <section style={{ padding: '30px 0 40px', textAlign: 'center' }}>
+        <div className="container" style={{ maxWidth: '900px', margin: '0 auto', padding: '0 20px' }}>
+          <div className="badge-amber" style={{ marginBottom: '14px' }}>
+            <MapPin size={14} /> Greater Virginia & Central Virginia
+          </div>
+          <h1 style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.25rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.15, marginBottom: '14px' }}>
+            Get in Touch With Our Virginia Team
+          </h1>
+          <p style={{ fontSize: '1.15rem', color: '#475569', lineHeight: 1.6, maxWidth: '680px', margin: '0 auto' }}>
+            Have a home repair question, need turnover service between tenants, or managing an asset? Call, text, or email us below. A friendly team member will be happy to help.
+          </p>
         </div>
-    );
+      </section>
+
+      {/* ── 2. THREE DIRECT CONTACT CHANNELS ── */}
+      <section style={{ padding: '0 0 48px' }}>
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+            
+            {/* Card 1: Call or Text */}
+            <div className="white-card" style={{ padding: '28px', borderTop: '4px solid #F97316' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '10px', background: '#FFF7ED', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                <Phone size={24} />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
+                Call or Text Us
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: '#64748B', lineHeight: 1.5, marginBottom: '14px' }}>
+                You can even text us photos of what needs to be fixed for faster scoping!
+              </p>
+              <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
+                {companyInfo.phone}
+              </div>
+              <div style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '16px' }}>
+                Mon–Sat: 7:00 AM – 7:00 PM
+              </div>
+              <a href={`tel:${companyInfo.phoneRaw}`} className="btn-amber" style={{ padding: '8px 18px', fontSize: '0.875rem' }}>
+                <Phone size={15} /> Call or Text Now
+              </a>
+            </div>
+
+            {/* Card 2: Email Our Team */}
+            <div className="white-card" style={{ padding: '28px', borderTop: '4px solid #0F172A' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '10px', background: '#F1F5F9', color: '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                <Mail size={24} />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
+                Direct Email Dispatch
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: '#64748B', lineHeight: 1.5, marginBottom: '14px' }}>
+                Send inspection sheets, punch lists, or work order scopes. We review every note promptly.
+              </p>
+              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', marginBottom: '6px', wordBreak: 'break-all' }}>
+                {companyInfo.email}
+              </div>
+              <div style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '16px' }}>
+                Average response in 1–2 business days
+              </div>
+              <a
+                href={`mailto:${companyInfo.email}?subject=${encodeURIComponent('Service Inquiry - Homesync LLC')}`}
+                className="btn-outline-navy"
+                style={{ padding: '8px 18px', fontSize: '0.875rem' }}
+              >
+                <Mail size={15} /> Open Email to Write Us
+              </a>
+            </div>
+
+            {/* Card 3: Local Shop & Service Hub */}
+            <div className="white-card" style={{ padding: '28px', borderTop: '4px solid #CBD5E1' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '10px', background: '#F8FAFC', color: '#334155', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                <MapPin size={24} />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
+                Local Service Hub
+              </h3>
+              <p style={{ fontSize: '0.875rem', color: '#64748B', lineHeight: 1.5, marginBottom: '14px' }}>
+                Operating across Richmond, Henrico, Chesterfield, Midlothian, Hanover & Greater Virginia.
+              </p>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#0F172A', marginBottom: '6px' }}>
+                {companyInfo.address}
+              </div>
+              <div style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '16px' }}>
+                Dispatch & field truck staging
+              </div>
+              <Link to="/services" className="btn-outline-navy" style={{ padding: '8px 18px', fontSize: '0.875rem' }}>
+                View Service Areas
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. INTERACTIVE CONTACT FORM & RIGHT TRUST SIDEBAR ── */}
+      <section style={{ padding: '20px 0 60px' }}>
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px', alignItems: 'start' }}>
+            
+            {/* Form Column */}
+            <div className="white-card" style={{ padding: '32px' }}>
+              {isSent ? (
+                <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+                  <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#DEF7EC', color: '#03543F', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                    <CheckCircle2 size={32} />
+                  </div>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                    Inquiry Prepared!
+                  </h3>
+                  <p style={{ fontSize: '1rem', color: '#475569', lineHeight: 1.6, marginBottom: '24px' }}>
+                    Thank you, {formData.name || 'friend'}. We opened your email client to send your message directly to <strong>{companyInfo.email}</strong>. If your email client did not open automatically, click the button below:
+                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                    <a href={mailtoUrl} className="btn-amber">
+                      <Mail size={16} /> Open Your Email App
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setIsSent(false)}
+                      className="btn-outline-navy"
+                    >
+                      Edit Note
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <div style={{ marginBottom: '20px' }}>
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0F172A', marginBottom: '4px' }}>
+                      Send Us a Message via Email
+                    </h3>
+                    <p style={{ fontSize: '0.9rem', color: '#64748B', margin: 0 }}>
+                      Fill in your details below. Clicking send will open your email client pre-populated with your scope.
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        required
+                        placeholder="e.g. Sarah Jenkins"
+                        value={formData.name}
+                        onChange={handleChange}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.95rem' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
+                        Phone Number *
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        required
+                        placeholder="(804) 555-0123"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.95rem' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        placeholder="sarah@example.com"
+                        value={formData.email}
+                        onChange={handleChange}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.95rem' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
+                        Service Needed
+                      </label>
+                      <select
+                        name="service"
+                        value={formData.service}
+                        onChange={handleChange}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.95rem', background: '#FFF' }}
+                      >
+                        <option value="Maintenance & Handyman Repairs">Maintenance & Handyman Repairs</option>
+                        <option value="Property Preservation & Board-Ups">Property Preservation & Board-Ups</option>
+                        <option value="Full Rental Turnover Make-Ready">Full Rental Turnover Make-Ready</option>
+                        <option value="Multiple Repairs / Other">Multiple Repairs / Other</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
+                      Property Address or Neighborhood
+                    </label>
+                    <input
+                      type="text"
+                      name="address"
+                      placeholder="e.g. 1204 Grove Ave, The Fan or Short Pump"
+                      value={formData.address}
+                      onChange={handleChange}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.95rem' }}
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#334155', marginBottom: '6px' }}>
+                      Tell Us About Your Project or Questions *
+                    </label>
+                    <textarea
+                      name="message"
+                      required
+                      rows={4}
+                      placeholder="Describe what needs fixing, any timeline preferences, or specific punch-list items..."
+                      value={formData.message}
+                      onChange={handleChange}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.95rem', resize: 'vertical' }}
+                    />
+                  </div>
+
+                  {/* SMS Consent Checkbox */}
+                  <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '12px 14px', marginBottom: '20px' }}>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer', fontSize: '0.8125rem', color: '#475569', lineHeight: 1.5 }}>
+                      <input
+                        type="checkbox"
+                        name="smsConsent"
+                        checked={formData.smsConsent}
+                        onChange={handleChange}
+                        style={{ marginTop: '2px', accentColor: '#F97316' }}
+                      />
+                      <span>
+                        I agree to receive text messages from Homesync LLC about my service request. Message and data rates may apply. Reply STOP anytime to opt out.
+                      </span>
+                    </label>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn-amber"
+                    style={{ width: '100%', padding: '14px', fontSize: '1.05rem', justifyContent: 'center' }}
+                  >
+                    <Send size={18} /> Send Message to Dispatch
+                  </button>
+
+                  <div style={{ fontSize: '0.8rem', color: '#94A3B8', textAlign: 'center', marginTop: '12px' }}>
+                    We respect your privacy. Your info is never sold or shared.
+                  </div>
+                </form>
+              )}
+            </div>
+
+            {/* Right Column: Friendly Support Card with Contractor Photo */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              
+              <div className="white-card" style={{ padding: '28px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '18px' }}>
+                  <img
+                    src={contractorPhoto}
+                    alt="Mike from Homesync"
+                    style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #F97316' }}
+                  />
+                  <div>
+                    <div className="badge-amber" style={{ marginBottom: '4px' }}>
+                      Local Virginia Pro
+                    </div>
+                    <div style={{ fontWeight: 800, color: '#0F172A', fontSize: '1.1rem' }}>
+                      Prefer talking directly?
+                    </div>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: '0.95rem', color: '#475569', lineHeight: 1.6, marginBottom: '20px' }}>
+                  If you prefer speaking with a real person right away, call Mike and our team during business hours. We’re always glad to talk through a repair.
+                </p>
+
+                <a
+                  href={`tel:${companyInfo.phoneRaw}`}
+                  className="btn-amber"
+                  style={{ width: '100%', justifyContent: 'center', fontSize: '1rem', marginBottom: '14px' }}
+                >
+                  <Phone size={18} /> Call {companyInfo.phone}
+                </a>
+
+                {/* Text a Photo Callout */}
+                <div style={{ background: '#FFF7ED', border: '1px solid #FDBA74', borderRadius: '8px', padding: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: '#C2410C', marginBottom: '6px' }}>
+                    <Camera size={16} /> Text Photos of Your Repair
+                  </div>
+                  <p style={{ fontSize: '0.85rem', color: '#7C2D12', lineHeight: 1.5, margin: 0 }}>
+                    Snap 2–3 photos of the repair with your smartphone and text them directly to <strong>{companyInfo.phone}</strong>. It helps us arrive with the right tools and parts on day one!
+                  </p>
+                </div>
+              </div>
+
+              {/* Work Guarantee */}
+              <div className="white-card" style={{ padding: '24px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                  <ShieldCheck size={24} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div>
+                    <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#0F172A', marginBottom: '4px' }}>
+                      Our Workmanship Guarantee
+                    </h4>
+                    <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
+                      If something isn’t done right, we return and fix it. No runarounds, no surprise invoices.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. COVERAGE DIRECTORY IN A SINGLE LINE ── */}
+      <section style={{ padding: '40px 0 60px', borderTop: '1px solid #E2E8F0' }}>
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+            <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+              Where We Work in Greater Virginia
+            </h3>
+            <p style={{ color: '#64748B', fontSize: '0.95rem', margin: 0 }}>
+              Our service trucks are on the road six days a week throughout Greater Virginia & Central Virginia:
+            </p>
+          </div>
+
+          <div className="areas-single-line-grid">
+            {serviceAreas.map((area, idx) => (
+              <div key={idx} className="white-card" style={{ padding: '18px 16px' }}>
+                <div style={{ fontWeight: 800, color: '#0F172A', fontSize: '0.95rem', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <MapPin size={15} color="#F97316" />
+                  {area.name}
+                </div>
+                <div style={{ fontSize: '0.8125rem', color: '#64748B', lineHeight: 1.45 }}>
+                  {area.areas}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+    </div>
+  );
 }

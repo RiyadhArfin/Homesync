@@ -1,1032 +1,985 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, TreePine, Trash2, Hammer, CheckCircle2, Users, ChevronDown } from 'lucide-react';
-import TiltCard from '../components/TiltCard';
+import {
+  Wrench,
+  ShieldCheck,
+  Key,
+  ArrowRight,
+  Phone,
+  CheckCircle2,
+  Clock,
+  MapPin,
+  Camera,
+  DollarSign,
+  Send,
+  Home as HomeIcon,
+  Sparkles,
+  ArrowDown,
+  Hammer,
+} from 'lucide-react';
 import BeforeAfterSlider from '../components/BeforeAfterSlider';
-import MagneticButton from '../components/MagneticButton';
-import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
-import heroVideo from '../assets/videos/hero-video.webm';
-import heroBg from '../assets/images/hero-main.png';
-import ctaBg from '../assets/images/cta-keys.png';
-import trustBadge from '../assets/images/trust-badge.png';
-
-const mockOrders = [
-  { id: 1, type: 'Property Securing', loc: 'Richmond, VA', time: '12m ago', status: 'Completed' },
-  { id: 2, type: 'Lawn Mowing', loc: 'Henrico, VA', time: 'Just now', status: 'Active' },
-  { id: 3, type: 'Winterization', loc: 'Midlothian, VA', time: '1h ago', status: 'Completed' },
-  { id: 4, type: 'Debris Removal', loc: 'Glen Allen, VA', time: '45m ago', status: 'Completed' },
-  { id: 5, type: 'Paint Refresh', loc: 'Chesterfield, VA', time: '2h ago', status: 'Active' },
-];
+import {
+  companyInfo,
+  maintenanceServices,
+  preservationServices,
+  turnoverSteps,
+  serviceAreas,
+} from '../data/friendlyContent';
+import contractorHero from '../assets/images/contractor-hero.jpg';
+import livingRoomBefore from '../assets/images/living-room-before.jpg';
+import livingRoomAfter from '../assets/images/living-room-after.jpg';
+import exteriorBefore from '../assets/images/before-exterior.png';
+import exteriorAfter from '../assets/images/after-exterior.png';
 
 export default function HomePage() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [currentOrder, setCurrentOrder] = useState(0);
-  const heroRef = useRef<HTMLElement>(null);
-  const spotlightRef = useRef<HTMLDivElement>(null);
-  useRevealOnScroll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+  const [activeTab, setActiveTab] = useState<number>(0);
+  const [sliderTab, setSliderTab] = useState<'interior' | 'exterior'>('interior');
+  const pillarsRef = useRef<HTMLDivElement>(null);
+  const estimateRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 2,
-        y: (e.clientY / window.innerHeight - 0.5) * 2,
-      });
-    };
+  const [estimateData, setEstimateData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    service: 'Maintenance & Handyman Repairs',
+    address: '',
+    details: '',
+    smsConsent: true,
+  });
+  const [estimateSent, setEstimateSent] = useState(false);
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  const estimateMailSubject = encodeURIComponent(
+    `Free Estimate Request from ${estimateData.name || 'Website Visitor'}`
+  );
+  const estimateMailBody = encodeURIComponent(
+`Full Name: ${estimateData.name}
+Phone: ${estimateData.phone}
+Email: ${estimateData.email}
+Service Needed: ${estimateData.service}
+Property Address / Neighborhood: ${estimateData.address}
+Project Details:
+${estimateData.details}
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentOrder((prev) => (prev + 1) % mockOrders.length);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, []);
+SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
+  );
+  const estimateMailto = `mailto:${companyInfo.email}?subject=${estimateMailSubject}&body=${estimateMailBody}`;
 
-  // @property Spotlight tracker
-  useEffect(() => {
-    const hero = heroRef.current;
-    const spotlight = spotlightRef.current;
-    if (!hero || !spotlight) return;
-    const handleSpotlight = (e: MouseEvent) => {
-      const rect = hero.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      spotlight.style.setProperty('--spotlight-x', `${x}%`);
-      spotlight.style.setProperty('--spotlight-y', `${y}%`);
-      spotlight.style.opacity = '1';
-    };
-    const handleLeave = () => { spotlight.style.opacity = '0'; };
-    hero.addEventListener('mousemove', handleSpotlight);
-    hero.addEventListener('mouseleave', handleLeave);
-    return () => {
-      hero.removeEventListener('mousemove', handleSpotlight);
-      hero.removeEventListener('mouseleave', handleLeave);
-    };
-  }, []);
+  const scrollToPillars = () => {
+    pillarsRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-  const services = [
-    { title: 'Securing & Locks', icon: <ShieldCheck size={32} />, desc: 'Board-ups, re-keying, and lockbox installation.' },
-    { title: 'Lawn & Landscape', icon: <TreePine size={32} />, desc: 'Regular maintenance, mowing, and tree trimming.' },
-    { title: 'Debris Removal', icon: <Trash2 size={32} />, desc: 'Interior and exterior trash outs and dumping.' },
-    { title: 'General Repairs', icon: <Hammer size={32} />, desc: 'Safety repairs, winterization, and structural fixes.' },
-  ];
+  const scrollToEstimate = () => {
+    estimateRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSelectTab = (idx: number) => {
+    setActiveTab(idx);
+    if (window.innerWidth < 960) {
+      const el = document.getElementById(`pillar-card-${idx}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  };
+
+  const handleEstimateChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setEstimateData((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setEstimateData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleEstimateSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setEstimateSent(true);
+    window.location.href = estimateMailto;
+  };
 
   return (
-    <div className="home-page">
-      {/* ── CINEMATIC VIDEO HERO ── */}
-      <section className="hero" ref={heroRef}>
+    <div className="home-page bg-blueprint-grid" style={{ minHeight: '100vh' }}>
+      
+      {/* ── 1. HERO SECTION ── */}
+      <section style={{ padding: '40px 0 60px', borderBottom: '1px solid #E2E8F0' }}>
+        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', alignItems: 'center' }}>
+            
+            {/* Left Column: Value Proposition & Hero CTAs */}
+            <div>
+              <div className="badge-amber" style={{ marginBottom: '16px' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F97316', display: 'inline-block' }} />
+                <span>Dependable Craftsmanship in Richmond & Surrounding Counties</span>
+              </div>
 
-        {/* Video layer */}
-        <video
-          className="hero-video"
-          src={heroVideo}
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={heroBg}
-        />
+              <h1 style={{ fontSize: 'clamp(2.25rem, 5vw, 3.4rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: '18px' }}>
+                Home Repairs & Property Care Made Simple.
+              </h1>
 
-        {/* Cinematic letterbox bars */}
-        <div className="hero-letterbox hero-letterbox--top" />
-        <div className="hero-letterbox hero-letterbox--bottom" />
+              <p style={{ fontSize: '1.15rem', color: '#475569', lineHeight: 1.6, marginBottom: '28px' }}>
+                From quick handyman fixes and drywall patching to full rental turnovers and vacant property upkeep. Homesync delivers dependable workmanship, upfront pricing, and friendly service across Greater Virginia.
+              </p>
 
-        {/* Gradient overlays — depth + brand colour wash */}
-        <div className="hero-overlay hero-overlay--dark" />
-        <div className="hero-overlay hero-overlay--brand" />
-        <div className="hero-overlay hero-overlay--vignette" />
+              {/* CTAs */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center', marginBottom: '32px' }}>
+                <button
+                  type="button"
+                  onClick={scrollToEstimate}
+                  className="tactile-button-primary"
+                  style={{ padding: '14px 28px', fontSize: '1.05rem' }}
+                >
+                  <Hammer size={18} /> Get a Free Estimate
+                </button>
+                <button
+                  type="button"
+                  onClick={scrollToPillars}
+                  className="btn-outline-navy"
+                  style={{ padding: '14px 24px', fontSize: '1.05rem' }}
+                >
+                  <span>See Our 3 Services</span> <ArrowDown size={16} />
+                </button>
+              </div>
 
-        {/* Film grain noise (CSS animated) */}
-        <div className="hero-grain" aria-hidden="true" />
+              {/* Trust Badges Strip (Stitch 4-Item Grid) */}
+              <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '20px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
+                    <ShieldCheck size={18} color="#F97316" />
+                    <span>Licensed & Insured</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
+                    <DollarSign size={18} color="#F97316" />
+                    <span>Upfront Honest Pricing</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
+                    <CheckCircle2 size={18} color="#F97316" />
+                    <span>Friendly Vetted Pros</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
+                    <Sparkles size={18} color="#F97316" />
+                    <span>Free Estimates</span>
+                  </div>
+                </div>
+              </div>
 
-        {/* Glowing horizontal accent line */}
-        <div className="hero-accent-line" aria-hidden="true" />
-
-        {/* @property Mouse Spotlight */}
-        <div ref={spotlightRef} className="hero-spotlight" aria-hidden="true" />
-
-        {/* Live Dispatch Ticker Widget (Covers corner watermark/sparkle) */}
-        <div className="hero-dispatch-widget">
-          <div className="dispatch-header">
-            <span className="dispatch-pulse-dot" />
-            <span className="dispatch-title">LIVE DISPATCH FEED</span>
-          </div>
-          <div className="dispatch-body">
-            <div className="dispatch-meta">
-              <span className="dispatch-type">{mockOrders[currentOrder].type}</span>
-              <span className="dispatch-time">{mockOrders[currentOrder].time}</span>
             </div>
-            <div className="dispatch-location">
-              {mockOrders[currentOrder].loc}
+
+            {/* Right Column: Contractor Photo with Floating Credibility Badge */}
+            <div>
+              <div className="white-card" style={{ padding: '12px', position: 'relative' }}>
+                <div style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden' }}>
+                  <img
+                    src={contractorHero}
+                    alt="Homesync technician smiling in front of a clean home in Greater Virginia"
+                    style={{ width: '100%', height: '460px', objectFit: 'cover', display: 'block' }}
+                  />
+                  
+                  {/* Floating Credibility Badge (Stitch Style) */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '16px',
+                    left: '16px',
+                    right: '16px',
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(8px)',
+                    border: '1px solid #E2E8F0',
+                    padding: '14px 18px',
+                    borderRadius: '10px',
+                    boxShadow: '0 8px 24px rgba(15, 23, 42, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                  }}>
+                    <div style={{ width: '42px', height: '42px', borderRadius: '8px', background: '#FFF7ED', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Wrench size={22} />
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#0F172A', lineHeight: 1.2 }}>
+                        Serving Greater Virginia & Surrounding Counties
+                      </div>
+                      <div style={{ fontSize: '0.8125rem', color: '#64748B', marginTop: '2px' }}>
+                        Henrico, Chesterfield, Midlothian, Hanover & Beyond
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
             </div>
-            <div className={`dispatch-status-badge status-${mockOrders[currentOrder].status.toLowerCase()}`}>
-              {mockOrders[currentOrder].status}
-            </div>
+
           </div>
         </div>
-
-        {/* Frosted glass exit strip */}
-        <div className="hero-frost-exit" aria-hidden="true" />
-
-        {/* Main content */}
-        <div
-          className="container hero-content"
-          style={{
-            transform: `translate3d(${mousePos.x * -14}px, ${mousePos.y * -7}px, 0)`,
-            transition: 'transform 0.15s ease-out'
-          }}
-        >
-          {/* Animated live badge */}
-          <div className="hero-badge">
-            <span className="hero-badge-dot" />
-            Richmond, VA · Licensed &amp; Insured
-          </div>
-
-          <h1 className="hero-title">
-            Professional Property{' '}
-            <span className="highlight-text">Solutions</span>
-          </h1>
-
-          <p className="hero-subtitle">
-            Trusted by Banks, Asset Managers, and Property Owners across Virginia.
-            We secure, maintain, and renovate your assets — fast.
-          </p>
-
-          <div className="hero-cta-group">
-            <MagneticButton as="div" className="btn btn-hero-primary" strength={0.3}>
-              <Link to="/contact" style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'inherit', textDecoration: 'none' }}>
-                Get A Free Quote <ArrowRight size={20} />
-              </Link>
-            </MagneticButton>
-            <Link to="/services" className="btn btn-hero-ghost">
-              View Services
-            </Link>
-          </div>
-
-          {/* Stats row */}
-          <div className="hero-stats">
-            <div className="hero-stat"><span className="hero-stat-num">500+</span><span>Properties Served</span></div>
-            <div className="hero-stat-divider" />
-            <div className="hero-stat"><span className="hero-stat-num">24/7</span><span>Response Time</span></div>
-            <div className="hero-stat-divider" />
-            <div className="hero-stat"><span className="hero-stat-num">100%</span><span>Satisfaction</span></div>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <a href="#services-preview" className="hero-scroll-indicator" aria-label="Scroll down">
-          <ChevronDown size={22} />
-        </a>
-
       </section>
 
-      {/* Services Preview */}
-      <section className="section services-preview">
-        <div className="container">
-          <div className="section-header reveal">
-            <h2>Our Core Services</h2>
-            <p>Comprehensive property preservation and maintenance solutions.</p>
+      {/* ── 2. PINNED 3-PILLAR SERVICE SHOWCASE (3 Side-by-Side Cards) ── */}
+      <section ref={pillarsRef} style={{ padding: '70px 0', borderBottom: '1px solid #E2E8F0' }}>
+        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+          
+          <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 36px' }}>
+            <span style={{ color: '#F97316', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
+              HOW WE HELP
+            </span>
+            <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, marginBottom: '12px' }}>
+              Three Clear Ways We Care for Your Properties
+            </h2>
+            <p style={{ fontSize: '1.1rem', color: '#64748B', lineHeight: 1.6, margin: 0 }}>
+              Whether you live in your home, rent it out, or manage an entire portfolio, we have the right team for the job.
+            </p>
           </div>
 
-          <div className="services-grid">
-            {services.map((service, index) => (
-              <TiltCard key={index} className="service-card">
-                <div className="service-icon">{service.icon}</div>
-                <h3>{service.title}</h3>
-                <p>{service.desc}</p>
-                <Link to="/services" className="service-link">Learn More</Link>
-              </TiltCard>
+          {/* Interactive Tab Switcher */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
+            <div style={{ background: '#F1F5F9', border: '1px solid #E2E8F0', padding: '6px', borderRadius: '12px', display: 'inline-flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <button
+                type="button"
+                onClick={() => handleSelectTab(0)}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: activeTab === 0 ? '#0F172A' : 'transparent',
+                  color: activeTab === 0 ? '#FFFFFF' : '#475569',
+                  boxShadow: activeTab === 0 ? '0 2px 8px rgba(15, 23, 42, 0.15)' : 'none',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <Wrench size={16} color={activeTab === 0 ? '#F97316' : '#64748B'} />
+                <span>1. Maintenance & Handyman</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectTab(1)}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: activeTab === 1 ? '#0F172A' : 'transparent',
+                  color: activeTab === 1 ? '#FFFFFF' : '#475569',
+                  boxShadow: activeTab === 1 ? '0 2px 8px rgba(15, 23, 42, 0.15)' : 'none',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <ShieldCheck size={16} color={activeTab === 1 ? '#F97316' : '#64748B'} />
+                <span>2. Property Preservation</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectTab(2)}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: activeTab === 2 ? '#0F172A' : 'transparent',
+                  color: activeTab === 2 ? '#FFFFFF' : '#475569',
+                  boxShadow: activeTab === 2 ? '0 2px 8px rgba(15, 23, 42, 0.15)' : 'none',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <Key size={16} color={activeTab === 2 ? '#F97316' : '#64748B'} />
+                <span>3. Rental Turnovers</span>
+              </button>
+            </div>
+          </div>
+
+          {/* SIMULTANEOUS 3-PILLAR CARDS GRID (Stitch Layout) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '28px', alignItems: 'stretch' }}>
+            
+            {/* PILLAR 1: MAINTENANCE & HANDYMAN (Primary Focus) */}
+            <div
+              id="pillar-card-0"
+              className="white-card"
+              style={{
+                padding: '32px 28px',
+                border: activeTab === 0 ? '2px solid #F97316' : '1px solid #E2E8F0',
+                boxShadow: activeTab === 0 ? '0 12px 30px rgba(249, 115, 22, 0.15)' : '0 4px 6px -1px rgba(15, 23, 42, 0.05)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                  <span className="badge-amber" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
+                    01 · Primary Focus
+                  </span>
+                  <Wrench size={24} color="#F97316" />
+                </div>
+
+                <div style={{ display: 'inline-block', background: '#FFF7ED', color: '#9A3412', fontSize: '0.8rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', marginBottom: '12px' }}>
+                  Everyday Household Repairs
+                </div>
+
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                  Maintenance & Handyman Care
+                </h3>
+
+                <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.5, marginBottom: '20px' }}>
+                  Your dependable neighborhood crew for everyday repairs, seasonal chores, and custom home punch lists.
+                </p>
+
+                {/* 12 Handyman Trade Chips */}
+                <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '16px', marginBottom: '24px' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
+                    12 Core Trades Handled:
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {maintenanceServices.map((s) => (
+                      <span
+                        key={s.id}
+                        style={{
+                          background: '#F8FAFC',
+                          border: '1px solid #E2E8F0',
+                          borderRadius: '9999px',
+                          padding: '4px 10px',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          color: '#334155',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        <CheckCircle2 size={11} color="#F97316" />
+                        {s.title}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                <Link
+                  to="/services#maintenance"
+                  className="btn-amber"
+                  style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem', padding: '11px' }}
+                >
+                  Explore All 12 Maintenance Services <ArrowRight size={16} />
+                </Link>
+              </div>
+            </div>
+
+            {/* PILLAR 2: PROPERTY PRESERVATION */}
+            <div
+              id="pillar-card-1"
+              className="white-card"
+              style={{
+                padding: '32px 28px',
+                border: activeTab === 1 ? '2px solid #F97316' : '1px solid #E2E8F0',
+                boxShadow: activeTab === 1 ? '0 12px 30px rgba(249, 115, 22, 0.15)' : '0 4px 6px -1px rgba(15, 23, 42, 0.05)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                  <span className="badge-navy" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
+                    02 · Asset Protection
+                  </span>
+                  <ShieldCheck size={24} color="#0F172A" />
+                </div>
+
+                <div style={{ display: 'inline-block', background: '#F1F5F9', color: '#334155', fontSize: '0.8rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', marginBottom: '12px' }}>
+                  Vacant, Bank & Estate Properties
+                </div>
+
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                  Vacant Home Upkeep
+                </h3>
+
+                <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.5, marginBottom: '20px' }}>
+                  Keeping vacant, estate, and bank-owned properties secure, code-compliant, and well-maintained across Greater Virginia.
+                </p>
+
+                {/* 6 Preservation Chips */}
+                <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '16px', marginBottom: '24px' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
+                    6 Core Preservation Capabilities:
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {preservationServices.map((s) => (
+                      <span
+                        key={s.id}
+                        style={{
+                          background: '#F8FAFC',
+                          border: '1px solid #E2E8F0',
+                          borderRadius: '9999px',
+                          padding: '4px 10px',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          color: '#334155',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        <CheckCircle2 size={11} color="#0F172A" />
+                        {s.title}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                <Link
+                  to="/services#preservation"
+                  className="btn-outline-navy"
+                  style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem', padding: '11px' }}
+                >
+                  View Preservation Details <ArrowRight size={16} />
+                </Link>
+              </div>
+            </div>
+
+            {/* PILLAR 3: FULL RENTAL TURNOVERS */}
+            <div
+              id="pillar-card-2"
+              className="white-card"
+              style={{
+                padding: '32px 28px',
+                border: activeTab === 2 ? '2px solid #F97316' : '1px solid #E2E8F0',
+                boxShadow: activeTab === 2 ? '0 12px 30px rgba(249, 115, 22, 0.15)' : '0 4px 6px -1px rgba(15, 23, 42, 0.05)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                  <span className="badge-amber" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
+                    03 · Turnkey Make-Ready
+                  </span>
+                  <Key size={24} color="#F97316" />
+                </div>
+
+                <div style={{ display: 'inline-block', background: '#FFF7ED', color: '#9A3412', fontSize: '0.8rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', marginBottom: '12px' }}>
+                  Fast Landlord Make-Readies
+                </div>
+
+                <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                  Full Rental Turnovers
+                </h3>
+
+                <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.5, marginBottom: '20px' }}>
+                  Thorough make-ready turnarounds between tenants so you can re-lease quickly with zero vacancy headache.
+                </p>
+
+                {/* 4 Turnover Stages */}
+                <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '16px', marginBottom: '24px' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
+                    4-Stage Make-Ready System:
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {turnoverSteps.map((step) => (
+                      <div key={step.step} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 10px', fontSize: '0.8rem' }}>
+                        <span style={{ fontWeight: 700, color: '#0F172A' }}>
+                          Stage {step.step}: {step.title.split('&')[0]}
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: '#F97316', fontWeight: 700 }}>{step.duration}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                <Link
+                  to="/services#turnover"
+                  className="btn-outline-navy"
+                  style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem', padding: '11px' }}
+                >
+                  See Full Turnover Checklist <ArrowRight size={16} />
+                </Link>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── 3. TRANSFORMATION SLIDER + 3 CUSTOMER GUARANTEES (Stitch Layout) ── */}
+      <section style={{ padding: '70px 0', borderBottom: '1px solid #E2E8F0' }}>
+        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+          
+          <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 28px' }}>
+            <span style={{ color: '#F97316', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
+              PROVEN CRAFTSMANSHIP
+            </span>
+            <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, marginBottom: '10px' }}>
+              Real Results You Can See
+            </h2>
+            <p style={{ fontSize: '1.05rem', color: '#64748B', maxWidth: '640px', margin: '0 auto 20px' }}>
+              Slide to inspect how we transform cluttered, damaged spaces into clean, move-in-ready rooms.
+            </p>
+
+            {/* Toggle Tabs */}
+            <div style={{ display: 'inline-flex', background: '#F1F5F9', border: '1px solid #E2E8F0', padding: '4px', borderRadius: '10px', gap: '6px' }}>
+              <button
+                type="button"
+                onClick={() => setSliderTab('interior')}
+                style={{
+                  padding: '8px 18px',
+                  borderRadius: '6px',
+                  border: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  background: sliderTab === 'interior' ? '#0F172A' : 'transparent',
+                  color: sliderTab === 'interior' ? '#FFFFFF' : '#475569',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                Interior Rental Turnover
+              </button>
+              <button
+                type="button"
+                onClick={() => setSliderTab('exterior')}
+                style={{
+                  padding: '8px 18px',
+                  borderRadius: '6px',
+                  border: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  background: sliderTab === 'exterior' ? '#0F172A' : 'transparent',
+                  color: sliderTab === 'exterior' ? '#FFFFFF' : '#475569',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                Exterior Property Restoration
+              </button>
+            </div>
+          </div>
+
+          {/* Slider Container */}
+          <div className="white-card" style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto 40px' }}>
+            {sliderTab === 'interior' ? (
+              <BeforeAfterSlider
+                beforeImage={livingRoomBefore}
+                afterImage={livingRoomAfter}
+                title="Living Room Turnaround: Worn Carpet & Drywall Cracks to Fresh Hardwoods"
+                subtitle="Untidy rental unit prepped, patched, painted, and refreshed with new floors in 4 days."
+              />
+            ) : (
+              <BeforeAfterSlider
+                beforeImage={exteriorBefore}
+                afterImage={exteriorAfter}
+                title="Exterior Curb Appeal & Porch Restoration"
+                subtitle="Overgrowth cleared, siding power washed, and trim repaired for full curb appeal."
+              />
+            )}
+          </div>
+
+          {/* 3 Customer Guarantee Cards (Stitch Feature) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', maxWidth: '1000px', margin: '0 auto' }}>
+            
+            <div className="white-card" style={{ padding: '24px', display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: '#DEF7EC', color: '#03543F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <ShieldCheck size={22} />
+              </div>
+              <div>
+                <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0F172A', marginBottom: '4px' }}>
+                  100% Quality Guarantee
+                </h4>
+                <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
+                  If something isn’t done right the first time, our crew comes back and makes it right. No runarounds, no excuses.
+                </p>
+              </div>
+            </div>
+
+            <div className="white-card" style={{ padding: '24px', display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: '#FFF7ED', color: '#C2410C', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Camera size={22} />
+              </div>
+              <div>
+                <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0F172A', marginBottom: '4px' }}>
+                  Photo Proof on Every Job
+                </h4>
+                <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
+                  We take date-stamped before-and-after photos of every repair so you have total transparency, even if you are out of state.
+                </p>
+              </div>
+            </div>
+
+            <div className="white-card" style={{ padding: '24px', display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: '#F1F5F9', color: '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <DollarSign size={22} />
+              </div>
+              <div>
+                <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0F172A', marginBottom: '4px' }}>
+                  No Surprise Fees
+                </h4>
+                <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
+                  Itemized written estimates upfront. If unexpected repairs arise behind a wall, we discuss and get approval before proceeding.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── 4. WHO WE HELP (3 Personas) ── */}
+      <section style={{ padding: '70px 0', borderBottom: '1px solid #E2E8F0' }}>
+        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+          
+          <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 40px' }}>
+            <span style={{ color: '#0F172A', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
+              TAILORED SOLUTIONS
+            </span>
+            <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#0F172A', marginBottom: '10px' }}>
+              Tailored Care for Every Property Type
+            </h2>
+            <p style={{ fontSize: '1.05rem', color: '#64748B', margin: 0 }}>
+              Different properties need different care. Here is how we support our neighbors across Greater Virginia:
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+            
+            {/* Persona 1: Homeowners */}
+            <div className="white-card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#FFF7ED', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px' }}>
+                  <HomeIcon size={24} />
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '10px' }}>
+                  Homeowners & Families
+                </h3>
+                <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '20px' }}>
+                  Take your weekends back. Stop putting off that squeaky door, damaged drywall, or seasonal pressure washing. We arrive on time and take care of your punch list cleanly.
+                </p>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem', color: '#334155' }}>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle2 size={15} color="#F97316" /> Clear, upfront price estimates
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle2 size={15} color="#F97316" /> Respectful, clean technicians
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle2 size={15} color="#F97316" /> Single point of contact for multiple trades
+                  </li>
+                </ul>
+              </div>
+              <Link to="/get-quote?category=maintenance" className="btn-outline-navy" style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem' }}>
+                Book Home Repairs
+              </Link>
+            </div>
+
+            {/* Persona 2: Landlords */}
+            <div className="white-card" style={{ padding: '32px', borderTop: '4px solid #0F172A', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#F1F5F9', color: '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px' }}>
+                  <Key size={24} />
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '10px' }}>
+                  Landlords & Property Managers
+                </h3>
+                <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '20px' }}>
+                  Minimize vacancy periods. We provide fast tenant turnover make-readies, emergency maintenance dispatches, and date-stamped photo logs so you can lease with confidence.
+                </p>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem', color: '#334155' }}>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle2 size={15} color="#F97316" /> Fast make-ready turnarounds
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle2 size={15} color="#F97316" /> Detailed room-by-room move-out logs
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle2 size={15} color="#F97316" /> Lock rekeying & smoke alarm checks
+                  </li>
+                </ul>
+              </div>
+              <Link to="/get-quote?category=turnover" className="btn-outline-navy" style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem' }}>
+                Schedule Unit Turnover
+              </Link>
+            </div>
+
+            {/* Persona 3: Investors */}
+            <div className="white-card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#FFF7ED', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px' }}>
+                  <ShieldCheck size={24} />
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '10px' }}>
+                  Real Estate Investors & Lenders
+                </h3>
+                <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '20px' }}>
+                  Protect the physical condition and equity of vacant assets. We handle initial inspections, board-ups, lawn mowing compliance, and winterization for out-of-town owners.
+                </p>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem', color: '#334155' }}>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle2 size={15} color="#F97316" /> Comprehensive date-stamped photo proof
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle2 size={15} color="#F97316" /> Code violation prevention (lawn/debris)
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle2 size={15} color="#F97316" /> Rekey to master codes & lockbox placement
+                  </li>
+                </ul>
+              </div>
+              <Link to="/get-quote?category=preservation" className="btn-outline-navy" style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem' }}>
+                Preserve Vacant Asset
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. DIRECT FREE ESTIMATE FORM ON HOME PAGE (Stitch Feature) ── */}
+      <section ref={estimateRef} style={{ padding: '70px 0', borderBottom: '1px solid #E2E8F0' }}>
+        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+          
+          <div style={{
+            background: '#0F172A',
+            color: '#FFFFFF',
+            borderRadius: '24px',
+            padding: 'clamp(28px, 5vw, 56px)',
+            boxShadow: '0 20px 40px rgba(15, 23, 42, 0.2)',
+          }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', alignItems: 'center' }}>
+              
+              {/* Left Column: Direct Contact & Info */}
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', padding: '6px 14px', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: 700, color: '#FDBA74', marginBottom: '18px' }}>
+                  <Clock size={15} color="#F97316" /> Prompt, Friendly Scheduling
+                </div>
+                
+                <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.2, marginBottom: '18px' }}>
+                  Ready to check those repairs off your list?
+                </h2>
+
+                <p style={{ fontSize: '1.1rem', color: '#CBD5E1', lineHeight: 1.6, marginBottom: '28px' }}>
+                  Request a free estimate online or give us a call today. We’re happy to help with any home maintenance, preservation, or rental turnover project across Greater Virginia.
+                </p>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', borderTop: '1px solid rgba(255,255,255,0.12)', paddingTop: '20px' }}>
+                  <a href={`tel:${companyInfo.phoneRaw}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', color: '#FFFFFF', textDecoration: 'none', fontSize: '1.25rem', fontWeight: 800 }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Phone size={20} color="#FFFFFF" />
+                    </div>
+                    <span>{companyInfo.phone}</span>
+                  </a>
+                  <div style={{ fontSize: '0.875rem', color: '#94A3B8' }}>
+                    {companyInfo.hours} · Greater Virginia & Surrounding Counties
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Embedded Free Estimate Card */}
+              <div className="white-card" style={{ padding: '32px', color: '#0F172A' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0F172A', marginBottom: '4px' }}>
+                  Request a Free Estimate
+                </h3>
+                <p style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '20px' }}>
+                  Tell us about your home project. Submitting opens your email client directly.
+                </p>
+
+                {estimateSent ? (
+                  <div style={{ textAlign: 'center', padding: '24px 12px' }}>
+                    <CheckCircle2 size={40} color="#059669" style={{ margin: '0 auto 12px' }} />
+                    <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
+                      Estimate Request Ready!
+                    </h4>
+                    <p style={{ fontSize: '0.9rem', color: '#475569', marginBottom: '16px' }}>
+                      We opened your email app to send directly to <strong>{companyInfo.email}</strong>. If your email app did not open automatically, click below:
+                    </p>
+                    <a href={estimateMailto} className="btn-amber" style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem' }}>
+                      <Send size={15} /> Click to Send Email
+                    </a>
+                  </div>
+                ) : (
+                  <form onSubmit={handleEstimateSubmit}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                          Your Name *
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          required
+                          placeholder="John Miller"
+                          value={estimateData.name}
+                          onChange={handleEstimateChange}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                          Phone Number *
+                        </label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          required
+                          placeholder="(804) 555-0123"
+                          value={estimateData.phone}
+                          onChange={handleEstimateChange}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem' }}
+                        />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                          Email Address *
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          required
+                          placeholder="john@example.com"
+                          value={estimateData.email}
+                          onChange={handleEstimateChange}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                          Service Needed
+                        </label>
+                        <select
+                          name="service"
+                          value={estimateData.service}
+                          onChange={handleEstimateChange}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem', background: '#FFF' }}
+                        >
+                          <option value="Maintenance & Handyman Repairs">Maintenance & Handyman Repairs</option>
+                          <option value="Property Preservation & Board-Ups">Property Preservation & Board-Ups</option>
+                          <option value="Full Rental Turnover Make-Ready">Full Rental Turnover Make-Ready</option>
+                          <option value="Multiple Repairs / Other">Multiple Repairs / Other</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div style={{ marginBottom: '12px' }}>
+                      <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                        Property Address or Neighborhood
+                      </label>
+                      <input
+                        type="text"
+                        name="address"
+                        placeholder="e.g. 1204 Grove Ave, The Fan or Short Pump"
+                        value={estimateData.address}
+                        onChange={handleEstimateChange}
+                        style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem' }}
+                      />
+                    </div>
+
+                    <div style={{ marginBottom: '14px' }}>
+                      <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                        Project Details / Notes
+                      </label>
+                      <textarea
+                        name="details"
+                        rows={2}
+                        placeholder="Briefly describe what needs fixing..."
+                        value={estimateData.details}
+                        onChange={handleEstimateChange}
+                        style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem', resize: 'vertical' }}
+                      />
+                    </div>
+
+                    <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '10px 12px', marginBottom: '16px' }}>
+                      <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', cursor: 'pointer', fontSize: '0.78rem', color: '#475569', lineHeight: 1.4 }}>
+                        <input
+                          type="checkbox"
+                          name="smsConsent"
+                          checked={estimateData.smsConsent}
+                          onChange={handleEstimateChange}
+                          style={{ marginTop: '2px', accentColor: '#F97316' }}
+                        />
+                        <span>
+                          I agree to receive text messages from Homesync LLC about my service request. Message and data rates may apply. Reply STOP anytime.
+                        </span>
+                      </label>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="tactile-button-primary"
+                      style={{ width: '100%', padding: '12px', fontSize: '1rem', justifyContent: 'center' }}
+                    >
+                      <Send size={16} /> Send Estimate Request
+                    </button>
+                    <p style={{ fontSize: '0.75rem', color: '#64748B', textAlign: 'center', marginTop: '8px', marginBottom: 0 }}>
+                      Opens your email app directly addressed to {companyInfo.email}.
+                    </p>
+                  </form>
+                )}
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── 6. WHERE WE WORK IN GREATER VIRGINIA (Single Line 5-Column Grid) ── */}
+      <section style={{ padding: '60px 0', borderBottom: '1px solid #E2E8F0' }}>
+        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+              Where We Work in Greater Virginia
+            </h3>
+            <p style={{ color: '#64748B', fontSize: '1rem', margin: 0 }}>
+              Our service trucks are on the road six days a week throughout Greater Virginia & Central Virginia:
+            </p>
+          </div>
+
+          <div className="areas-single-line-grid">
+            {serviceAreas.map((area, idx) => (
+              <div key={idx} className="white-card" style={{ padding: '18px 16px' }}>
+                <div style={{ fontWeight: 800, color: '#0F172A', fontSize: '0.95rem', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <MapPin size={15} color="#F97316" />
+                  {area.name}
+                </div>
+                <div style={{ fontSize: '0.8rem', color: '#64748B', lineHeight: 1.45 }}>
+                  {area.areas}
+                </div>
+              </div>
             ))}
           </div>
 
-          <div className="view-all-container">
-            <Link to="/services" className="btn btn-glass-prominent">
-              View All Services <ArrowRight size={20} />
-            </Link>
+          <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.9rem', color: '#64748B' }}>
+            Don’t see your exact town listed? If you are in Greater Virginia or surrounding counties, call or text us at <strong>{companyInfo.phone}</strong>.
           </div>
         </div>
       </section>
 
-      {/* Trust / About Preview */}
-      <section className="section trust-section">
-        <div className="container">
-          <div className="section-header reveal">
-            <h2>Why Choose Homesync?</h2>
-            <p>We deliver LLC-grade professionalism with every work order.</p>
-            <p className="trust-lead-centered">Our team is dedicated to speed, compliance, and quality across all services.</p>
-          </div>
-
-          <div className="grid-2-col">
-            <div className="trust-content reveal-left">
-              <ul className="trust-list">
-                <li>
-                  <CheckCircle2 size={24} className="trust-icon" />
-                  <div>
-                    <strong>Reliable & Timely</strong>
-                    <p>We meet strict deadlines for inspections and repairs.</p>
-                  </div>
-                </li>
-                <li>
-                  <CheckCircle2 size={24} className="trust-icon" />
-                  <div>
-                    <strong>Fully Compliant</strong>
-                    <p>Adhering to all local codes and asset management standards.</p>
-                  </div>
-                </li>
-                <li>
-                  <CheckCircle2 size={24} className="trust-icon" />
-                  <div>
-                    <strong>Quality Craftsmanship</strong>
-                    <p>From cleanouts to renovations, we do it right seamlessly.</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-            <div className="trust-visual reveal-right">
-              <div className="trust-badge-container">
-                <img src={trustBadge} alt="Certified Professional" className="trust-badge-img" />
-              </div>
-              <div className="stat-card">
-                <span className="stat-number">100%</span>
-                <span className="stat-label">Client Satisfaction</span>
-              </div>
-              <div className="stat-card">
-                <span className="stat-number">24/7</span>
-                <span className="stat-label">Response Time</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="view-all-container">
-            <Link to="/about" className="btn btn-outline-strong">
-              Meet The Team <Users size={20} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Before/After Section */}
-      <section className="section" style={{ padding: '40px 0 100px 0' }}>
-        <div className="container">
-          <BeforeAfterSlider />
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="cta-strip">
-        <div className="cta-overlay"></div>
-        <div className="container cta-content">
-          <h2 className="reveal" data-delay="0">Ready to secure your property?</h2>
-          <p className="reveal" data-delay="100">Contact us today for a free consultation or quote.</p>
-          <div className="reveal" data-delay="200">
-            <MagneticButton as="div" strength={0.25}>
-              <Link to="/contact" className="btn btn-primary-inverse">Contact Us Now</Link>
-            </MagneticButton>
-          </div>
-        </div>
-      </section>
-
-      <style>{`
-        .home-page {
-          overflow-x: hidden;
-        }
-
-        /* ─── HERO ─────────────────────────────────── */
-        .hero {
-          position: relative;
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          color: white;
-        }
-
-        /* Video fills the frame */
-        .hero-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          z-index: 0;
-          /* Technique 1: iris clip-path reveal */
-          animation: iris-open 1.4s cubic-bezier(0.22, 1, 0.36, 1) both,
-                     hero-zoom-scroll linear both;
-        }
-
-        @keyframes iris-open {
-          0%   { clip-path: inset(48% 48% round 50%); opacity: 0.4; }
-          60%  { clip-path: inset(2% 2% round 4px); opacity: 1; }
-          100% { clip-path: inset(0% 0% round 0px); opacity: 1; }
-        }
-
-        /* Technique 3: scroll-driven zoom-out */
-        @supports (animation-timeline: scroll()) {
-          .hero-video {
-            animation-name: iris-open, hero-zoom-scroll;
-            animation-duration: 1.4s, auto;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), linear;
-            animation-fill-mode: both, both;
-            animation-timeline: auto, scroll(root block);
-            animation-range: auto, 0% 55%;
-          }
-          @keyframes hero-zoom-scroll {
-            from { transform: scale(1.06); filter: brightness(1); }
-            to   { transform: scale(1.22); filter: brightness(0.45); }
-          }
-        }
-
-        /* Letterbox cinema bars */
-        .hero-letterbox {
-          position: absolute;
-          left: 0;
-          right: 0;
-          height: clamp(24px, 4vw, 56px);
-          background: #000;
-          z-index: 3;
-          animation: letterbox-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-        .hero-letterbox--top    { top: 0; transform-origin: top; }
-        .hero-letterbox--bottom { bottom: 0; transform-origin: bottom; }
-
-        @keyframes letterbox-in {
-          from { transform: scaleY(3); }
-          to   { transform: scaleY(1); }
-        }
-
-        /* Overlay layers */
-        .hero-overlay { position: absolute; inset: 0; }
-        .hero-overlay--dark   { background: linear-gradient(180deg, rgba(5,10,24,0.55) 0%, rgba(5,10,24,0.72) 100%); z-index: 1; }
-        .hero-overlay--brand  { background: linear-gradient(135deg, rgba(10,28,58,0.65) 0%, transparent 60%); z-index: 1; }
-        .hero-overlay--vignette { background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%); z-index: 1; }
-
-        /* Film grain */
-        .hero-grain {
-          position: absolute;
-          inset: 0;
-          z-index: 2;
-          opacity: 0.04;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-          background-size: 180px;
-          animation: grain-shift 0.4s steps(1) infinite;
-          pointer-events: none;
-        }
-        @keyframes grain-shift {
-          0%  { background-position: 0 0; }
-          25% { background-position: -30px 10px; }
-          50% { background-position: 10px -20px; }
-          75% { background-position: -20px 30px; }
-        }
-
-        /* Horizontal glowing accent line */
-        .hero-accent-line {
-          position: absolute;
-          bottom: 35%;
-          left: 0;
-          right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent 0%, var(--accent) 30%, #00aaff 50%, var(--accent) 70%, transparent 100%);
-          opacity: 0.25;
-          z-index: 3;
-          animation: accent-line-in 2s ease-out 0.5s both;
-        }
-        @keyframes accent-line-in {
-          from { opacity: 0; transform: scaleX(0); }
-          to   { opacity: 0.25; transform: scaleX(1); }
-        }
-
-        /* Content */
-        .hero-content {
-          position: relative;
-          z-index: 4;
-          max-width: 920px;
-          margin: 0 auto;
-          text-align: center;
-          padding-top: 80px;
-        }
-
-        /* Live badge */
-        .hero-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.18);
-          backdrop-filter: blur(8px);
-          border-radius: 100px;
-          padding: 8px 20px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          color: rgba(255,255,255,0.9);
-          margin-bottom: 28px;
-          animation: fadeInUp 0.8s ease-out 0.3s both;
-        }
-        .hero-badge-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: #22c55e;
-          box-shadow: 0 0 0 0 rgba(34,197,94,0.5);
-          animation: pulse-dot 2s ease-in-out infinite;
-        }
-        @keyframes pulse-dot {
-          0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
-          50%      { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
-        }
-
-        .hero-title {
-          font-size: clamp(2.6rem, 6vw, 5rem);
-          font-weight: 900;
-          line-height: 1.05;
-          letter-spacing: -0.03em;
-          margin-bottom: 24px;
-          animation: fadeInUp 0.8s ease-out 0.5s both,
-                     text-shimmer 5s linear 1.5s infinite;
-          /* Technique 4: shimmer sweep */
-          background: linear-gradient(
-            90deg,
-            rgba(255,255,255,0.95) 20%,
-            rgba(147,210,255,1)    40%,
-            rgba(255,255,255,1)    50%,
-            rgba(147,210,255,1)    60%,
-            rgba(255,255,255,0.95) 80%
-          );
-          background-size: 250% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          text-shadow: none;
-        }
-
-        @keyframes text-shimmer {
-          from { background-position: 200% center; }
-          to   { background-position: -200% center; }
-        }
-
-        .highlight-text {
-          color: transparent;
-          background: linear-gradient(90deg, #60b4ff 0%, #a8d8ff 50%, #0063a6 100%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          display: inline-block;
-          position: relative;
-        }
-
-        /* Technique 2: @property Spotlight */
-        @property --spotlight-x { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
-        @property --spotlight-y { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
-
-        .hero-spotlight {
-          position: absolute;
-          inset: 0;
-          z-index: 2;
-          pointer-events: none;
-          opacity: 0;
-          transition: opacity 0.6s ease, --spotlight-x 0.08s ease-out, --spotlight-y 0.08s ease-out;
-          background: radial-gradient(
-            circle 380px at var(--spotlight-x) var(--spotlight-y),
-            rgba(100, 180, 255, 0.12) 0%,
-            rgba(100, 180, 255, 0.04) 50%,
-            transparent 100%
-          );
-        }
-
-        /* Technique 5: frosted glass exit strip */
-        .hero-frost-exit {
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          height: 180px;
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
-          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
-          z-index: 5;
-          pointer-events: none;
-        }
-
-        /* ─── LIVE DISPATCH WIDGET ────────────────── */
-        .hero-dispatch-widget {
-          position: absolute;
-          bottom: clamp(64px, 6vw, 85px);
-          right: clamp(20px, 4vw, 48px);
-          z-index: 10;
-          width: 250px;
-          background: rgba(10, 25, 50, 0.55);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          border: 1px solid rgba(147, 210, 255, 0.25);
-          border-radius: 12px;
-          padding: 14px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(96, 180, 255, 0.15);
-          animation: fadeInUp 0.3s ease-out both;
-          text-align: left;
-        }
-
-        .dispatch-header {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          padding-bottom: 8px;
-          margin-bottom: 10px;
-        }
-
-        .dispatch-pulse-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #60b4ff;
-          box-shadow: 0 0 8px #60b4ff;
-          animation: dispatch-pulse 1.8s ease-in-out infinite;
-        }
-
-        @keyframes dispatch-pulse {
-          0%, 100% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.35); opacity: 0.45; }
-        }
-
-        .dispatch-title {
-          font-size: 0.72rem;
-          font-weight: 800;
-          letter-spacing: 0.08em;
-          color: rgba(255, 255, 255, 0.7);
-        }
-
-        .dispatch-body {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-
-        .dispatch-meta {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .dispatch-type {
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #fff;
-        }
-
-        .dispatch-time {
-          font-size: 0.75rem;
-          color: rgba(255, 255, 255, 0.55);
-        }
-
-        .dispatch-location {
-          font-size: 0.8rem;
-          color: rgba(255, 255, 255, 0.8);
-        }
-
-        .dispatch-status-badge {
-          align-self: flex-start;
-          font-size: 0.68rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          padding: 3px 8px;
-          border-radius: 4px;
-          margin-top: 4px;
-        }
-
-        .dispatch-status-badge.status-completed {
-          background: rgba(34, 197, 94, 0.15);
-          color: #4ade80;
-          border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-
-        .dispatch-status-badge.status-active {
-          background: rgba(96, 180, 255, 0.15);
-          color: #60b4ff;
-          border: 1px solid rgba(96, 180, 255, 0.3);
-        }
-
-        .hero-subtitle {
-          font-size: clamp(1rem, 2vw, 1.25rem);
-          color: rgba(255,255,255,0.8);
-          max-width: 640px;
-          margin: 0 auto 40px;
-          line-height: 1.7;
-          animation: fadeInUp 0.8s ease-out 0.7s both;
-        }
-
-        .hero-cta-group {
-          display: flex;
-          gap: 16px;
-          justify-content: center;
-          flex-wrap: wrap;
-          margin-bottom: 60px;
-          animation: fadeInUp 0.8s ease-out 0.9s both;
-        }
-
-        .btn-hero-primary {
-          background: var(--accent);
-          color: white;
-          padding: 16px 36px;
-          border-radius: 8px;
-          font-size: 1.05rem;
-          font-weight: 700;
-          box-shadow: 0 0 32px rgba(0,99,166,0.5);
-          transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
-          cursor: pointer;
-        }
-        .btn-hero-primary:hover {
-          background: #0079cc;
-          box-shadow: 0 0 48px rgba(0,99,166,0.8);
-          transform: translateY(-2px);
-        }
-
-        .btn-hero-ghost {
-          background: rgba(255,255,255,0.08);
-          color: white;
-          border: 1.5px solid rgba(255,255,255,0.35);
-          backdrop-filter: blur(8px);
-          padding: 16px 36px;
-          border-radius: 8px;
-          font-size: 1.05rem;
-          font-weight: 600;
-          transition: all 0.3s ease;
-        }
-        .btn-hero-ghost:hover {
-          background: rgba(255,255,255,0.18);
-          border-color: rgba(255,255,255,0.7);
-        }
-
-        /* Stats row */
-        .hero-stats {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 32px;
-          flex-wrap: wrap;
-          animation: fadeInUp 0.8s ease-out 1.1s both;
-        }
-        .hero-stat {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 2px;
-        }
-        .hero-stat-num {
-          font-size: 1.6rem;
-          font-weight: 800;
-          color: #60b4ff;
-          line-height: 1;
-        }
-        .hero-stat span:last-child {
-          font-size: 0.78rem;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          color: rgba(255,255,255,0.55);
-          font-weight: 500;
-        }
-        .hero-stat-divider {
-          width: 1px;
-          height: 36px;
-          background: rgba(255,255,255,0.2);
-        }
-
-        /* Scroll indicator */
-        .hero-scroll-indicator {
-          position: absolute;
-          bottom: 32px;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 4;
-          color: rgba(255,255,255,0.5);
-          animation: scroll-bounce 2s ease-in-out infinite, fadeIn 1s ease-out 1.5s both;
-          transition: color 0.2s;
-        }
-        .hero-scroll-indicator:hover { color: white; }
-        @keyframes scroll-bounce {
-          0%,100% { transform: translateX(-50%) translateY(0); }
-          50%      { transform: translateX(-50%) translateY(8px); }
-        }
-
-        /* Sections */
-        .section {
-          padding: 120px 0;
-        }
-
-        .section-header {
-          text-align: center;
-          margin-bottom: 80px;
-        }
-
-        .section-header h2 {
-          font-size: 2.5rem;
-          color: var(--primary);
-          margin-bottom: 16px;
-        }
-        
-        body.dark .section-header h2 {
-            color: var(--text-light);
-        }
-        
-        .section-header p {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        body.dark .section-header p {
-            color: var(--text-dark-secondary);
-        }
-
-        .services-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 40px;
-          margin-bottom: 64px;
-        }
-
-        .service-card {
-          padding: 40px;
-          background: white;
-          border-radius: 12px; /* Modern rounding */
-          box-shadow: var(--shadow-sm);
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          border: 1px solid var(--surface-2);
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          position: relative;
-          overflow: hidden;
-        }
-        
-        body.dark .service-card {
-            background: var(--surface-dark-2);
-            border-color: var(--glass-border-dark);
-        }
-
-        @supports (animation-timeline: view()) {
-          .service-card {
-            animation: fade-in-up linear both;
-            animation-timeline: view();
-            animation-range: entry 10% cover 30%;
-          }
-        }
-
-        @keyframes fade-in-up {
-          0% {
-            opacity: 0;
-            transform: translateY(100px) scale(0.9);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-
-        .service-card:hover {
-          transform: translateY(-8px);
-          box-shadow: var(--shadow-xl);
-          border-color: var(--accent);
-        }
-
-        .service-icon {
-          color: var(--accent);
-          margin-bottom: 24px;
-          background: var(--accent-light);
-          width: 64px;
-          height: 64px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 12px;
-        }
-        
-        body.dark .service-icon {
-            background: rgba(245, 158, 11, 0.1);
-        }
-
-        .service-card h3 {
-          font-size: 1.5rem;
-          margin-bottom: 16px;
-        }
-
-        .service-link {
-          display: inline-flex;
-          align-items: center;
-          margin-top: auto;
-          padding-top: 24px;
-          color: var(--primary);
-          font-weight: 700;
-          font-size: 0.95rem;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-        
-        .service-link::after {
-            content: '→';
-            margin-left: 8px;
-            transition: transform 0.2s;
-        }
-        
-        .service-link:hover::after {
-            transform: translateX(4px);
-        }
-        
-        body.dark .service-link {
-          color: var(--text-dark-secondary);
-        }
-        
-        body.dark .service-link:hover {
-          color: var(--accent);
-        }
-        
-        .view-all-container {
-            text-align: center;
-            margin-top: 48px;
-        }
-
-        /* Trust Section with Glassmorphism */
-        .trust-section {
-          background-color: var(--bg-light);
-          position: relative;
-        }
-        
-        body.dark .trust-section {
-            background-color: var(--bg-dark);
-        }
-
-        .grid-2-col {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 80px;
-          align-items: center;
-        }
-
-        @media (min-width: 992px) {
-          .grid-2-col {
-            grid-template-columns: 1.2fr 1fr;
-          }
-        }
-        
-        .trust-lead-centered {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-top: 16px;
-            line-height: 1.6;
-        }
-        body.dark .trust-lead-centered {
-            color: var(--text-dark-secondary);
-        }
-
-        .trust-list {
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 32px;
-        }
-
-        .trust-list li {
-          display: flex;
-          gap: 20px;
-          align-items: flex-start;
-        }
-
-        .trust-icon {
-          color: var(--accent);
-          flex-shrink: 0;
-          margin-top: 2px;
-          background: white;
-          border-radius: 50%;
-          box-shadow: var(--shadow-sm);
-        }
-        
-        body.dark .trust-icon {
-            background: var(--surface-dark-2);
-        }
-        
-        .trust-list strong {
-            display: block;
-            font-size: 1.15rem;
-            margin-bottom: 4px;
-            color: var(--primary);
-        }
-        
-        body.dark .trust-list strong {
-            color: var(--text-light);
-        }
-
-        .trust-visual {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-            grid-auto-flow: dense;
-        }
-        
-        @media (min-width: 768px) {
-            .trust-visual {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        
-        .trust-badge-container {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 24px;
-        }
-
-        .trust-badge-img {
-            height: 120px;
-            width: auto;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .stat-card {
-            background: white;
-            color: var(--primary);
-            padding: 48px 32px;
-            text-align: center;
-            border-radius: 16px;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--surface-2);
-        }
-        
-        body.dark .stat-card {
-            background: var(--surface-dark-2);
-            color: var(--text-light);
-            border-color: var(--glass-border-dark);
-        }
-        
-        .stat-number {
-            display: block;
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 8px;
-            line-height: 1;
-        }
-        
-        .stat-label {
-            font-size: 1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-secondary);
-        }
-        
-        body.dark .stat-label {
-            color: var(--text-dark-secondary);
-        }
-
-        /* CTA Strip */
-        .cta-strip {
-          padding: 100px 0;
-          background-image: url(${ctaBg});
-          background-size: cover;
-          background-position: center;
-          color: white;
-          text-align: center;
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .cta-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.8));
-            z-index: 1;
-        }
-        
-        .cta-content {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .cta-content h2 {
-          font-size: 3rem;
-          margin-bottom: 24px;
-        }
-
-        .cta-content p {
-          margin-bottom: 40px;
-          font-size: 1.5rem;
-          color: var(--text-dark-secondary);
-        }
-      `}</style>
     </div>
   );
 }

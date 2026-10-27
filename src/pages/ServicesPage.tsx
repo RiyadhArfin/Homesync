@@ -1,638 +1,947 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { TreePine, Trash2, Hammer, ClipboardCheck, Home, Key, ChevronDown } from 'lucide-react';
-import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
-import handymanVideo from '../assets/videos/handyman-service.webm';
-import serviceLock from '../assets/images/service-lock.png';
-import serviceLawn from '../assets/images/service-lawn.png';
-import serviceDebris from '../assets/images/service-debris.png';
-import featureInspection from '../assets/images/feature-inspection.png';
-import serviceRepair from '../assets/images/service-repair.png';
-import heroServices from '../assets/images/hero-services.png';
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import {
+  Wrench,
+  ShieldCheck,
+  Key,
+  ArrowRight,
+  Phone,
+  CheckCircle2,
+  Check,
+  ChevronRight,
+  Flame,
+  Paintbrush,
+  Layers,
+  Hammer,
+  Fence,
+  Trash2,
+  Droplets,
+  DoorClosed,
+  Home as HomeIcon,
+  Zap,
+  Truck,
+  Scissors,
+  ClipboardCheck,
+  Trash,
+  Compass,
+  Sparkles,
+  Clock,
+  DollarSign,
+  MapPin,
+  Send,
+  Calendar,
+} from 'lucide-react';
+import {
+  companyInfo,
+  maintenanceServices,
+  preservationServices,
+} from '../data/friendlyContent';
+import livingRoomAfter from '../assets/images/living-room-after.jpg';
 
-const mockOrders = [
-  { id: 1, type: 'Initial Inspection', loc: 'Richmond, VA', time: '8m ago', status: 'Completed' },
-  { id: 2, type: 'Lock Re-Keying', loc: 'Chesterfield, VA', time: 'Just now', status: 'Active' },
-  { id: 3, type: 'Roof Tarping', loc: 'Henrico, VA', time: '30m ago', status: 'Completed' },
-  { id: 4, type: 'Debris Trash-out', loc: 'Petersburg, VA', time: '1h ago', status: 'Completed' },
-  { id: 5, type: 'Gutter Cleaning', loc: 'Midlothian, VA', time: '3h ago', status: 'Completed' },
-];
+const iconMap: Record<string, React.ComponentType<{ size?: number; color?: string; style?: React.CSSProperties }>> = {
+  Wrench,
+  Flame,
+  Paintbrush,
+  Layers,
+  Hammer,
+  Fence,
+  Trash2,
+  Droplets,
+  DoorClosed,
+  Home: HomeIcon,
+  Zap,
+  Truck,
+  Lock: ShieldCheck,
+  Scissors,
+  Trash,
+  ClipboardCheck,
+  ShieldCheck,
+  Compass,
+};
+
+const maintenanceCategories: Record<string, string> = {
+  'general-handyman': 'Everyday Fixes',
+  'hvac-appliances': 'Heating & Air',
+  'painting': 'Interior & Exterior',
+  'drywall': 'Seamless Patch',
+  'carpentry-flooring': 'Finish Carpentry',
+  'fencing-decking-landscaping': 'Outdoor Living',
+  'cleaning-debris': 'Junk Haul-Away',
+  'pressure-washing': 'Exterior Wash',
+  'garage-door': 'Tune-Ups & Safety',
+  'roofing': 'Weather Defense',
+  'plumbing-electrical': 'Fixtures & Power',
+  'driveway-maintenance': 'Asphalt & Gravel',
+};
+
+const preservationCategories: Record<string, string> = {
+  'lock-changes': 'Access Control',
+  'lawn-maintenance': 'Code Compliance',
+  'trash-outs': 'Cleanout Scopes',
+  'property-inspections': 'Date-Stamped Logs',
+  'safety-repairs': 'Hazard Abatement',
+  'winterization': 'Freeze Protection',
+};
+
+const preservationFooters: Record<string, string> = {
+  'lock-changes': 'Rapid Richmond Dispatch',
+  'lawn-maintenance': 'Scheduled Recurring Service',
+  'trash-outs': 'Includes Responsible Disposal',
+  'property-inspections': 'Delivered Same Day As Visit',
+  'safety-repairs': 'Liability Reduction',
+  'winterization': 'Seasonal Peace of Mind',
+};
 
 export default function ServicesPage() {
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-    const [currentOrder, setCurrentOrder] = useState(0);
-    const heroRef = useRef<HTMLElement>(null);
-    const spotlightRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const estimateRef = useRef<HTMLDivElement>(null);
 
-    useRevealOnScroll('.reveal, .reveal-scale');
+  // Initialize filter based on hash without triggering setState in effect
+  const [filter, setFilter] = useState<'all' | 'maintenance' | 'preservation' | 'turnover'>(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      if (window.location.hash.includes('maintenance')) return 'maintenance';
+      if (window.location.hash.includes('preservation')) return 'preservation';
+      if (window.location.hash.includes('turnover')) return 'turnover';
+    }
+    return 'all';
+  });
 
-    useEffect(() => {
-      const handleMouseMove = (e: MouseEvent) => {
-        setMousePos({
-          x: (e.clientX / window.innerWidth - 0.5) * 2,
-          y: (e.clientY / window.innerHeight - 0.5) * 2,
-        });
-      };
+  const [estimateData, setEstimateData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    service: 'General Handyman Services',
+    address: '',
+    details: '',
+    smsConsent: true,
+  });
+  const [estimateSent, setEstimateSent] = useState(false);
 
-      window.addEventListener('mousemove', handleMouseMove);
-      return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
+  useEffect(() => {
+    if (location.hash) {
+      const raw = location.hash.replace('#', '');
+      if (raw === 'estimate') {
+        estimateRef.current?.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      const el =
+        document.getElementById(raw) ||
+        document.getElementById(`section-${raw}`) ||
+        document.getElementById(`${raw}-section`) ||
+        (raw === 'maintenance' && document.getElementById('section-handyman')) ||
+        (raw === 'preservation' && document.getElementById('section-preservation')) ||
+        (raw === 'turnover' && document.getElementById('section-turnover'));
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location.hash]);
 
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setCurrentOrder((prev) => (prev + 1) % mockOrders.length);
-      }, 4500);
-      return () => clearInterval(timer);
-    }, []);
+  const scrollToEstimate = (selectedService?: string) => {
+    if (selectedService) {
+      setEstimateData((prev) => ({ ...prev, service: selectedService }));
+    }
+    estimateRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-    // @property Spotlight tracker
-    useEffect(() => {
-      const hero = heroRef.current;
-      const spotlight = spotlightRef.current;
-      if (!hero || !spotlight) return;
-      const handleSpotlight = (e: MouseEvent) => {
-        const rect = hero.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        spotlight.style.setProperty('--spotlight-x-svc', `${x}%`);
-        spotlight.style.setProperty('--spotlight-y-svc', `${y}%`);
-        spotlight.style.opacity = '1';
-      };
-      const handleLeave = () => { spotlight.style.opacity = '0'; };
-      hero.addEventListener('mousemove', handleSpotlight);
-      hero.addEventListener('mouseleave', handleLeave);
-      return () => {
-        hero.removeEventListener('mousemove', handleSpotlight);
-        hero.removeEventListener('mouseleave', handleLeave);
-      };
-    }, []);
+  const handleEstimateChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setEstimateData((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setEstimateData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
 
-    const allServices = [
-        { title: 'Securing & Lock Services', icon: <Key size={24} />, img: serviceLock, desc: 'Complete property securing including re-keying, lock changes, board-ups, and lockbox installation to prevent unauthorized access.' },
-        { title: 'Lawn & Landscape Care', icon: <TreePine size={24} />, img: serviceLawn, desc: 'Regular grass cuts, tree trimming, shrub maintenance, and seasonal yard cleanups to maintain curb appeal.' },
-        { title: 'Debris Removal', icon: <Trash2 size={24} />, img: serviceDebris, desc: 'Full interior and exterior trash-outs, hazard removal, and dumping services for foreclosed or vacant properties.' },
-        { title: 'Initial Inspections & Reports', icon: <ClipboardCheck size={24} />, img: featureInspection, desc: 'Comprehensive property condition reports, occupancy verification, and damage assessment within 24-48 hours.' },
-        { title: 'General Repairs', icon: <Hammer size={24} />, img: serviceRepair, desc: 'Handyman services covering drywall, plumbing leaks, electrical safety checks, and structural repairs.' },
-        { title: 'Exterior Maintenance', icon: <Home size={24} />, img: heroServices, desc: 'Siding repairs, gutter cleaning, pressure washing, and roof tarping/patching.' },
-    ];
+  const estimateMailSubject = encodeURIComponent(
+    `Services Estimate Request from ${estimateData.name || 'Website Visitor'}`
+  );
+  const estimateMailBody = encodeURIComponent(
+`Full Name: ${estimateData.name}
+Phone: ${estimateData.phone}
+Email: ${estimateData.email}
+Requested Service: ${estimateData.service}
+Property Address / Neighborhood: ${estimateData.address}
+Job Details:
+${estimateData.details}
 
-    return (
-        <div className="services-page">
-            {/* ── CINEMATIC VIDEO HERO ── */}
-            <section className="svc-hero" ref={heroRef}>
+SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
+  );
+  const estimateMailto = `mailto:${companyInfo.email}?subject=${estimateMailSubject}&body=${estimateMailBody}`;
 
-                {/* Video */}
-                <video
-                    className="svc-hero-video"
-                    src={handymanVideo}
-                    autoPlay muted loop playsInline
-                    poster={heroServices}
-                />
+  const handleEstimateSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setEstimateSent(true);
+    window.location.href = estimateMailto;
+  };
 
-                {/* Letterbox bars */}
-                <div className="svc-hero-lb svc-hero-lb--top" />
-                <div className="svc-hero-lb svc-hero-lb--bottom" />
+  return (
+    <div className="services-page bg-blueprint-grid" style={{ minHeight: '100vh', paddingTop: '32px', paddingBottom: '80px' }}>
+      
+      {/* ── 1. HERO SECTION & TRUST MINI-BADGES (Stitch Screen 1) ── */}
+      <section style={{ padding: '48px 0 36px', borderBottom: '1px solid #E2E8F0' }} id="services">
+        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+          
+          <div style={{ maxWidth: '820px' }}>
+            <div className="badge-amber" style={{ marginBottom: '16px' }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F97316', display: 'inline-block' }} />
+              <span style={{ fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', fontSize: '0.75rem' }}>WHAT WE DO</span>
+            </div>
 
-                {/* Overlay layers */}
-                <div className="svc-hero-overlay svc-hero-overlay--dark" />
-                <div className="svc-hero-overlay svc-hero-overlay--brand" />
-                <div className="svc-hero-overlay svc-hero-overlay--vignette" />
+            <h1 style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.4rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.15, letterSpacing: '-0.025em', marginBottom: '16px' }}>
+              Complete Property Services Across Greater Richmond
+            </h1>
 
-                {/* Film grain */}
-                <div className="svc-hero-grain" aria-hidden="true" />
+            <p style={{ fontSize: '1.15rem', color: '#475569', lineHeight: 1.6, marginBottom: '28px' }}>
+              Whether you need everyday handyman repairs, vacant home preservation, or a fast rental turnover, we have the right skilled crew for the job. Punctual, transparent, and built on dependable local craft.
+            </p>
 
-                {/* Glowing accent line */}
-                <div className="svc-hero-accent-line" aria-hidden="true" />
+            {/* Trust Mini Badges (Stitch Style) */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginBottom: '36px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', padding: '8px 14px', borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05)', fontSize: '0.85rem', fontWeight: 600, color: '#1E293B' }}>
+                <CheckCircle2 size={16} color="#F97316" />
+                <span>Fully Licensed &amp; Insured</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', padding: '8px 14px', borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05)', fontSize: '0.85rem', fontWeight: 600, color: '#1E293B' }}>
+                <Clock size={16} color="#F97316" />
+                <span>Mon–Sat 7am–7pm Scheduling</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', padding: '8px 14px', borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05)', fontSize: '0.85rem', fontWeight: 600, color: '#1E293B' }}>
+                <DollarSign size={16} color="#F97316" />
+                <span>Clear Itemized Estimates</span>
+              </div>
+            </div>
+          </div>
 
-                {/* @property Mouse Spotlight */}
-                <div ref={spotlightRef} className="svc-hero-spotlight" aria-hidden="true" />
+          {/* Sticky Interactive Filter Tabs with Count Chips (Stitch Style) */}
+          <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '24px', display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+            
+            <button
+              type="button"
+              onClick={() => setFilter('all')}
+              style={{
+                padding: '10px 22px',
+                borderRadius: '9999px',
+                border: filter === 'all' ? '1px solid #0F172A' : '1px solid #CBD5E1',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: filter === 'all' ? '#0F172A' : '#FFFFFF',
+                color: filter === 'all' ? '#FFFFFF' : '#475569',
+                boxShadow: filter === 'all' ? '0 2px 8px rgba(15, 23, 42, 0.15)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F97316', display: 'inline-block' }} />
+              <span>All Services</span>
+            </button>
 
-                {/* Live Dispatch Ticker Widget (Covers corner watermark/sparkle) */}
-                <div className="svc-dispatch-widget">
-                  <div className="svc-dispatch-header">
-                    <span className="svc-dispatch-pulse-dot" />
-                    <span className="svc-dispatch-title">LIVE DISPATCH FEED</span>
+            <button
+              type="button"
+              onClick={() => setFilter('maintenance')}
+              style={{
+                padding: '10px 20px',
+                borderRadius: '9999px',
+                border: filter === 'maintenance' ? '1px solid #0F172A' : '1px solid #CBD5E1',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: filter === 'maintenance' ? '#0F172A' : '#FFFFFF',
+                color: filter === 'maintenance' ? '#FFFFFF' : '#475569',
+                boxShadow: filter === 'maintenance' ? '0 2px 8px rgba(15, 23, 42, 0.15)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <Wrench size={16} color={filter === 'maintenance' ? '#F97316' : '#64748B'} />
+              <span>Maintenance &amp; Handyman</span>
+              <span style={{ background: filter === 'maintenance' ? 'rgba(255,255,255,0.2)' : '#F1F5F9', color: filter === 'maintenance' ? '#FFF' : '#334155', padding: '2px 8px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800 }}>
+                12
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setFilter('preservation')}
+              style={{
+                padding: '10px 20px',
+                borderRadius: '9999px',
+                border: filter === 'preservation' ? '1px solid #0F172A' : '1px solid #CBD5E1',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: filter === 'preservation' ? '#0F172A' : '#FFFFFF',
+                color: filter === 'preservation' ? '#FFFFFF' : '#475569',
+                boxShadow: filter === 'preservation' ? '0 2px 8px rgba(15, 23, 42, 0.15)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <ShieldCheck size={16} color={filter === 'preservation' ? '#F97316' : '#64748B'} />
+              <span>Property Preservation</span>
+              <span style={{ background: filter === 'preservation' ? 'rgba(255,255,255,0.2)' : '#F1F5F9', color: filter === 'preservation' ? '#FFF' : '#334155', padding: '2px 8px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800 }}>
+                6
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setFilter('turnover')}
+              style={{
+                padding: '10px 20px',
+                borderRadius: '9999px',
+                border: filter === 'turnover' ? '1px solid #0F172A' : '1px solid #CBD5E1',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: filter === 'turnover' ? '#0F172A' : '#FFFFFF',
+                color: filter === 'turnover' ? '#FFFFFF' : '#475569',
+                boxShadow: filter === 'turnover' ? '0 2px 8px rgba(15, 23, 42, 0.15)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <Key size={16} color={filter === 'turnover' ? '#F97316' : '#64748B'} />
+              <span>Rental Turnovers</span>
+              <span style={{ background: '#FFF7ED', color: '#C2410C', padding: '2px 8px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800 }}>
+                Make-Ready
+              </span>
+            </button>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── 2. PILLAR 1: MAINTENANCE & HANDYMAN (12 TRADES WITH CATEGORY CHIPS) ── */}
+      {(filter === 'all' || filter === 'maintenance') && (
+        <section id="section-handyman" style={{ padding: '60px 0', borderBottom: '1px solid #E2E8F0' }}>
+          <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+            
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px', borderBottom: '1px solid #E2E8F0', paddingBottom: '18px' }}>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#F97316', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>
+                  <Wrench size={16} />
+                  <span>Pillar 01 • Residential Maintenance</span>
+                </div>
+                <h2 style={{ fontSize: 'clamp(1.75rem, 3.2vw, 2.35rem)', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+                  Maintenance &amp; Handyman Services
+                </h2>
+                <p style={{ color: '#64748B', margin: '6px 0 0', fontSize: '1rem' }}>
+                  Dependable craftsmanship for homes, townhouses, and residential communities throughout Greater Virginia.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => scrollToEstimate('Maintenance & Handyman')}
+                className="tactile-button-primary"
+                style={{ padding: '10px 20px', fontSize: '0.9rem' }}
+              >
+                <span>Request Maintenance</span> <ArrowRight size={16} />
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
+              {maintenanceServices.map((service) => {
+                const IconComp = iconMap[service.icon] || Wrench;
+                const categoryChip = maintenanceCategories[service.id] || 'Everyday Fixes';
+
+                return (
+                  <div key={service.id} className="white-card service-card-hover" style={{ padding: '28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                        <div style={{ width: '48px', height: '48px', borderRadius: '10px', background: '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#F97316' }}>
+                          <IconComp size={24} />
+                        </div>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#9A3412', background: '#FFF7ED', border: '1px solid #FFEDD5', padding: '3px 10px', borderRadius: '9999px' }}>
+                          {categoryChip}
+                        </span>
+                      </div>
+
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                        {service.title}
+                      </h3>
+                      <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.55, marginBottom: '20px' }}>
+                        {service.description}
+                      </p>
+
+                      <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '14px', marginBottom: '20px' }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
+                          What We Cover:
+                        </div>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {service.highlights.map((h, i) => (
+                            <li key={i} style={{ fontSize: '0.85rem', color: '#334155', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                              <Check size={15} color="#F97316" style={{ marginTop: '2px', flexShrink: 0 }} />
+                              <span>{h}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div style={{ paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                      <button
+                        type="button"
+                        onClick={() => scrollToEstimate(service.title)}
+                        className="btn-outline-navy"
+                        style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem', padding: '10px' }}
+                      >
+                        <span>Request Service</span> <ArrowRight size={15} />
+                      </button>
+                    </div>
                   </div>
-                  <div className="svc-dispatch-body">
-                    <div className="svc-dispatch-meta">
-                      <span className="svc-dispatch-type">{mockOrders[currentOrder].type}</span>
-                      <span className="svc-dispatch-time">{mockOrders[currentOrder].time}</span>
+                );
+              })}
+            </div>
+
+          </div>
+        </section>
+      )}
+
+      {/* ── 3. PILLAR 2: PROPERTY PRESERVATION (6 ASSET PROTECTION SERVICES) ── */}
+      {(filter === 'all' || filter === 'preservation') && (
+        <section id="section-preservation" style={{ padding: '60px 0', borderBottom: '1px solid #E2E8F0' }}>
+          <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+            
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px', borderBottom: '1px solid #E2E8F0', paddingBottom: '18px' }}>
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#0F172A', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>
+                  <ShieldCheck size={16} />
+                  <span>Pillar 02 • Vacant Asset Protection</span>
+                </div>
+                <h2 style={{ fontSize: 'clamp(1.75rem, 3.2vw, 2.35rem)', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+                  Property Preservation &amp; Asset Care
+                </h2>
+                <p style={{ color: '#64748B', margin: '6px 0 0', fontSize: '1rem' }}>
+                  Comprehensive property preservation, code violation abatement, and vacant asset upkeep for lenders, heirs, and real estate investors.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => scrollToEstimate('Property Preservation')}
+                className="btn-outline-navy"
+                style={{ padding: '10px 20px', fontSize: '0.9rem' }}
+              >
+                <span>Order Preservation Scopes</span> <ArrowRight size={16} />
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
+              {preservationServices.map((service) => {
+                const IconComp = iconMap[service.icon] || ShieldCheck;
+                const categoryChip = preservationCategories[service.id] || 'Asset Protection';
+                const footerTag = preservationFooters[service.id] || 'Rapid Richmond Dispatch';
+
+                return (
+                  <div key={service.id} className="white-card service-card-hover" style={{ padding: '28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                        <div style={{ width: '48px', height: '48px', borderRadius: '10px', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0F172A' }}>
+                          <IconComp size={24} />
+                        </div>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#1E293B', background: '#F1F5F9', border: '1px solid #E2E8F0', padding: '3px 10px', borderRadius: '9999px' }}>
+                          {categoryChip}
+                        </span>
+                      </div>
+
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+                        {service.title}
+                      </h3>
+                      <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.55, marginBottom: '20px' }}>
+                        {service.description}
+                      </p>
+
+                      <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '14px', marginBottom: '20px' }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
+                          Key Protection Deliverables:
+                        </div>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {service.highlights.map((h, i) => (
+                            <li key={i} style={{ fontSize: '0.85rem', color: '#334155', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                              <CheckCircle2 size={15} color="#0F172A" style={{ marginTop: '2px', flexShrink: 0 }} />
+                              <span>{h}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                    <div className="svc-dispatch-location">
-                      {mockOrders[currentOrder].loc}
+
+                    <div style={{ paddingTop: '16px', borderTop: '1px solid #F1F5F9', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '6px 10px', borderRadius: '6px', textAlign: 'center' }}>
+                        {footerTag}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => scrollToEstimate(service.title)}
+                        className="btn-outline-navy"
+                        style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem', padding: '10px' }}
+                      >
+                        <span>Order Service</span> <ArrowRight size={15} />
+                      </button>
                     </div>
-                    <div className={`svc-dispatch-status-badge status-${mockOrders[currentOrder].status.toLowerCase()}`}>
-                      {mockOrders[currentOrder].status}
-                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+          </div>
+        </section>
+      )}
+
+      {/* ── 4. PILLAR 3: TURNKEY RENTAL TURNOVERS + SPOTLIGHT CARD (Stitch Screen 4) ── */}
+      {(filter === 'all' || filter === 'turnover') && (
+        <section id="section-turnover" style={{ padding: '60px 0', borderBottom: '1px solid #E2E8F0' }}>
+          <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+            
+            <div style={{ marginBottom: '32px' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#F97316', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>
+                <Key size={16} />
+                <span>Pillar 03 • Fast Rental Turnovers</span>
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.75rem, 3.2vw, 2.35rem)', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+                Turnkey Rental Make-Ready Services
+              </h2>
+              <p style={{ color: '#64748B', margin: '6px 0 0', fontSize: '1rem', maxWidth: '780px' }}>
+                Minimizing vacancy between leases for Richmond landlords and rental property investors with a reliable 4-step turnaround process.
+              </p>
+            </div>
+
+            {/* Turnaround Transformation Spotlight Card (Stitch Exact Component) */}
+            <div className="white-card" style={{ overflow: 'hidden', marginBottom: '40px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0' }}>
+                
+                {/* Left: Image Container with Badge */}
+                <div style={{ position: 'relative', minHeight: '340px' }}>
+                  <img
+                    src={livingRoomAfter}
+                    alt="Homesync LLC Rental Turnover Before and After"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '16px',
+                    left: '16px',
+                    background: 'rgba(15, 23, 42, 0.9)',
+                    backdropFilter: 'blur(6px)',
+                    color: '#FFFFFF',
+                    padding: '8px 14px',
+                    borderRadius: '6px',
+                    fontSize: '0.8125rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.02em',
+                  }}>
+                    Richmond Single Family Rental • 4-Day Make-Ready
                   </div>
                 </div>
 
-                {/* Frosted glass exit strip */}
-                <div className="svc-hero-frost-exit" aria-hidden="true" />
-
-                {/* Content */}
-                <div 
-                    className="container svc-hero-content"
-                    style={{
-                        transform: `translate3d(${mousePos.x * -14}px, ${mousePos.y * -7}px, 0)`,
-                        transition: 'transform 0.15s ease-out'
-                    }}
-                >
-                    <div className="svc-hero-badge">
-                        <span className="svc-hero-badge-dot" />
-                        11 Expert Services · Richmond, VA
+                {/* Right: Turnover Value & Commitment */}
+                <div style={{ padding: 'clamp(28px, 4vw, 40px)', background: '#F8FAFC', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FFF7ED', color: '#9A3412', border: '1px solid #FFEDD5', padding: '4px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '14px' }}>
+                      <Zap size={14} color="#F97316" />
+                      <span>Fast Turnkey Turnarounds for Landlords</span>
                     </div>
 
-                    <h1 className="svc-hero-title">
-                        Our Expert <span className="svc-highlight">Services</span>
-                    </h1>
+                    <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0F172A', marginBottom: '10px', lineHeight: 1.25 }}>
+                      From Move-Out Chaos to Lease-Ready in Days
+                    </h3>
 
-                    <p className="svc-hero-subtitle">
-                        Comprehensive preservation, maintenance, and renovation solutions
-                        for every stage of property management.
+                    <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.6, marginBottom: '24px' }}>
+                      Vacant units cost money every sunrise. We manage the entire turnover scope from junk clearing to the final lock cylinder re-key so you don’t have to juggle five different sub-contractors.
                     </p>
 
-                    <Link to="/contact" className="btn svc-hero-cta">
-                        Get A Free Quote <ChevronDown size={18} style={{ transform: 'rotate(-90deg)' }} />
-                    </Link>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '28px' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                        <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#DEF7EC', color: '#03543F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                          <CheckCircle2 size={16} />
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0F172A' }}>
+                            Itemized Landlord Invoicing
+                          </div>
+                          <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                            Categorized by tenant deposit deductions and normal wear-and-tear for simple bookkeeping.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                        <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#DEF7EC', color: '#03543F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                          <CheckCircle2 size={16} />
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0F172A' }}>
+                            Single Point of Contact
+                          </div>
+                          <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                            One dedicated Richmond lead managing your timeline, keys, and punch list.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                        <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#DEF7EC', color: '#03543F', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                          <CheckCircle2 size={16} />
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0F172A' }}>
+                            Photo Completion Report
+                          </div>
+                          <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                            Full documentation sent directly to your phone before you list for the next tenant.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => scrollToEstimate('Rental Turnover Make-Ready')}
+                    className="tactile-button-primary"
+                    style={{ width: '100%', justifyContent: 'center', padding: '12px', fontSize: '0.95rem' }}
+                  >
+                    <span>Book a Rental Make-Ready Estimate</span> <ArrowRight size={16} />
+                  </button>
                 </div>
 
-                {/* Scroll indicator */}
-                <a href="#services-grid" className="svc-scroll-indicator" aria-label="Scroll to services">
-                    <ChevronDown size={22} />
-                </a>
-            </section>
+              </div>
+            </div>
 
-            <section className="section" id="services-grid">
-                <div className="container">
-                    <div className="services-grid-large">
-                        {allServices.map((service, index) => (
-                            <div key={index} className="service-card-large reveal-scale" data-delay={`${index * 80}`}>
-                                <div className="service-img-container">
-                                    <img src={service.img} alt={service.title} />
-                                    <div className="service-icon-overlay">{service.icon}</div>
-                                </div>
-                                <div className="service-content">
-                                    <h3>{service.title}</h3>
-                                    <p>{service.desc}</p>
-                                </div>
-                            </div>
-                        ))}
+            {/* 4-Step Process Timeline Cards (Stitch Screen 4) */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+              {[
+                {
+                  step: '01',
+                  title: 'Trash-Out',
+                  icon: Trash2,
+                  desc: 'Any leftover tenant belongings, basement leftovers, or garage scrap are packed and hauled away quickly to clear the workspace.',
+                },
+                {
+                  step: '02',
+                  title: 'Repairs & Checks',
+                  icon: Wrench,
+                  desc: 'Faucets, toilets, smoke alarms, switches, ceiling fans, and kitchen appliances are tested, repaired, or updated for safety.',
+                },
+                {
+                  step: '03',
+                  title: 'Patch & Paint',
+                  icon: Paintbrush,
+                  desc: 'Nail holes, anchor tears, and door dings are spackled flat and coated with fresh, neutral paint for that crisp new-home aroma.',
+                },
+                {
+                  step: '04',
+                  title: 'Deep Clean & Re-Key',
+                  icon: Sparkles,
+                  desc: 'Spotless sanitizing of ovens, refrigerators, tile, and baths. Finished with fresh lock cylinders and new keys in hand.',
+                },
+              ].map((item) => {
+                const StepIcon = item.icon;
+                return (
+                  <div key={item.step} className="white-card service-card-hover" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#FFF7ED', color: '#9A3412', fontWeight: 800, fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                        {item.step}
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <StepIcon size={20} color="#F97316" />
+                        <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+                          {item.title}
+                        </h4>
+                      </div>
+
+                      <p style={{ fontSize: '0.9rem', color: '#475569', lineHeight: 1.55, margin: '0 0 16px' }}>
+                        {item.desc}
+                      </p>
                     </div>
 
-                    <div className="additional-info reveal" data-delay="100">
-                        <h3>Need a custom solution?</h3>
-                        <p>We also offer additional property solutions tailored to your specific asset needs.</p>
-                        <Link to="/contact" className="btn btn-primary">Contact Our Team</Link>
+                    <div style={{ paddingTop: '14px', borderTop: '1px solid #F1F5F9' }}>
+                      <button
+                        type="button"
+                        onClick={() => scrollToEstimate(`Rental Turnover: Stage ${item.step} (${item.title})`)}
+                        style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.85rem', fontWeight: 700, color: '#F97316', display: 'inline-flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
+                      >
+                        <span>Book Stage {item.step}</span> <ChevronRight size={14} />
+                      </button>
                     </div>
+                  </div>
+                );
+              })}
+            </div>
+
+          </div>
+        </section>
+      )}
+
+      {/* ── 5. DIRECT IN-PAGE SERVICE ESTIMATE SECTION (Stitch Screen 5) ── */}
+      <section ref={estimateRef} id="estimate" style={{ padding: '70px 0', borderBottom: '1px solid #E2E8F0' }}>
+        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+          
+          <div className="white-card" style={{ padding: 'clamp(28px, 5vw, 48px)', border: '1px solid #CBD5E1', boxShadow: '0 12px 30px rgba(15, 23, 42, 0.08)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '44px', alignItems: 'center' }}>
+              
+              {/* Left Column: Local Contact & Hours */}
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FFF7ED', color: '#9A3412', border: '1px solid #FFEDD5', padding: '4px 12px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '14px' }}>
+                  <Calendar size={14} color="#F97316" />
+                  <span>Prompt Local Response</span>
                 </div>
-            </section>
 
-            <style>{`
-        /* ─── SERVICES VIDEO HERO ─────────────────── */
-        .svc-hero {
-          position: relative;
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          color: white;
-        }
+                <h2 style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, marginBottom: '14px' }}>
+                  Request Your Free Service Estimate
+                </h2>
 
-        .svc-hero-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          z-index: 0;
-          /* Technique 1: iris clip-path reveal */
-          animation: iris-open-svc 1.4s cubic-bezier(0.22, 1, 0.36, 1) both,
-                     hero-zoom-scroll-svc linear both;
-        }
+                <p style={{ fontSize: '1.05rem', color: '#475569', lineHeight: 1.6, marginBottom: '28px' }}>
+                  Tell us what needs attention at your home or rental property. We review your request, provide transparent pricing, and schedule a convenient walkthrough time.
+                </p>
 
-        @keyframes iris-open-svc {
-          0%   { clip-path: inset(48% 48% round 50%); opacity: 0.4; }
-          60%  { clip-path: inset(2% 2% round 4px); opacity: 1; }
-          100% { clip-path: inset(0% 0% round 0px); opacity: 1; }
-        }
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderTop: '1px solid #E2E8F0', paddingTop: '22px' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <MapPin size={20} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.925rem', color: '#0F172A' }}>Richmond Office</div>
+                      <div style={{ fontSize: '0.85rem', color: '#64748B' }}>{companyInfo.address}</div>
+                    </div>
+                  </div>
 
-        /* Technique 3: scroll-driven zoom-out */
-        @supports (animation-timeline: scroll()) {
-          .svc-hero-video {
-            animation-name: iris-open-svc, hero-zoom-scroll-svc;
-            animation-duration: 1.4s, auto;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), linear;
-            animation-fill-mode: both, both;
-            animation-timeline: auto, scroll(root block);
-            animation-range: auto, 0% 55%;
-          }
-          @keyframes hero-zoom-scroll-svc {
-            from { transform: scale(1.06); filter: brightness(1); }
-            to   { transform: scale(1.22); filter: brightness(0.45); }
-          }
-        }
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <Phone size={20} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.925rem', color: '#0F172A' }}>Direct Contractor Line</div>
+                      <a href={`tel:${companyInfo.phoneRaw}`} style={{ fontSize: '0.95rem', fontWeight: 700, color: '#F97316', textDecoration: 'none' }}>
+                        {companyInfo.phone} (Call or Text)
+                      </a>
+                    </div>
+                  </div>
 
-        /* Letterbox bars */
-        .svc-hero-lb {
-          position: absolute; left: 0; right: 0;
-          height: clamp(20px, 3.5vw, 48px);
-          background: #000;
-          z-index: 3;
-          animation: svc-lb-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-        .svc-hero-lb--top    { top: 0;    transform-origin: top; }
-        .svc-hero-lb--bottom { bottom: 0; transform-origin: bottom; }
-        @keyframes svc-lb-in {
-          from { transform: scaleY(3); }
-          to   { transform: scaleY(1); }
-        }
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <Clock size={20} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.925rem', color: '#0F172A' }}>Operating Hours</div>
+                      <div style={{ fontSize: '0.85rem', color: '#64748B' }}>Monday through Saturday: 7:00 AM – 7:00 PM <br /><small>Closed Sunday for Family Time</small></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        /* Overlay layers */
-        .svc-hero-overlay { position: absolute; inset: 0; }
-        .svc-hero-overlay--dark    { background: linear-gradient(180deg, rgba(5,10,24,0.5) 0%, rgba(5,10,24,0.75) 100%); z-index: 1; }
-        .svc-hero-overlay--brand   { background: linear-gradient(135deg, rgba(10,28,58,0.6) 0%, transparent 55%); z-index: 1; }
-        .svc-hero-overlay--vignette{ background: radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.65) 100%); z-index: 1; }
+              {/* Right Column: Embedded Estimate Form */}
+              <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '14px', padding: '28px' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '4px' }}>
+                  Service Details Form
+                </h3>
+                <p style={{ fontSize: '0.85rem', color: '#64748B', marginBottom: '20px' }}>
+                  No high-pressure sales calls. Straightforward written estimates.
+                </p>
 
-        /* Film grain */
-        .svc-hero-grain {
-          position: absolute; inset: 0; z-index: 2;
-          opacity: 0.04;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-          background-size: 180px;
-          animation: grain-shift 0.4s steps(1) infinite;
-          pointer-events: none;
-        }
+                {estimateSent ? (
+                  <div style={{ textAlign: 'center', padding: '24px 12px' }}>
+                    <CheckCircle2 size={40} color="#059669" style={{ margin: '0 auto 12px' }} />
+                    <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
+                      Estimate Request Ready!
+                    </h4>
+                    <p style={{ fontSize: '0.9rem', color: '#475569', marginBottom: '16px' }}>
+                      We opened your email app to send directly to <strong>{companyInfo.email}</strong>. If your email app did not open automatically, click below:
+                    </p>
+                    <a href={estimateMailto} className="btn-amber" style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem' }}>
+                      <Send size={15} /> Click to Send Email
+                    </a>
+                  </div>
+                ) : (
+                  <form onSubmit={handleEstimateSubmit}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                          Your Name *
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          required
+                          placeholder="John Miller"
+                          value={estimateData.name}
+                          onChange={handleEstimateChange}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem', background: '#FFF' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                          Phone Number *
+                        </label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          required
+                          placeholder="(804) 555-0123"
+                          value={estimateData.phone}
+                          onChange={handleEstimateChange}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem', background: '#FFF' }}
+                        />
+                      </div>
+                    </div>
 
-        /* Glowing accent line */
-        .svc-hero-accent-line {
-          position: absolute; bottom: 38%; left: 0; right: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent 0%, var(--accent) 30%, #00aaff 50%, var(--accent) 70%, transparent 100%);
-          opacity: 0.22; z-index: 3;
-          animation: accent-line-in 2s ease-out 0.5s both;
-        }
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                          Email Address *
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          required
+                          placeholder="john@example.com"
+                          value={estimateData.email}
+                          onChange={handleEstimateChange}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem', background: '#FFF' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                          Project Category
+                        </label>
+                        <select
+                          name="service"
+                          value={estimateData.service}
+                          onChange={handleEstimateChange}
+                          style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem', background: '#FFF' }}
+                        >
+                          <option value="General Handyman Services">General Handyman Services</option>
+                          <option value="Drywall & Interior Painting">Drywall &amp; Interior Painting</option>
+                          <option value="Rental Turnover (Make-Ready)">Rental Turnover (Make-Ready)</option>
+                          <option value="Property Preservation & Asset Care">Property Preservation &amp; Asset Care</option>
+                          <option value="Plumbing or Electrical Fixes">Plumbing or Electrical Fixes</option>
+                          <option value="Pressure Washing & Exterior Care">Pressure Washing &amp; Exterior Care</option>
+                        </select>
+                      </div>
+                    </div>
 
-        /* Content */
-        .svc-hero-content {
-          position: relative; z-index: 4;
-          max-width: 800px; margin: 0 auto;
-          text-align: center; padding: 100px 24px 80px;
-        }
+                    <div style={{ marginBottom: '12px' }}>
+                      <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                        Property Address or Neighborhood
+                      </label>
+                      <input
+                        type="text"
+                        name="address"
+                        placeholder="e.g. 3540 Pump Rd, Henrico or Richmond"
+                        value={estimateData.address}
+                        onChange={handleEstimateChange}
+                        style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem', background: '#FFF' }}
+                      />
+                    </div>
 
-        /* Badge */
-        .svc-hero-badge {
-          display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.18);
-          backdrop-filter: blur(8px);
-          border-radius: 100px; padding: 7px 18px;
-          font-size: 0.82rem; font-weight: 600;
-          letter-spacing: 0.05em; text-transform: uppercase;
-          color: rgba(255,255,255,0.9); margin-bottom: 24px;
-          animation: fadeInUp 0.7s ease-out 0.3s both;
-        }
-        .svc-hero-badge-dot {
-          width: 8px; height: 8px; border-radius: 50%;
-          background: #f59e0b;
-          box-shadow: 0 0 0 0 rgba(245,158,11,0.5);
-          animation: pulse-amber 2s ease-in-out infinite;
-        }
-        @keyframes pulse-amber {
-          0%,100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.5); }
-          50%      { box-shadow: 0 0 0 6px rgba(245,158,11,0); }
-        }
+                    <div style={{ marginBottom: '14px' }}>
+                      <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>
+                        Brief Description of the Job
+                      </label>
+                      <textarea
+                        name="details"
+                        rows={3}
+                        placeholder="Tell us what needs fixing or updating..."
+                        value={estimateData.details}
+                        onChange={handleEstimateChange}
+                        style={{ width: '100%', padding: '9px 12px', borderRadius: '6px', border: '1px solid #CBD5E1', fontSize: '0.9rem', resize: 'vertical', background: '#FFF' }}
+                      />
+                    </div>
 
-        /* Title */
-        .svc-hero-title {
-          font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-          font-weight: 900; line-height: 1.05;
-          letter-spacing: -0.03em; margin-bottom: 20px;
-          animation: fadeInUp 0.7s ease-out 0.5s both,
-                     text-shimmer-svc 5s linear 1.5s infinite;
-          /* Technique 4: shimmer sweep */
-          background: linear-gradient(
-            90deg,
-            rgba(255,255,255,0.95) 20%,
-            rgba(254,243,199,1)    40%,
-            rgba(255,255,255,1)    50%,
-            rgba(254,243,199,1)    60%,
-            rgba(255,255,255,0.95) 80%
-          );
-          background-size: 250% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          text-shadow: none;
-        }
+                    <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '10px 12px', marginBottom: '16px' }}>
+                      <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', cursor: 'pointer', fontSize: '0.78rem', color: '#475569', lineHeight: 1.4 }}>
+                        <input
+                          type="checkbox"
+                          name="smsConsent"
+                          checked={estimateData.smsConsent}
+                          onChange={handleEstimateChange}
+                          style={{ marginTop: '2px', accentColor: '#F97316' }}
+                        />
+                        <span>
+                          I agree to receive text messages from Homesync LLC regarding this estimate. Message and data rates may apply. Reply STOP anytime.
+                        </span>
+                      </label>
+                    </div>
 
-        @keyframes text-shimmer-svc {
-          from { background-position: 200% center; }
-          to   { background-position: -200% center; }
-        }
+                    <button
+                      type="submit"
+                      className="tactile-button-primary"
+                      style={{ width: '100%', padding: '12px', fontSize: '1rem', justifyContent: 'center' }}
+                    >
+                      <Send size={16} /> Send Estimate Request
+                    </button>
+                    <p style={{ fontSize: '0.75rem', color: '#64748B', textAlign: 'center', marginTop: '10px', marginBottom: 0 }}>
+                      Zero commitment. Upfront quotes provided prior to starting work.
+                    </p>
+                  </form>
+                )}
+              </div>
 
-        .svc-highlight {
-          color: transparent;
-          background: linear-gradient(90deg, #f59e0b, #fbbf24);
-          -webkit-background-clip: text;
-          background-clip: text;
-          display: inline-block;
-          position: relative;
-        }
+            </div>
+          </div>
 
-        /* Technique 2: @property Spotlight */
-        @property --spotlight-x-svc { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
-        @property --spotlight-y-svc { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+        </div>
+      </section>
 
-        .svc-hero-spotlight {
-          position: absolute;
-          inset: 0;
-          z-index: 2;
-          pointer-events: none;
-          opacity: 0;
-          transition: opacity 0.6s ease, --spotlight-x-svc 0.08s ease-out, --spotlight-y-svc 0.08s ease-out;
-          background: radial-gradient(
-            circle 380px at var(--spotlight-x-svc) var(--spotlight-y-svc),
-            rgba(245, 158, 11, 0.1) 0%,
-            rgba(245, 158, 11, 0.03) 50%,
-            transparent 100%
-          );
-        }
+      {/* ── 6. BOTTOM CUSTOMIZED PACKAGE BANNER (Stitch Screen 6) ── */}
+      <section style={{ padding: '60px 0', background: '#0F172A', color: '#FFFFFF', marginTop: '20px' }}>
+        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'center', justifyContent: 'space-between', textAlign: 'center' }}>
+            <div style={{ maxWidth: '720px' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#FB923C', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '12px' }}>
+                <Sparkles size={14} />
+                <span>FRIENDLY RICHMOND CONTRACTORS</span>
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.4rem)', fontWeight: 800, color: '#FFFFFF', marginBottom: '12px', lineHeight: 1.25 }}>
+                Need a customized service package for your property?
+              </h2>
+              <p style={{ fontSize: '1.05rem', color: '#CBD5E1', margin: 0, lineHeight: 1.6 }}>
+                Give us a call at <strong>{companyInfo.phone}</strong> or request an estimate online. We are here Mon–Sat 7am–7pm.
+              </p>
+            </div>
 
-        /* Technique 5: frosted glass exit strip */
-        .svc-hero-frost-exit {
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          height: 180px;
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
-          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
-          z-index: 5;
-          pointer-events: none;
-        }
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', justifyContent: 'center' }}>
+              <button
+                type="button"
+                onClick={() => scrollToEstimate()}
+                className="tactile-button-primary"
+                style={{ padding: '13px 28px', fontSize: '1rem' }}
+              >
+                <span>Get a Free Estimate</span>
+              </button>
+              <a
+                href={`tel:${companyInfo.phoneRaw}`}
+                className="btn-outline-dark-surface"
+              >
+                <Phone size={16} color="#F97316" />
+                <span>Call {companyInfo.phone}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        /* ─── LIVE DISPATCH WIDGET ────────────────── */
-        .svc-dispatch-widget {
-          position: absolute;
-          bottom: clamp(64px, 6vw, 85px);
-          right: clamp(20px, 4vw, 48px);
-          z-index: 10;
-          width: 250px;
-          background: rgba(10, 25, 50, 0.55);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          border: 1px solid rgba(245, 158, 11, 0.25);
-          border-radius: 12px;
-          padding: 14px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 158, 11, 0.15);
-          animation: fadeInUp 0.3s ease-out both;
-          text-align: left;
+      {/* ── CSS Utilities for Cards ── */}
+      <style>{`
+        .service-card-hover {
+          transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
-
-        .svc-dispatch-header {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          padding-bottom: 8px;
-          margin-bottom: 10px;
-        }
-
-        .svc-dispatch-pulse-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #f59e0b;
-          box-shadow: 0 0 8px #f59e0b;
-          animation: dispatch-pulse-svc 1.8s ease-in-out infinite;
-        }
-
-        @keyframes dispatch-pulse-svc {
-          0%, 100% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.35); opacity: 0.45; }
-        }
-
-        .svc-dispatch-title {
-          font-size: 0.72rem;
-          font-weight: 800;
-          letter-spacing: 0.08em;
-          color: rgba(255, 255, 255, 0.7);
-        }
-
-        .svc-dispatch-body {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-
-        .svc-dispatch-meta {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .svc-dispatch-type {
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #fff;
-        }
-
-        .svc-dispatch-time {
-          font-size: 0.75rem;
-          color: rgba(255, 255, 255, 0.55);
-        }
-
-        .svc-dispatch-location {
-          font-size: 0.8rem;
-          color: rgba(255, 255, 255, 0.8);
-        }
-
-        .svc-dispatch-status-badge {
-          align-self: flex-start;
-          font-size: 0.68rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          padding: 3px 8px;
-          border-radius: 4px;
-          margin-top: 4px;
-        }
-
-        .svc-dispatch-status-badge.status-completed {
-          background: rgba(34, 197, 94, 0.15);
-          color: #4ade80;
-          border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-
-        .svc-dispatch-status-badge.status-active {
-          background: rgba(245, 158, 11, 0.15);
-          color: #f59e0b;
-          border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        /* Subtitle */
-        .svc-hero-subtitle {
-          font-size: clamp(0.95rem, 1.8vw, 1.15rem);
-          color: rgba(255,255,255,0.78);
-          max-width: 580px; margin: 0 auto 36px;
-          line-height: 1.7;
-          animation: fadeInUp 0.7s ease-out 0.7s both;
-        }
-
-        /* CTA */
-        .svc-hero-cta {
-          background: #f59e0b; color: #0a1c3a;
-          padding: 14px 32px; border-radius: 8px;
-          font-size: 1rem; font-weight: 700;
-          box-shadow: 0 0 28px rgba(245,158,11,0.45);
-          display: inline-flex; align-items: center; gap: 8px;
-          transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
-          animation: fadeInUp 0.7s ease-out 0.9s both;
-        }
-        .svc-hero-cta:hover {
-          background: #fbbf24;
-          box-shadow: 0 0 44px rgba(245,158,11,0.7);
+        .service-card-hover:hover {
           transform: translateY(-2px);
-        }
-
-        /* Scroll indicator */
-        .svc-scroll-indicator {
-          position: absolute; bottom: 28px; left: 50%;
-          transform: translateX(-50%); z-index: 4;
-          color: rgba(255,255,255,0.45);
-          animation: scroll-bounce 2s ease-in-out infinite, fadeIn 1s ease-out 1.2s both;
-          transition: color 0.2s;
-        }
-        .svc-scroll-indicator:hover { color: white; }
-
-        .section {
-            padding: 140px 0;
-        }
-
-        .services-grid-large {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-          gap: 40px;
-          animation: fadeInUp 0.8s ease-out 0.4s backwards;
-        }
-
-        .service-card-large {
-          background: white;
-          border: 1px solid var(--surface-2);
-          border-radius: 12px;
-          overflow: hidden;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          box-shadow: var(--shadow-sm);
-        }
-        
-        body.dark .service-card-large {
-            background: var(--surface-dark-2);
-            border-color: var(--glass-border-dark);
-        }
-
-        .service-card-large:hover {
-          box-shadow: var(--shadow-xl);
-          border-color: var(--accent);
-          transform: translateY(-8px);
-        }
-
-        .service-img-container {
-            position: relative;
-            height: 200px;
-            overflow: hidden;
-        }
-        
-        .service-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-        }
-        
-        .service-card-large:hover .service-img-container img {
-            transform: scale(1.05);
-        }
-        
-        .service-icon-overlay {
-            position: absolute;
-            bottom: -20px;
-            right: 20px;
-            background: var(--accent);
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-md);
-            z-index: 2;
-        }
-
-        .service-content {
-          padding: 40px 32px 32px;
-          flex-grow: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-        }
-
-        .service-card-large h3 {
-          font-size: 1.5rem;
-          margin-bottom: 16px;
-          font-weight: 700;
-        }
-
-        .service-card-large p {
-          color: var(--text-secondary);
-          line-height: 1.7;
-          font-size: 1.05rem;
-        }
-        
-        body.dark .service-card-large p {
-            color: var(--text-dark-secondary);
-        }
-        
-        .additional-info {
-            text-align: center;
-            margin-top: 100px;
-            margin-bottom: 40px;
-            padding: 60px;
-            background-color: var(--bg-light);
-            border-radius: 16px;
-            border: 1px solid var(--surface-2);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        body.dark .additional-info {
-            background-color: var(--surface-dark-2);
-            border-color: var(--glass-border-dark);
-        }
-        
-        .additional-info h3 {
-            margin-bottom: 24px;
-            font-size: 2rem;
-        }
-        
-        .additional-info p {
-            margin-bottom: 40px;
-            color: var(--text-secondary);
-            font-size: 1.25rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        body.dark .additional-info p {
-            color: var(--text-dark-secondary);
+          border-color: #CBD5E1;
+          box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.1);
         }
       `}</style>
-        </div>
-    );
+
+    </div>
+  );
 }
