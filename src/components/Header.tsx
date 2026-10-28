@@ -55,7 +55,7 @@ export default function Header() {
               <span>Call or Text: {companyInfo.phone}</span>
             </a>
             <span className="utility-separator utility-desktop-only">·</span>
-            <span className="utility-hours utility-desktop-only">Mon–Sat 7:00 AM – 7:00 PM</span>
+            <span className="utility-hours utility-desktop-only">Mon–Fri 8:00 AM – 5:00 PM</span>
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ export const companyInfo = {
   address: '3540 Pump Rd, Richmond, VA 23233',
   cityStateZip: 'Richmond, VA 23233',
   serviceRegion: 'Greater Virginia & Central Virginia',
-  hours: 'Monday – Saturday: 7:00 AM – 7:00 PM (Closed Sunday)',
+  hours: 'Monday – Friday: 8:00 AM – 5:00 PM (Closed Weekends)',
   license: 'Licensed & Insured Virginia Residential Contractor',
   tagline: 'Dependable Home Repairs, Property Preservation & Turnover Solutions across Greater Virginia',
 };

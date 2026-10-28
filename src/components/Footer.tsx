@@ -118,8 +118,8 @@ export default function Footer() {
                   <span>Hours of Operation</span>
                 </div>
                 <div style={{ fontSize: '0.8125rem', color: '#CBD5E1', lineHeight: 1.4 }}>
-                  <div>Mon – Sat: 7:00 AM – 7:00 PM</div>
-                  <div style={{ color: '#94A3B8', marginTop: '2px' }}>Sunday: Closed for Family Time</div>
+                  <div>Mon – Fri: 8:00 AM – 5:00 PM</div>
+                  <div style={{ color: '#94A3B8', marginTop: '2px' }}>Saturday & Sunday: Closed</div>
                 </div>
               </div>
             </div>

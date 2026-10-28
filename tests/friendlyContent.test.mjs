@@ -12,7 +12,8 @@ test('companyInfo contains required business details and no jargon', () => {
   assert.equal(companyInfo.name, 'Homesync LLC');
   assert.equal(companyInfo.phone, '(804) 292-2009');
   assert.ok(companyInfo.email.includes('@homesyncllc.org'));
-  assert.ok(companyInfo.hours.includes('7:00 AM'));
+  assert.ok(companyInfo.hours.includes('8:00 AM'));
+  assert.ok(companyInfo.hours.includes('5:00 PM'));
   
   // Verify NO 24/7 or 24-hour response claims
   assert.ok(!companyInfo.hours.toLowerCase().includes('24/7'));

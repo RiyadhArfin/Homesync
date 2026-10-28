@@ -207,7 +207,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', padding: '8px 14px', borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05)', fontSize: '0.85rem', fontWeight: 600, color: '#1E293B' }}>
                 <Clock size={16} color="#0063A6" />
-                <span>Mon–Sat 7am–7pm Scheduling</span>
+                <span>Mon–Fri 8am–5pm Scheduling</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', padding: '8px 14px', borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05)', fontSize: '0.85rem', fontWeight: 600, color: '#1E293B' }}>
                 <DollarSign size={16} color="#0063A6" />
@@ -733,7 +733,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                     <Clock size={20} color="#0063A6" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div>
                       <div style={{ fontWeight: 700, fontSize: '0.925rem', color: '#0F172A' }}>Operating Hours</div>
-                      <div style={{ fontSize: '0.85rem', color: '#64748B' }}>Monday through Saturday: 7:00 AM – 7:00 PM <br /><small>Closed Sunday for Family Time</small></div>
+                      <div style={{ fontSize: '0.85rem', color: '#64748B' }}>Monday through Friday: 8:00 AM – 5:00 PM <br /><small>Saturday &amp; Sunday: Closed</small></div>
                     </div>
                   </div>
                 </div>
@@ -905,7 +905,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 Need a customized service package for your property?
               </h2>
               <p style={{ fontSize: '1.05rem', color: '#CBD5E1', margin: 0, lineHeight: 1.6 }}>
-                Give us a call at <strong>{companyInfo.phone}</strong> or request an estimate online. We are here Mon–Sat 7am–7pm.
+                Give us a call at <strong>{companyInfo.phone}</strong> or request an estimate online. We are here Mon–Fri 8am–5pm.
               </p>
             </div>
 

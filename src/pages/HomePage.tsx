@@ -956,7 +956,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               Where We Work in Greater Virginia
             </h3>
             <p style={{ color: '#64748B', fontSize: '1rem', margin: 0 }}>
-              Our service trucks are on the road six days a week throughout Greater Virginia & Central Virginia:
+              Our service trucks are on the road five days a week throughout Greater Virginia & Central Virginia:
             </p>
           </div>
 

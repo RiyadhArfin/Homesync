@@ -97,7 +97,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                 {companyInfo.phone}
               </div>
               <div style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '16px' }}>
-                Mon–Sat: 7:00 AM – 7:00 PM
+                Mon–Fri: 8:00 AM – 5:00 PM
               </div>
               <a href={`tel:${companyInfo.phoneRaw}`} className="btn-amber" style={{ padding: '8px 18px', fontSize: '0.875rem' }}>
                 <Phone size={15} /> Call or Text Now
@@ -395,7 +395,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
               Where We Work in Greater Virginia
             </h3>
             <p style={{ color: '#64748B', fontSize: '0.95rem', margin: 0 }}>
-              Our service trucks are on the road six days a week throughout Greater Virginia & Central Virginia:
+              Our service trucks are on the road five days a week throughout Greater Virginia & Central Virginia:
             </p>
           </div>
 

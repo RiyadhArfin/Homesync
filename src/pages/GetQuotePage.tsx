@@ -554,7 +554,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                     <Calendar size={20} color="#0063A6" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div style={{ fontSize: '0.875rem', color: '#334155' }}>
-                      <strong>Working Hours:</strong> Mon–Sat 7:00 AM – 7:00 PM.
+                      <strong>Working Hours:</strong> Mon–Fri 8:00 AM – 5:00 PM.
                     </div>
                   </div>
                 </div>
