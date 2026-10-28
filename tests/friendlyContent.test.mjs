@@ -11,7 +11,7 @@ import {
 test('companyInfo contains required business details and no jargon', () => {
   assert.equal(companyInfo.name, 'Homesync LLC');
   assert.equal(companyInfo.phone, '(804) 292-2009');
-  assert.ok(companyInfo.email.includes('@homesyncllc.org'));
+  assert.equal(companyInfo.email, 'info@homesyncllc.org');
   assert.ok(companyInfo.hours.includes('8:00 AM'));
   assert.ok(companyInfo.hours.includes('5:00 PM'));
   
