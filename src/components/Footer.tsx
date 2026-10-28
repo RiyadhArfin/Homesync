@@ -17,7 +17,7 @@ export default function Footer() {
                 <span className="footer-brand-name">
                   HOME<span style={{ color: '#0063A6' }}>SYNC</span> LLC
                 </span>
-                <span className="footer-brand-tag">PROPERTY CARE &amp; HANDYMAN</span>
+                <span className="footer-brand-tag">PROPERTY MAINTENANCE &amp; REPAIRS</span>
               </div>
             </Link>
             

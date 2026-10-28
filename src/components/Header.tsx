@@ -71,7 +71,7 @@ export default function Header() {
               <span className="brand-name">
                 HOME<span className="brand-highlight">SYNC</span> LLC
               </span>
-              <span className="brand-subtitle">PROPERTY CARE &amp; HANDYMAN</span>
+              <span className="brand-subtitle">PROPERTY MAINTENANCE &amp; REPAIRS</span>
             </div>
           </Link>
 

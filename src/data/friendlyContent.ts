@@ -234,11 +234,10 @@ export const turnoverSteps: TurnoverStep[] = [
 ];
 
 export const serviceAreas = [
-  { name: 'City of Richmond', areas: 'The Fan, Museum District, Church Hill, Northside, Shockoe Slip, Carytown' },
-  { name: 'Henrico County', areas: 'Short Pump, Glen Allen, Tuckahoe, Lakeside, Sandston, Varina' },
-  { name: 'Chesterfield County', areas: 'Midlothian, Brandermill, Woodlake, North Chesterfield, Chester' },
-  { name: 'Hanover County', areas: 'Mechanicsville, Ashland, Atlee, Beaverdam' },
-  { name: 'Tri-Cities Corridor', areas: 'Petersburg, Colonial Heights, Hopewell, Prince George' },
+  { name: 'Richmond & Surrounding Areas', areas: 'Richmond • Henrico • Hanover • King William • King & Queen • Washington' },
+  { name: 'Northern Virginia', areas: 'Fairfax • Manassas • Loudoun • Alexandria • Arlington' },
+  { name: 'Hampton Roads', areas: 'Hampton • Newport News • Chesapeake • Norfolk • Suffolk • Virginia Beach • Portsmouth' },
+  { name: 'Expanded Virginia Coverage', areas: 'Southampton & surrounding areas' },
 ];
 
 export const whyChooseHomesync = [
