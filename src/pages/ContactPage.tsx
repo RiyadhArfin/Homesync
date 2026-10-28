@@ -83,8 +83,8 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
             
             {/* Card 1: Call or Text */}
-            <div className="white-card" style={{ padding: '28px', borderTop: '4px solid #F97316' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '10px', background: '#FFF7ED', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+            <div className="white-card" style={{ padding: '28px', borderTop: '4px solid #0063A6' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '10px', background: '#EFF6FF', color: '#0063A6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
                 <Phone size={24} />
               </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
@@ -300,7 +300,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                         name="smsConsent"
                         checked={formData.smsConsent}
                         onChange={handleChange}
-                        style={{ marginTop: '2px', accentColor: '#F97316' }}
+                        style={{ marginTop: '2px', accentColor: '#0063A6' }}
                       />
                       <span>
                         I agree to receive text messages from Homesync LLC about my service request. Message and data rates may apply. Reply STOP anytime to opt out.
@@ -331,7 +331,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                   <img
                     src={contractorPhoto}
                     alt="Mike from Homesync"
-                    style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #F97316' }}
+                    style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #0063A6' }}
                   />
                   <div>
                     <div className="badge-amber" style={{ marginBottom: '4px' }}>
@@ -356,11 +356,11 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                 </a>
 
                 {/* Text a Photo Callout */}
-                <div style={{ background: '#FFF7ED', border: '1px solid #FDBA74', borderRadius: '8px', padding: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: '#C2410C', marginBottom: '6px' }}>
+                <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '8px', padding: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: '#0063A6', marginBottom: '6px' }}>
                     <Camera size={16} /> Text Photos of Your Repair
                   </div>
-                  <p style={{ fontSize: '0.85rem', color: '#7C2D12', lineHeight: 1.5, margin: 0 }}>
+                  <p style={{ fontSize: '0.85rem', color: '#1E293B', lineHeight: 1.5, margin: 0 }}>
                     Snap 2–3 photos of the repair with your smartphone and text them directly to <strong>{companyInfo.phone}</strong>. It helps us arrive with the right tools and parts on day one!
                   </p>
                 </div>
@@ -369,7 +369,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
               {/* Work Guarantee */}
               <div className="white-card" style={{ padding: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                  <ShieldCheck size={24} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <ShieldCheck size={24} color="#0063A6" style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div>
                     <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#0F172A', marginBottom: '4px' }}>
                       Our Workmanship Guarantee
@@ -403,7 +403,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
             {serviceAreas.map((area, idx) => (
               <div key={idx} className="white-card" style={{ padding: '18px 16px' }}>
                 <div style={{ fontWeight: 800, color: '#0F172A', fontSize: '0.95rem', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <MapPin size={15} color="#F97316" />
+                  <MapPin size={15} color="#0063A6" />
                   {area.name}
                 </div>
                 <div style={{ fontSize: '0.8125rem', color: '#64748B', lineHeight: 1.45 }}>

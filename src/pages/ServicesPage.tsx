@@ -187,7 +187,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
           
           <div style={{ maxWidth: '820px' }}>
             <div className="badge-amber" style={{ marginBottom: '16px' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F97316', display: 'inline-block' }} />
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#0063A6', display: 'inline-block' }} />
               <span style={{ fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', fontSize: '0.75rem' }}>WHAT WE DO</span>
             </div>
 
@@ -202,15 +202,15 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
             {/* Trust Mini Badges (Stitch Style) */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginBottom: '36px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', padding: '8px 14px', borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05)', fontSize: '0.85rem', fontWeight: 600, color: '#1E293B' }}>
-                <CheckCircle2 size={16} color="#F97316" />
+                <CheckCircle2 size={16} color="#0063A6" />
                 <span>Fully Licensed &amp; Insured</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', padding: '8px 14px', borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05)', fontSize: '0.85rem', fontWeight: 600, color: '#1E293B' }}>
-                <Clock size={16} color="#F97316" />
+                <Clock size={16} color="#0063A6" />
                 <span>Mon–Sat 7am–7pm Scheduling</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', padding: '8px 14px', borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05)', fontSize: '0.85rem', fontWeight: 600, color: '#1E293B' }}>
-                <DollarSign size={16} color="#F97316" />
+                <DollarSign size={16} color="#0063A6" />
                 <span>Clear Itemized Estimates</span>
               </div>
             </div>
@@ -238,7 +238,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 transition: 'all 0.15s ease',
               }}
             >
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F97316', display: 'inline-block' }} />
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#0063A6', display: 'inline-block' }} />
               <span>All Services</span>
             </button>
 
@@ -261,7 +261,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 transition: 'all 0.15s ease',
               }}
             >
-              <Wrench size={16} color={filter === 'maintenance' ? '#F97316' : '#64748B'} />
+              <Wrench size={16} color={filter === 'maintenance' ? '#0063A6' : '#64748B'} />
               <span>Maintenance &amp; Handyman</span>
               <span style={{ background: filter === 'maintenance' ? 'rgba(255,255,255,0.2)' : '#F1F5F9', color: filter === 'maintenance' ? '#FFF' : '#334155', padding: '2px 8px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800 }}>
                 12
@@ -287,7 +287,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 transition: 'all 0.15s ease',
               }}
             >
-              <ShieldCheck size={16} color={filter === 'preservation' ? '#F97316' : '#64748B'} />
+              <ShieldCheck size={16} color={filter === 'preservation' ? '#0063A6' : '#64748B'} />
               <span>Property Preservation</span>
               <span style={{ background: filter === 'preservation' ? 'rgba(255,255,255,0.2)' : '#F1F5F9', color: filter === 'preservation' ? '#FFF' : '#334155', padding: '2px 8px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800 }}>
                 6
@@ -313,9 +313,9 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 transition: 'all 0.15s ease',
               }}
             >
-              <Key size={16} color={filter === 'turnover' ? '#F97316' : '#64748B'} />
+              <Key size={16} color={filter === 'turnover' ? '#0063A6' : '#64748B'} />
               <span>Rental Turnovers</span>
-              <span style={{ background: '#FFF7ED', color: '#C2410C', padding: '2px 8px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800 }}>
+              <span style={{ background: '#EFF6FF', color: '#0063A6', padding: '2px 8px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800 }}>
                 Make-Ready
               </span>
             </button>
@@ -331,7 +331,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
             
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px', borderBottom: '1px solid #E2E8F0', paddingBottom: '18px' }}>
               <div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#F97316', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#0063A6', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>
                   <Wrench size={16} />
                   <span>Pillar 01 • Residential Maintenance</span>
                 </div>
@@ -362,10 +362,10 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   <div key={service.id} className="white-card service-card-hover" style={{ padding: '28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                        <div style={{ width: '48px', height: '48px', borderRadius: '10px', background: '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#F97316' }}>
+                        <div style={{ width: '48px', height: '48px', borderRadius: '10px', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0063A6' }}>
                           <IconComp size={24} />
                         </div>
-                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#9A3412', background: '#FFF7ED', border: '1px solid #FFEDD5', padding: '3px 10px', borderRadius: '9999px' }}>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0063A6', background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '3px 10px', borderRadius: '9999px' }}>
                           {categoryChip}
                         </span>
                       </div>
@@ -384,7 +384,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                           {service.highlights.map((h, i) => (
                             <li key={i} style={{ fontSize: '0.85rem', color: '#334155', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                              <Check size={15} color="#F97316" style={{ marginTop: '2px', flexShrink: 0 }} />
+                              <Check size={15} color="#0063A6" style={{ marginTop: '2px', flexShrink: 0 }} />
                               <span>{h}</span>
                             </li>
                           ))}
@@ -508,7 +508,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
           <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
             
             <div style={{ marginBottom: '32px' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#F97316', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#0063A6', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>
                 <Key size={16} />
                 <span>Pillar 03 • Fast Rental Turnovers</span>
               </div>
@@ -551,8 +551,8 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 {/* Right: Turnover Value & Commitment */}
                 <div style={{ padding: 'clamp(28px, 4vw, 40px)', background: '#F8FAFC', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FFF7ED', color: '#9A3412', border: '1px solid #FFEDD5', padding: '4px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '14px' }}>
-                      <Zap size={14} color="#F97316" />
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#EFF6FF', color: '#0063A6', border: '1px solid #BFDBFE', padding: '4px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '14px' }}>
+                      <Zap size={14} color="#0063A6" />
                       <span>Fast Turnkey Turnarounds for Landlords</span>
                     </div>
 
@@ -654,12 +654,12 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 return (
                   <div key={item.step} className="white-card service-card-hover" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div>
-                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#FFF7ED', color: '#9A3412', fontWeight: 800, fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#EFF6FF', color: '#0063A6', fontWeight: 800, fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
                         {item.step}
                       </div>
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                        <StepIcon size={20} color="#F97316" />
+                        <StepIcon size={20} color="#0063A6" />
                         <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
                           {item.title}
                         </h4>
@@ -674,7 +674,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                       <button
                         type="button"
                         onClick={() => scrollToEstimate(`Rental Turnover: Stage ${item.step} (${item.title})`)}
-                        style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.85rem', fontWeight: 700, color: '#F97316', display: 'inline-flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
+                        style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.85rem', fontWeight: 700, color: '#0063A6', display: 'inline-flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
                       >
                         <span>Book Stage {item.step}</span> <ChevronRight size={14} />
                       </button>
@@ -697,8 +697,8 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               
               {/* Left Column: Local Contact & Hours */}
               <div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FFF7ED', color: '#9A3412', border: '1px solid #FFEDD5', padding: '4px 12px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '14px' }}>
-                  <Calendar size={14} color="#F97316" />
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#EFF6FF', color: '#0063A6', border: '1px solid #BFDBFE', padding: '4px 12px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '14px' }}>
+                  <Calendar size={14} color="#0063A6" />
                   <span>Prompt Local Response</span>
                 </div>
 
@@ -712,7 +712,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderTop: '1px solid #E2E8F0', paddingTop: '22px' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                    <MapPin size={20} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <MapPin size={20} color="#0063A6" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div>
                       <div style={{ fontWeight: 700, fontSize: '0.925rem', color: '#0F172A' }}>Richmond Office</div>
                       <div style={{ fontSize: '0.85rem', color: '#64748B' }}>{companyInfo.address}</div>
@@ -720,17 +720,17 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                    <Phone size={20} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <Phone size={20} color="#0063A6" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div>
                       <div style={{ fontWeight: 700, fontSize: '0.925rem', color: '#0F172A' }}>Direct Contractor Line</div>
-                      <a href={`tel:${companyInfo.phoneRaw}`} style={{ fontSize: '0.95rem', fontWeight: 700, color: '#F97316', textDecoration: 'none' }}>
+                      <a href={`tel:${companyInfo.phoneRaw}`} style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0063A6', textDecoration: 'none' }}>
                         {companyInfo.phone} (Call or Text)
                       </a>
                     </div>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                    <Clock size={20} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <Clock size={20} color="#0063A6" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div>
                       <div style={{ fontWeight: 700, fontSize: '0.925rem', color: '#0F172A' }}>Operating Hours</div>
                       <div style={{ fontSize: '0.85rem', color: '#64748B' }}>Monday through Saturday: 7:00 AM – 7:00 PM <br /><small>Closed Sunday for Family Time</small></div>
@@ -864,7 +864,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                           name="smsConsent"
                           checked={estimateData.smsConsent}
                           onChange={handleEstimateChange}
-                          style={{ marginTop: '2px', accentColor: '#F97316' }}
+                          style={{ marginTop: '2px', accentColor: '#0063A6' }}
                         />
                         <span>
                           I agree to receive text messages from Homesync LLC regarding this estimate. Message and data rates may apply. Reply STOP anytime.
@@ -897,7 +897,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
         <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'center', justifyContent: 'space-between', textAlign: 'center' }}>
             <div style={{ maxWidth: '720px' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#FB923C', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '12px' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#BAE6FD', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '12px' }}>
                 <Sparkles size={14} />
                 <span>FRIENDLY RICHMOND CONTRACTORS</span>
               </div>
@@ -922,7 +922,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 href={`tel:${companyInfo.phoneRaw}`}
                 className="btn-outline-dark-surface"
               >
-                <Phone size={16} color="#F97316" />
+                <Phone size={16} color="#38BDF8" />
                 <span>Call {companyInfo.phone}</span>
               </a>
             </div>

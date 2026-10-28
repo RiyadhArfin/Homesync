@@ -121,7 +121,7 @@ export default function Header() {
             </button>
 
             <a href={`tel:${companyInfo.phoneRaw}`} className="header-phone-cta desktop-only">
-              <Phone size={16} className="text-orange" />
+              <Phone size={16} className="text-brand-blue" />
               <span>{companyInfo.phone}</span>
             </a>
 
@@ -166,7 +166,7 @@ export default function Header() {
 
             <div className="mobile-drawer-actions">
               <a href={`tel:${companyInfo.phoneRaw}`} className="btn-outline-navy" style={{ justifyContent: 'center' }}>
-                <Phone size={16} color="#F97316" />
+                <Phone size={16} color="#0063A6" />
                 <span>Call or Text {companyInfo.phone}</span>
               </a>
               <Link to="/get-quote" className="tactile-button-primary" onClick={closeMobileMenu} style={{ justifyContent: 'center', padding: '12px' }}>
@@ -212,7 +212,7 @@ export default function Header() {
         }
 
         .utility-icon {
-          color: #F97316;
+          color: #0063A6;
           flex-shrink: 0;
         }
 
@@ -230,7 +230,7 @@ export default function Header() {
         }
 
         .utility-phone:hover {
-          color: #FB923C;
+          color: #38BDF8;
         }
 
         .utility-hours {
@@ -311,7 +311,7 @@ export default function Header() {
         }
 
         .brand-highlight {
-          color: #F97316;
+          color: #0063A6;
         }
 
         .brand-subtitle {
@@ -345,11 +345,11 @@ export default function Header() {
         }
 
         .nav-item:hover {
-          color: #F97316;
+          color: #0063A6;
         }
 
         .nav-item.active {
-          color: #F97316;
+          color: #0063A6;
           font-weight: 700;
         }
 
@@ -360,7 +360,7 @@ export default function Header() {
           left: 0;
           width: 100%;
           height: 2px;
-          background: #F97316;
+          background: #0063A6;
           border-radius: 2px;
         }
 
@@ -403,11 +403,11 @@ export default function Header() {
 
         .header-phone-cta:hover {
           background-color: #F8FAFC;
-          color: #F97316;
+          color: #0063A6;
         }
 
-        .text-orange {
-          color: #F97316;
+        .text-brand-blue {
+          color: #0063A6;
         }
 
         .desktop-only {
@@ -485,7 +485,7 @@ export default function Header() {
 
         .mobile-nav-link.active,
         .mobile-nav-link:hover {
-          color: #F97316;
+          color: #0063A6;
         }
 
         .mobile-drawer-actions {
@@ -519,11 +519,11 @@ export default function Header() {
         }
 
         body.dark .nav-item.active {
-          color: #FB923C;
+          color: #38BDF8;
         }
 
         body.dark .nav-item.active::after {
-          background: #FB923C;
+          background: #38BDF8;
         }
 
         body.dark .theme-toggle-btn {

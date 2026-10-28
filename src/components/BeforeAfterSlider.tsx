@@ -109,7 +109,7 @@ export default function BeforeAfterSlider({
       {/* Physical Range Slider Control Underneath (Stitch Accessibility Specification) */}
       <div className="slider-range-control">
         <div className="slider-range-hint">
-          <SlidersHorizontal size={17} color="#F97316" />
+          <SlidersHorizontal size={17} color="#0063A6" />
           <span>Drag slider or scrub bar to inspect both rooms</span>
         </div>
 
@@ -186,8 +186,8 @@ export default function BeforeAfterSlider({
 
         .label-after {
           right: 16px;
-          background: rgba(249, 115, 22, 0.92);
-          box-shadow: 0 2px 8px rgba(249, 115, 22, 0.4);
+          background: rgba(0, 99, 166, 0.92);
+          box-shadow: 0 2px 8px rgba(0, 99, 166, 0.4);
         }
 
         .slider-handle {
@@ -195,20 +195,20 @@ export default function BeforeAfterSlider({
           top: 0;
           bottom: 0;
           width: 3px;
-          background-color: #F97316;
+          background-color: #0063A6;
           z-index: 10;
           transform: translateX(-50%);
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+          box-shadow: 0 0 10px rgba(0, 99, 166, 0.5);
         }
 
         .slider-button {
           width: 42px;
           height: 42px;
           background: #FFFFFF;
-          border: 2px solid #F97316;
+          border: 2px solid #0063A6;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -270,7 +270,7 @@ export default function BeforeAfterSlider({
           background: #E2E8F0;
           outline: none;
           cursor: pointer;
-          accent-color: #F97316;
+          accent-color: #0063A6;
         }
 
         body.dark .before-after-container {

@@ -4,11 +4,13 @@ import {
   ShieldCheck,
   Clock,
   MapPin,
+  Map,
   Phone,
   Building2,
   XCircle,
   X,
   CheckCircle2,
+  BadgeCheck,
   Camera,
   Receipt,
   Check,
@@ -38,7 +40,7 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <div className="about-page architectural-matrix" style={{ minHeight: '100vh', paddingTop: '20px' }}>
+    <div className="about-page architectural-matrix" style={{ width: '100%', paddingTop: '16px' }}>
       
       {/* ── Scroll Progress Bar ── */}
       <div
@@ -48,7 +50,7 @@ export default function AboutPage() {
           top: 0,
           left: 0,
           height: '4px',
-          backgroundColor: '#f97316',
+          backgroundColor: '#0063a6',
           zIndex: 60,
           width: `${scrollProgress}%`,
           transition: 'width 75ms ease-out',
@@ -75,8 +77,8 @@ export default function AboutPage() {
                   marginBottom: '18px',
                 }}
               >
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f97316' }} />
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#9d4300', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#0063a6' }} />
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0063a6', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
                   ABOUT HOMESYNC LLC
                 </span>
               </div>
@@ -90,27 +92,44 @@ export default function AboutPage() {
               </p>
 
               {/* Badges Cluster */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '28px' }}>
-                <div className="white-card tactile-card-shadow" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 600, color: '#0b1c30' }}>
-                  <ShieldCheck size={16} color="#f97316" />
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>
+                <div className="white-card tactile-card-shadow" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '5px 12px', borderRadius: '9999px', fontSize: '0.825rem', fontWeight: 600, color: '#0b1c30', border: '1px solid #cbd5e1' }}>
+                  <ShieldCheck size={15} color="#0063a6" />
                   <span>Licensed &amp; Insured Residential Contractor</span>
                 </div>
-                <div className="white-card tactile-card-shadow" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 600, color: '#0b1c30' }}>
-                  <MapPin size={16} color="#f97316" />
+                <div className="white-card tactile-card-shadow" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '5px 12px', borderRadius: '9999px', fontSize: '0.825rem', fontWeight: 600, color: '#0b1c30', border: '1px solid #cbd5e1' }}>
+                  <MapPin size={15} color="#0063a6" />
                   <span>Local Richmond Crew</span>
                 </div>
-                <div className="white-card tactile-card-shadow" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 600, color: '#0b1c30' }}>
-                  <Clock size={16} color="#f97316" />
+                <div className="white-card tactile-card-shadow" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '5px 12px', borderRadius: '9999px', fontSize: '0.825rem', fontWeight: 600, color: '#0b1c30', border: '1px solid #cbd5e1' }}>
+                  <Clock size={15} color="#0063a6" />
                   <span>Mon–Sat 7am–7pm</span>
                 </div>
               </div>
 
               {/* Quick Action Buttons */}
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '14px' }}>
-                <a href="#quote-cta" className="tactile-button-primary" style={{ padding: '12px 26px', fontSize: '1rem', fontWeight: 700 }}>
+                <a href="#quote-cta" className="tactile-button-primary" style={{ padding: '12px 26px', fontSize: '1rem', fontWeight: 700, borderRadius: '8px' }}>
                   Get a Free Estimate
                 </a>
-                <a href={`tel:${companyInfo.phoneRaw}`} className="btn-outline-navy" style={{ padding: '12px 24px', fontSize: '1rem' }}>
+                <a
+                  href={`tel:${companyInfo.phoneRaw}`}
+                  style={{
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #cbd5e1',
+                    color: '#0b1c30',
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    padding: '12px 24px',
+                    borderRadius: '8px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    textDecoration: 'none',
+                    boxShadow: '0 2px 4px -1px rgba(15, 23, 42, 0.04)',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
                   <Phone size={18} /> Call {companyInfo.phone}
                 </a>
               </div>
@@ -151,12 +170,12 @@ export default function AboutPage() {
                     boxShadow: '0 10px 25px rgba(0,0,0,0.35)',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
                     <div
                       style={{
                         padding: '10px',
                         borderRadius: '8px',
-                        backgroundColor: '#f97316',
+                        backgroundColor: '#0063a6',
                         color: '#ffffff',
                         display: 'flex',
                         alignItems: 'center',
@@ -170,7 +189,7 @@ export default function AboutPage() {
                       <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>
                         Serving Greater Richmond
                       </h4>
-                      <p style={{ fontSize: '0.825rem', color: '#bec6e0', margin: '2px 0 0' }}>
+                      <p style={{ fontSize: '0.825rem', color: '#d3e4fe', margin: '2px 0 0' }}>
                         Henrico, Chesterfield, Midlothian &amp; Hanover
                       </p>
                     </div>
@@ -189,8 +208,8 @@ export default function AboutPage() {
           
           <div style={{ maxWidth: '820px', marginBottom: '36px' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-              <span style={{ width: '24px', height: '6px', backgroundColor: '#f97316', borderRadius: '9999px' }} />
-              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#9d4300', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <span style={{ width: '24px', height: '6px', backgroundColor: '#0063a6', borderRadius: '9999px' }} />
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0063a6', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 Our Mission &amp; Background
               </span>
             </div>
@@ -248,29 +267,29 @@ export default function AboutPage() {
               style={{
                 padding: '28px',
                 borderRadius: '16px',
-                border: '2px solid #f97316',
+                border: '2px solid #0063a6',
                 position: 'relative',
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                boxShadow: '0 8px 24px rgba(249, 115, 22, 0.08)',
+                boxShadow: '0 8px 24px rgba(0, 99, 166, 0.12)',
               }}
             >
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '8px', backgroundColor: '#f97316' }} />
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '8px', backgroundColor: '#0063a6' }} />
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '14px', paddingBottom: '16px', borderBottom: '1px solid #d3e4fe' }}>
-                  <div style={{ padding: '10px', borderRadius: '10px', background: '#e5eeff', border: '1px solid #cbd5e1', color: '#9d4300', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <ShieldCheck size={22} />
+                  <div style={{ padding: '10px', borderRadius: '10px', background: '#e5eeff', border: '1px solid #d3e4fe', color: '#0063a6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <BadgeCheck size={22} />
                   </div>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0b1c30', margin: 0 }}>The Homesync Way</h3>
-                      <span style={{ background: '#f97316', color: '#ffffff', fontSize: '0.75rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px' }}>
+                      <span style={{ background: '#0063a6', color: '#ffffff', fontSize: '0.75rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px' }}>
                         Preferred
                       </span>
                     </div>
-                    <p style={{ fontSize: '0.85rem', color: '#9d4300', fontWeight: 600, margin: '2px 0 0' }}>
+                    <p style={{ fontSize: '0.85rem', color: '#0063a6', fontWeight: 600, margin: '2px 0 0' }}>
                       Reliable care built for Richmond homes &amp; rentals
                     </p>
                   </div>
@@ -285,14 +304,14 @@ export default function AboutPage() {
                     'Prompt walkthroughs and rapid turnarounds for landlord peace of mind',
                   ].map((benefit, idx) => (
                     <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                      <CheckCircle2 size={18} color="#f97316" style={{ marginTop: '3px', flexShrink: 0 }} />
+                      <CheckCircle2 size={18} color="#0063a6" style={{ marginTop: '3px', flexShrink: 0 }} />
                       <span style={{ fontSize: '0.925rem', color: '#0b1c30', fontWeight: 500, lineHeight: 1.5 }}>{benefit}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div style={{ borderTop: '1px solid #d3e4fe', paddingTop: '16px', marginTop: '24px', fontSize: '0.85rem', color: '#9d4300', fontWeight: 700 }}>
+              <div style={{ borderTop: '1px solid #d3e4fe', paddingTop: '16px', marginTop: '24px', fontSize: '0.85rem', color: '#0063a6', fontWeight: 700 }}>
                 Result: Total confidence, well-maintained homes, and stress-free communication.
               </div>
             </div>
@@ -303,8 +322,8 @@ export default function AboutPage() {
           <div className="white-card tactile-card-shadow" style={{ padding: '28px', borderRadius: '16px', border: '1px solid #cbd5e1' }}>
             <div className="about-transformation-grid">
               <div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 700, color: '#9d4300', textTransform: 'uppercase', marginBottom: '10px' }}>
-                  <Camera size={16} /> Documented Work Quality
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 700, color: '#0063a6', textTransform: 'uppercase', marginBottom: '10px' }}>
+                  <Camera size={16} color="#0063a6" /> Documented Work Quality
                 </div>
                 <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0b1c30', marginBottom: '12px' }}>
                   See the Homesync Transformation
@@ -319,7 +338,7 @@ export default function AboutPage() {
                     'Detailed before-and-after photo logs',
                   ].map((item, idx) => (
                     <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', color: '#0b1c30', fontWeight: 500 }}>
-                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f97316', flexShrink: 0 }} />
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#0063a6', flexShrink: 0 }} />
                       <span>{item}</span>
                     </div>
                   ))}
@@ -363,14 +382,17 @@ export default function AboutPage() {
         <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
           
           <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 48px' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#9d4300', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Our Standards
-            </span>
-            <h2 style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#0b1c30', marginTop: '8px', marginBottom: '12px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+              <span style={{ width: '24px', height: '6px', backgroundColor: '#0063a6', borderRadius: '9999px' }} />
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0063a6', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Our Standards
+              </span>
+            </div>
+            <h2 style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#0b1c30', marginTop: '4px', marginBottom: '12px' }}>
               What You Can Count On Every Single Time
             </h2>
             <p style={{ fontSize: '1rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>
-              We treat your property with the same care and respect we give our own homes. Here is our pledge to every Richmond client.
+              We treat your property with the same care and respect we give our own homes. Here is our pledge to you.
             </p>
           </div>
 
@@ -410,8 +432,8 @@ export default function AboutPage() {
                       height: '48px',
                       borderRadius: '12px',
                       background: '#e5eeff',
-                      border: '1px solid #cbd5e1',
-                      color: '#f97316',
+                      border: '1px solid #d3e4fe',
+                      color: '#0063a6',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -439,10 +461,13 @@ export default function AboutPage() {
         <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
           
           <div style={{ maxWidth: '820px', marginBottom: '36px' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#9d4300', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Service Coverage
-            </span>
-            <h2 style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#0b1c30', marginTop: '6px', marginBottom: '8px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+              <span style={{ width: '24px', height: '6px', backgroundColor: '#0063a6', borderRadius: '9999px' }} />
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0063a6', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Service Coverage
+              </span>
+            </div>
+            <h2 style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#0b1c30', marginTop: '4px', marginBottom: '8px' }}>
               Rooted in Richmond, Virginia
             </h2>
             <p style={{ fontSize: '1.05rem', color: '#475569', margin: 0 }}>
@@ -455,7 +480,7 @@ export default function AboutPage() {
             {/* Left Card: Regular Service Areas (7 Cols) */}
             <div className="white-card tactile-card-shadow" style={{ padding: '32px', borderRadius: '16px', border: '1px solid #cbd5e1' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0b1c30', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                <MapPin size={22} color="#f97316" />
+                <Map size={22} color="#0063a6" />
                 <span>Our Regular Service Areas</span>
               </h3>
               <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.6, marginBottom: '20px' }}>
@@ -485,7 +510,7 @@ export default function AboutPage() {
                       gridColumn: idx === 6 ? 'span 2' : undefined,
                     }}
                   >
-                    <Check size={18} color="#9d4300" style={{ flexShrink: 0 }} />
+                    <Check size={18} color="#0063a6" style={{ flexShrink: 0 }} />
                     <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#0b1c30' }}>{area}</span>
                   </div>
                 ))}
@@ -503,7 +528,7 @@ export default function AboutPage() {
                   gap: '12px',
                 }}
               >
-                <Info size={20} color="#f97316" style={{ marginTop: '2px', flexShrink: 0 }} />
+                <Info size={20} color="#0063a6" style={{ marginTop: '2px', flexShrink: 0 }} />
                 <p style={{ fontSize: '0.875rem', color: '#0b1c30', margin: 0, lineHeight: 1.5 }}>
                   <strong>Don't see your specific neighborhood?</strong> If you're anywhere in the Greater Richmond footprint, give us a call. We're happy to confirm crew availability.
                 </p>
@@ -513,7 +538,7 @@ export default function AboutPage() {
             {/* Right Card: Homesync Operations (5 Cols) */}
             <div className="white-card tactile-card-shadow" style={{ padding: '32px', borderRadius: '16px', border: '1px solid #cbd5e1' }}>
               <div style={{ borderBottom: '1px solid #d3e4fe', paddingBottom: '16px', marginBottom: '22px' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#9d4300', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0063a6', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   Local Shop &amp; Dispatch
                 </span>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0b1c30', marginTop: '4px', margin: 0 }}>
@@ -524,7 +549,7 @@ export default function AboutPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {/* Base Office */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#0063a6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
                     <Store size={20} />
                   </div>
                   <div>
@@ -536,12 +561,12 @@ export default function AboutPage() {
 
                 {/* Direct Line */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#0063a6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
                     <Phone size={20} />
                   </div>
                   <div>
                     <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0b1c30', margin: 0 }}>Direct Line</h4>
-                    <a href={`tel:${companyInfo.phoneRaw}`} style={{ fontSize: '0.9rem', color: '#9d4300', fontWeight: 700, textDecoration: 'none' }}>
+                    <a href={`tel:${companyInfo.phoneRaw}`} style={{ fontSize: '0.9rem', color: '#0063a6', fontWeight: 700, textDecoration: 'none' }}>
                       {companyInfo.phone}
                     </a>
                     <p style={{ fontSize: '0.8rem', color: '#584237', margin: '2px 0 0' }}>Call or text anytime during work hours</p>
@@ -550,7 +575,7 @@ export default function AboutPage() {
 
                 {/* Operating Hours */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#0063a6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
                     <Clock size={20} />
                   </div>
                   <div>
@@ -562,7 +587,7 @@ export default function AboutPage() {
 
                 {/* Neighborhood Service Note */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                  <div style={{ padding: '8px', borderRadius: '8px', background: '#e5eeff', color: '#0063a6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
                     <Handshake size={20} />
                   </div>
                   <div>
@@ -604,12 +629,12 @@ export default function AboutPage() {
                 pointerEvents: 'none',
               }}
             />
-            <div style={{ position: 'relative', zIndex: 1, maxWidth: '750px', margin: '0 auto' }}>
-              <blockquote style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.5rem)', fontWeight: 600, color: '#0b1c30', lineHeight: 1.45, margin: '0 auto 24px' }}>
-                “We treat every home like our own. Whether it’s fixing a broken door or preparing an apartment for new renters, our reputation is built on doing honest, quality work for our neighbors.”
+            <div style={{ position: 'relative', zIndex: 1, maxWidth: '780px', margin: '0 auto' }}>
+              <blockquote style={{ fontSize: 'clamp(1.15rem, 2.2vw, 1.35rem)', fontWeight: 600, color: '#0b1c30', lineHeight: 1.55, margin: '0 auto 24px' }}>
+                “We treat every home like our own. From fixing a broken door to preparing a property for its next residents, we approach every job with care, integrity, and attention to detail. Our reputation is built on honest service, quality workmanship, and a commitment to treating every property as if it were our own.”
               </blockquote>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ width: '48px', height: '4px', backgroundColor: '#f97316', borderRadius: '9999px', marginBottom: '12px' }} />
+                <div style={{ width: '48px', height: '4px', backgroundColor: '#0063a6', borderRadius: '9999px', marginBottom: '12px' }} />
                 <p style={{ fontSize: '1rem', fontWeight: 700, color: '#0b1c30', margin: 0 }}>
                   The Homesync Field Team &amp; Leadership
                 </p>
@@ -636,8 +661,8 @@ export default function AboutPage() {
             boxShadow: '0 20px 35px -5px rgba(15, 23, 42, 0.4)',
           }}
         >
-          {/* Subtle amber accent top border */}
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '8px', backgroundColor: '#f97316' }} />
+          {/* Subtle accent top border */}
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '8px', backgroundColor: '#0063a6' }} />
           
           <div className="about-banner-grid" style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -651,11 +676,11 @@ export default function AboutPage() {
                   padding: '4px 12px',
                   borderRadius: '9999px',
                   fontSize: '0.8rem',
-                  color: '#ffdcc3',
+                  color: '#bae6fd',
                   alignSelf: 'flex-start',
                 }}
               >
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f97316' }} />
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#0063a6' }} />
                 Get in Touch with Our Richmond Team
               </div>
 
@@ -672,14 +697,28 @@ export default function AboutPage() {
               <Link
                 to="/get-quote"
                 className="tactile-button-primary"
-                style={{ width: '100%', padding: '14px 28px', fontSize: '1.05rem', fontWeight: 700, borderRadius: '10px' }}
+                style={{ width: '100%', padding: '14px 28px', fontSize: '1.05rem', fontWeight: 700, borderRadius: '12px' }}
               >
                 <FileText size={18} /> Get a Free Estimate
               </Link>
               <a
                 href={`tel:${companyInfo.phoneRaw}`}
-                className="btn-outline-dark-surface"
-                style={{ width: '100%', padding: '14px 28px', fontSize: '1.05rem', fontWeight: 600, borderRadius: '10px' }}
+                style={{
+                  width: '100%',
+                  padding: '14px 28px',
+                  fontSize: '1.05rem',
+                  fontWeight: 700,
+                  borderRadius: '12px',
+                  backgroundColor: 'transparent',
+                  color: '#ffffff',
+                  border: '2px solid #565e74',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  textDecoration: 'none',
+                  transition: 'all 0.15s ease',
+                }}
               >
                 <Phone size={18} /> Call {companyInfo.phone}
               </a>

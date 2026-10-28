@@ -156,7 +156,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
               {/* Step 1: Select Pillar */}
               <div style={{ marginBottom: '32px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-                  <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#F97316', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.875rem' }}>1</span>
+                  <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#0063A6', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.875rem' }}>1</span>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
                     What type of service do you need?
                   </h3>
@@ -191,7 +191,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                           transition: 'all 0.15s ease',
                         }}
                       >
-                        <span style={{ color: active ? '#F97316' : '#64748B' }}>{p.icon}</span>
+                        <span style={{ color: active ? '#0063A6' : '#64748B' }}>{p.icon}</span>
                         {p.title}
                       </button>
                     );
@@ -202,7 +202,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
               {/* Step 2: Specific Services Multi-Select */}
               <div style={{ marginBottom: '32px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#F97316', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.875rem' }}>2</span>
+                  <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#0063A6', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.875rem' }}>2</span>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
                     Select specific punch-list items
                   </h3>
@@ -221,9 +221,9 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                           type="button"
                           onClick={() => toggleService(s.title)}
                           style={{
-                            background: checked ? '#FFF7ED' : '#FFFFFF',
-                            color: checked ? '#C2410C' : '#334155',
-                            border: checked ? '1px solid #F97316' : '1px solid #CBD5E1',
+                            background: checked ? '#EFF6FF' : '#FFFFFF',
+                            color: checked ? '#0063A6' : '#334155',
+                            border: checked ? '1px solid #0063A6' : '1px solid #CBD5E1',
                             borderRadius: '9999px',
                             padding: '6px 14px',
                             fontSize: '0.8125rem',
@@ -235,7 +235,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                             transition: 'all 0.15s ease',
                           }}
                         >
-                          {checked && <CheckCircle2 size={13} color="#F97316" />}
+                          {checked && <CheckCircle2 size={13} color="#0063A6" />}
                           {s.title}
                         </button>
                       );
@@ -251,9 +251,9 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                           type="button"
                           onClick={() => toggleService(s.title)}
                           style={{
-                            background: checked ? '#FFF7ED' : '#FFFFFF',
-                            color: checked ? '#C2410C' : '#334155',
-                            border: checked ? '1px solid #F97316' : '1px solid #CBD5E1',
+                            background: checked ? '#EFF6FF' : '#FFFFFF',
+                            color: checked ? '#0063A6' : '#334155',
+                            border: checked ? '1px solid #0063A6' : '1px solid #CBD5E1',
                             borderRadius: '9999px',
                             padding: '6px 14px',
                             fontSize: '0.8125rem',
@@ -265,7 +265,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                             transition: 'all 0.15s ease',
                           }}
                         >
-                          {checked && <CheckCircle2 size={13} color="#F97316" />}
+                          {checked && <CheckCircle2 size={13} color="#0063A6" />}
                           {s.title}
                         </button>
                       );
@@ -281,9 +281,9 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                           type="button"
                           onClick={() => toggleService(step.title)}
                           style={{
-                            background: checked ? '#FFF7ED' : '#FFFFFF',
-                            color: checked ? '#C2410C' : '#334155',
-                            border: checked ? '1px solid #F97316' : '1px solid #CBD5E1',
+                            background: checked ? '#EFF6FF' : '#FFFFFF',
+                            color: checked ? '#0063A6' : '#334155',
+                            border: checked ? '1px solid #0063A6' : '1px solid #CBD5E1',
                             borderRadius: '9999px',
                             padding: '6px 14px',
                             fontSize: '0.8125rem',
@@ -295,7 +295,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                             transition: 'all 0.15s ease',
                           }}
                         >
-                          {checked && <CheckCircle2 size={13} color="#F97316" />}
+                          {checked && <CheckCircle2 size={13} color="#0063A6" />}
                           {step.title}
                         </button>
                       );
@@ -307,7 +307,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
               {/* Step 3: Property Details */}
               <div style={{ marginBottom: '32px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-                  <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#F97316', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.875rem' }}>3</span>
+                  <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#0063A6', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.875rem' }}>3</span>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
                     Property address & timing
                   </h3>
@@ -382,7 +382,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
               {/* Step 4: Contact Info */}
               <div style={{ marginBottom: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-                  <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#F97316', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.875rem' }}>4</span>
+                  <span style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#0063A6', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.875rem' }}>4</span>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
                     Your contact information
                   </h3>
@@ -456,7 +456,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                       name="smsConsent"
                       checked={formData.smsConsent}
                       onChange={handleInputChange}
-                      style={{ marginTop: '2px', accentColor: '#F97316' }}
+                      style={{ marginTop: '2px', accentColor: '#0063A6' }}
                     />
                     <span>
                       I consent to receive text messages from Homesync LLC regarding my service request. Message and data rates may apply. Reply STOP to cancel at any time.
@@ -517,7 +517,7 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
                   <img
                     src={contractorPhoto}
                     alt="Mike from Homesync"
-                    style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #F97316' }}
+                    style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #0063A6' }}
                   />
                   <div>
                     <div style={{ fontWeight: 700, color: '#0F172A', fontSize: '0.95rem' }}>Need a quote faster?</div>
@@ -540,19 +540,19 @@ SMS Consent: ${formData.smsConsent ? 'Yes' : 'No'}`
               <div className="white-card" style={{ padding: '20px 24px', border: '1px solid #E2E8F0' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                    <ShieldCheck size={20} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <ShieldCheck size={20} color="#0063A6" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div style={{ fontSize: '0.875rem', color: '#334155' }}>
                       <strong>Licensed & Insured:</strong> Fully insured Virginia residential contractor.
                     </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                    <CheckCircle2 size={20} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <CheckCircle2 size={20} color="#0063A6" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div style={{ fontSize: '0.875rem', color: '#334155' }}>
                       <strong>Photo Proof Logs:</strong> We send clear before/after photos with every repair.
                     </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                    <Calendar size={20} color="#F97316" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <Calendar size={20} color="#0063A6" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div style={{ fontSize: '0.875rem', color: '#334155' }}>
                       <strong>Working Hours:</strong> Mon–Sat 7:00 AM – 7:00 PM.
                     </div>

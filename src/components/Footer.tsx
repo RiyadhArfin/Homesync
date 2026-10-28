@@ -15,7 +15,7 @@ export default function Footer() {
               <img src={logo} alt="Homesync LLC Logo" className="footer-logo-img" />
               <div className="footer-brand-text">
                 <span className="footer-brand-name">
-                  HOME<span style={{ color: '#F97316' }}>SYNC</span> LLC
+                  HOME<span style={{ color: '#0063A6' }}>SYNC</span> LLC
                 </span>
                 <span className="footer-brand-tag">PROPERTY CARE &amp; HANDYMAN</span>
               </div>
@@ -27,17 +27,17 @@ export default function Footer() {
 
             <div className="footer-contact-items">
               <p className="footer-contact-row">
-                <MapPin size={16} className="text-orange" />
+                <MapPin size={16} className="text-brand-blue" />
                 <span>{companyInfo.address}</span>
               </p>
               <p className="footer-contact-row">
-                <Phone size={16} className="text-orange" />
+                <Phone size={16} className="text-brand-blue" />
                 <a href={`tel:${companyInfo.phoneRaw}`} className="footer-link-highlight">
                   {companyInfo.phone}
                 </a>
               </p>
               <p className="footer-contact-row">
-                <Mail size={16} className="text-orange" />
+                <Mail size={16} className="text-brand-blue" />
                 <a href={`mailto:${companyInfo.email}`} className="footer-link-highlight">
                   {companyInfo.email}
                 </a>
@@ -105,7 +105,7 @@ export default function Footer() {
             <h4 className="footer-heading">Contractor Assurance</h4>
             <div className="assurance-box">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#FFFFFF', fontWeight: 700, fontSize: '0.9rem', marginBottom: '6px' }}>
-                <ShieldCheck size={18} color="#F97316" />
+                <ShieldCheck size={18} color="#0063A6" />
                 <span>Licensed &amp; Insured VA Contractor</span>
               </div>
               <p style={{ fontSize: '0.8125rem', color: '#94A3B8', lineHeight: 1.45, margin: '0 0 14px' }}>
@@ -114,7 +114,7 @@ export default function Footer() {
 
               <div className="hours-card">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, color: '#F8FAFC', fontSize: '0.85rem', marginBottom: '4px' }}>
-                  <Clock size={15} color="#F97316" />
+                  <Clock size={15} color="#0063A6" />
                   <span>Hours of Operation</span>
                 </div>
                 <div style={{ fontSize: '0.8125rem', color: '#CBD5E1', lineHeight: 1.4 }}>
@@ -245,11 +245,11 @@ export default function Footer() {
         }
 
         .footer-link-highlight:hover {
-          color: #F97316;
+          color: #0063A6;
         }
 
-        .text-orange {
-          color: #F97316;
+        .text-brand-blue {
+          color: #0063A6;
           flex-shrink: 0;
         }
 
@@ -278,7 +278,7 @@ export default function Footer() {
         }
 
         .footer-link:hover {
-          color: #F97316;
+          color: #0063A6;
           text-decoration: underline;
         }
 
@@ -333,7 +333,7 @@ export default function Footer() {
         }
 
         .footer-legal-link:hover {
-          color: #F97316;
+          color: #0063A6;
           text-decoration: underline;
         }
 

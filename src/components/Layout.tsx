@@ -5,14 +5,14 @@ import ScrollProgressBar from './ScrollProgressBar';
 
 export default function Layout() {
     return (
-        <>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <ScrollProgressBar />
             <Header />
-            <main style={{ minHeight: '100vh', background: 'var(--bg-light)' }}>
+            <main style={{ flex: 1, background: 'var(--bg-light)' }}>
                 <Outlet />
             </main>
             <Footer />
             <ScrollRestoration />
-        </>
+        </div>
     );
 }

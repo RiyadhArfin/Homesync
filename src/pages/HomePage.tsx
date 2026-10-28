@@ -111,7 +111,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
             {/* Left Column: Value Proposition & Hero CTAs */}
             <div>
               <div className="badge-amber" style={{ marginBottom: '16px' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F97316', display: 'inline-block' }} />
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#0063A6', display: 'inline-block' }} />
                 <span>Dependable Craftsmanship in Richmond & Surrounding Counties</span>
               </div>
 
@@ -147,19 +147,19 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '20px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
-                    <ShieldCheck size={18} color="#F97316" />
+                    <ShieldCheck size={18} color="#0063A6" />
                     <span>Licensed & Insured</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
-                    <DollarSign size={18} color="#F97316" />
+                    <DollarSign size={18} color="#0063A6" />
                     <span>Upfront Honest Pricing</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
-                    <CheckCircle2 size={18} color="#F97316" />
+                    <CheckCircle2 size={18} color="#0063A6" />
                     <span>Friendly Vetted Pros</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
-                    <Sparkles size={18} color="#F97316" />
+                    <Sparkles size={18} color="#0063A6" />
                     <span>Free Estimates</span>
                   </div>
                 </div>
@@ -193,7 +193,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                     alignItems: 'center',
                     gap: '12px',
                   }}>
-                    <div style={{ width: '42px', height: '42px', borderRadius: '8px', background: '#FFF7ED', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <div style={{ width: '42px', height: '42px', borderRadius: '8px', background: '#EFF6FF', color: '#0063A6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <Wrench size={22} />
                     </div>
                     <div>
@@ -219,7 +219,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
         <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
           
           <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 36px' }}>
-            <span style={{ color: '#F97316', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
+            <span style={{ color: '#0063A6', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
               HOW WE HELP
             </span>
             <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, marginBottom: '12px' }}>
@@ -252,7 +252,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   transition: 'all 0.15s ease',
                 }}
               >
-                <Wrench size={16} color={activeTab === 0 ? '#F97316' : '#64748B'} />
+                <Wrench size={16} color={activeTab === 0 ? '#0063A6' : '#64748B'} />
                 <span>1. Maintenance & Handyman</span>
               </button>
 
@@ -275,7 +275,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   transition: 'all 0.15s ease',
                 }}
               >
-                <ShieldCheck size={16} color={activeTab === 1 ? '#F97316' : '#64748B'} />
+                <ShieldCheck size={16} color={activeTab === 1 ? '#0063A6' : '#64748B'} />
                 <span>2. Property Preservation</span>
               </button>
 
@@ -298,7 +298,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   transition: 'all 0.15s ease',
                 }}
               >
-                <Key size={16} color={activeTab === 2 ? '#F97316' : '#64748B'} />
+                <Key size={16} color={activeTab === 2 ? '#0063A6' : '#64748B'} />
                 <span>3. Rental Turnovers</span>
               </button>
             </div>
@@ -313,8 +313,8 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               className="white-card"
               style={{
                 padding: '32px 28px',
-                border: activeTab === 0 ? '2px solid #F97316' : '1px solid #E2E8F0',
-                boxShadow: activeTab === 0 ? '0 12px 30px rgba(249, 115, 22, 0.15)' : '0 4px 6px -1px rgba(15, 23, 42, 0.05)',
+                border: activeTab === 0 ? '2px solid #0063A6' : '1px solid #E2E8F0',
+                boxShadow: activeTab === 0 ? '0 12px 30px rgba(0, 99, 166, 0.15)' : '0 4px 6px -1px rgba(15, 23, 42, 0.05)',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -326,10 +326,10 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   <span className="badge-amber" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
                     01 · Primary Focus
                   </span>
-                  <Wrench size={24} color="#F97316" />
+                  <Wrench size={24} color="#0063A6" />
                 </div>
 
-                <div style={{ display: 'inline-block', background: '#FFF7ED', color: '#9A3412', fontSize: '0.8rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', marginBottom: '12px' }}>
+                <div style={{ display: 'inline-block', background: '#EFF6FF', color: '#0063A6', fontSize: '0.8rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', marginBottom: '12px' }}>
                   Everyday Household Repairs
                 </div>
 
@@ -363,7 +363,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                           gap: '4px',
                         }}
                       >
-                        <CheckCircle2 size={11} color="#F97316" />
+                        <CheckCircle2 size={11} color="#0063A6" />
                         {s.title}
                       </span>
                     ))}
@@ -388,8 +388,8 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               className="white-card"
               style={{
                 padding: '32px 28px',
-                border: activeTab === 1 ? '2px solid #F97316' : '1px solid #E2E8F0',
-                boxShadow: activeTab === 1 ? '0 12px 30px rgba(249, 115, 22, 0.15)' : '0 4px 6px -1px rgba(15, 23, 42, 0.05)',
+                border: activeTab === 1 ? '2px solid #0063A6' : '1px solid #E2E8F0',
+                boxShadow: activeTab === 1 ? '0 12px 30px rgba(0, 99, 166, 0.15)' : '0 4px 6px -1px rgba(15, 23, 42, 0.05)',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -463,8 +463,8 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               className="white-card"
               style={{
                 padding: '32px 28px',
-                border: activeTab === 2 ? '2px solid #F97316' : '1px solid #E2E8F0',
-                boxShadow: activeTab === 2 ? '0 12px 30px rgba(249, 115, 22, 0.15)' : '0 4px 6px -1px rgba(15, 23, 42, 0.05)',
+                border: activeTab === 2 ? '2px solid #0063A6' : '1px solid #E2E8F0',
+                boxShadow: activeTab === 2 ? '0 12px 30px rgba(0, 99, 166, 0.15)' : '0 4px 6px -1px rgba(15, 23, 42, 0.05)',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -476,10 +476,10 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   <span className="badge-amber" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
                     03 · Turnkey Make-Ready
                   </span>
-                  <Key size={24} color="#F97316" />
+                  <Key size={24} color="#0063A6" />
                 </div>
 
-                <div style={{ display: 'inline-block', background: '#FFF7ED', color: '#9A3412', fontSize: '0.8rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', marginBottom: '12px' }}>
+                <div style={{ display: 'inline-block', background: '#EFF6FF', color: '#0063A6', fontSize: '0.8rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', marginBottom: '12px' }}>
                   Fast Landlord Make-Readies
                 </div>
 
@@ -502,7 +502,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                         <span style={{ fontWeight: 700, color: '#0F172A' }}>
                           Stage {step.step}: {step.title.split('&')[0]}
                         </span>
-                        <span style={{ fontSize: '0.75rem', color: '#F97316', fontWeight: 700 }}>{step.duration}</span>
+                        <span style={{ fontSize: '0.75rem', color: '#0063A6', fontWeight: 700 }}>{step.duration}</span>
                       </div>
                     ))}
                   </div>
@@ -530,7 +530,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
         <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
           
           <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 28px' }}>
-            <span style={{ color: '#F97316', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
+            <span style={{ color: '#0063A6', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
               PROVEN CRAFTSMANSHIP
             </span>
             <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, marginBottom: '10px' }}>
@@ -616,7 +616,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
             </div>
 
             <div className="white-card" style={{ padding: '24px', display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: '#FFF7ED', color: '#C2410C', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: '#EFF6FF', color: '#0063A6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <Camera size={22} />
               </div>
               <div>
@@ -669,7 +669,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
             {/* Persona 1: Homeowners */}
             <div className="white-card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#FFF7ED', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#EFF6FF', color: '#0063A6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px' }}>
                   <HomeIcon size={24} />
                 </div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '10px' }}>
@@ -680,13 +680,13 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 </p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem', color: '#334155' }}>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={15} color="#F97316" /> Clear, upfront price estimates
+                    <CheckCircle2 size={15} color="#0063A6" /> Clear, upfront price estimates
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={15} color="#F97316" /> Respectful, clean technicians
+                    <CheckCircle2 size={15} color="#0063A6" /> Respectful, clean technicians
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={15} color="#F97316" /> Single point of contact for multiple trades
+                    <CheckCircle2 size={15} color="#0063A6" /> Single point of contact for multiple trades
                   </li>
                 </ul>
               </div>
@@ -709,13 +709,13 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 </p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem', color: '#334155' }}>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={15} color="#F97316" /> Fast make-ready turnarounds
+                    <CheckCircle2 size={15} color="#0063A6" /> Fast make-ready turnarounds
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={15} color="#F97316" /> Detailed room-by-room move-out logs
+                    <CheckCircle2 size={15} color="#0063A6" /> Detailed room-by-room move-out logs
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={15} color="#F97316" /> Lock rekeying & smoke alarm checks
+                    <CheckCircle2 size={15} color="#0063A6" /> Lock rekeying & smoke alarm checks
                   </li>
                 </ul>
               </div>
@@ -727,7 +727,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
             {/* Persona 3: Investors */}
             <div className="white-card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#FFF7ED', color: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#EFF6FF', color: '#0063A6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px' }}>
                   <ShieldCheck size={24} />
                 </div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '10px' }}>
@@ -738,13 +738,13 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 </p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem', color: '#334155' }}>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={15} color="#F97316" /> Comprehensive date-stamped photo proof
+                    <CheckCircle2 size={15} color="#0063A6" /> Comprehensive date-stamped photo proof
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={15} color="#F97316" /> Code violation prevention (lawn/debris)
+                    <CheckCircle2 size={15} color="#0063A6" /> Code violation prevention (lawn/debris)
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={15} color="#F97316" /> Rekey to master codes & lockbox placement
+                    <CheckCircle2 size={15} color="#0063A6" /> Rekey to master codes & lockbox placement
                   </li>
                 </ul>
               </div>
@@ -772,8 +772,8 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               
               {/* Left Column: Direct Contact & Info */}
               <div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', padding: '6px 14px', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: 700, color: '#FDBA74', marginBottom: '18px' }}>
-                  <Clock size={15} color="#F97316" /> Prompt, Friendly Scheduling
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', padding: '6px 14px', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: 700, color: '#BAE6FD', marginBottom: '18px' }}>
+                  <Clock size={15} color="#38BDF8" /> Prompt, Friendly Scheduling
                 </div>
                 
                 <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.2, marginBottom: '18px' }}>
@@ -786,7 +786,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', borderTop: '1px solid rgba(255,255,255,0.12)', paddingTop: '20px' }}>
                   <a href={`tel:${companyInfo.phoneRaw}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', color: '#FFFFFF', textDecoration: 'none', fontSize: '1.25rem', fontWeight: 800 }}>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#F97316', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#0063A6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Phone size={20} color="#FFFFFF" />
                     </div>
                     <span>{companyInfo.phone}</span>
@@ -920,7 +920,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                           name="smsConsent"
                           checked={estimateData.smsConsent}
                           onChange={handleEstimateChange}
-                          style={{ marginTop: '2px', accentColor: '#F97316' }}
+                          style={{ marginTop: '2px', accentColor: '#0063A6' }}
                         />
                         <span>
                           I agree to receive text messages from Homesync LLC about my service request. Message and data rates may apply. Reply STOP anytime.
@@ -964,7 +964,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
             {serviceAreas.map((area, idx) => (
               <div key={idx} className="white-card" style={{ padding: '18px 16px' }}>
                 <div style={{ fontWeight: 800, color: '#0F172A', fontSize: '0.95rem', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <MapPin size={15} color="#F97316" />
+                  <MapPin size={15} color="#0063A6" />
                   {area.name}
                 </div>
                 <div style={{ fontSize: '0.8rem', color: '#64748B', lineHeight: 1.45 }}>
