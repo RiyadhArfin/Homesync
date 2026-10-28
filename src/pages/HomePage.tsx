@@ -116,11 +116,11 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               </div>
 
               <h1 style={{ fontSize: 'clamp(2.25rem, 5vw, 3.4rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: '18px' }}>
-                Home Repairs & Property Care Made Simple.
+                Home Repairs & Property Care 
               </h1>
 
               <p style={{ fontSize: '1.15rem', color: '#475569', lineHeight: 1.6, marginBottom: '28px' }}>
-                From quick handyman fixes and drywall patching to full rental turnovers and vacant property upkeep. Homesync delivers dependable workmanship, upfront pricing, and friendly service across Greater Virginia.
+                From quick handyman fixes and drywall patching to full rental turnovers and vacant property upkeep. Homesync delivers dependable workmanship, competitive pricing, and friendly services across Greater Virginia.
               </p>
 
               {/* CTAs */}
@@ -139,7 +139,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   className="btn-outline-navy"
                   style={{ padding: '14px 24px', fontSize: '1.05rem' }}
                 >
-                  <span>See Our 3 Services</span> <ArrowDown size={16} />
+                  <span>Our  Services</span> <ArrowDown size={16} />
                 </button>
               </div>
 
@@ -152,12 +152,9 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
                     <DollarSign size={18} color="#0063A6" />
-                    <span>Upfront Honest Pricing</span>
+                    <span>Competitive  Pricing</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
-                    <CheckCircle2 size={18} color="#0063A6" />
-                    <span>Friendly Vetted Pros</span>
-                  </div>
+                 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
                     <Sparkles size={18} color="#0063A6" />
                     <span>Free Estimates</span>
@@ -223,10 +220,10 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               HOW WE HELP
             </span>
             <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, marginBottom: '12px' }}>
-              Three Clear Ways We Care for Your Properties
+               We Care for Your Properties
             </h2>
             <p style={{ fontSize: '1.1rem', color: '#64748B', lineHeight: 1.6, margin: 0 }}>
-              Whether you live in your home, rent it out, or manage an entire portfolio, we have the right team for the job.
+              Whether you live in your home, rent it out, or manage an entire portfolio, we have the right team for your job.
             </p>
           </div>
 
@@ -334,17 +331,17 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 </div>
 
                 <h3 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
-                  Maintenance & Handyman Care
+                  Maintenance Care
                 </h3>
 
                 <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.5, marginBottom: '20px' }}>
-                  Your dependable neighborhood crew for everyday repairs, seasonal chores, and custom home punch lists.
+                  Your dependable neighborhood crew for everyday repairs and seasonal chores.
                 </p>
 
                 {/* 12 Handyman Trade Chips */}
                 <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '16px', marginBottom: '24px' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
-                    12 Core Trades Handled:
+                    Core Services:
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                     {maintenanceServices.map((s) => (
@@ -377,7 +374,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   className="btn-amber"
                   style={{ width: '100%', justifyContent: 'center', fontSize: '0.9rem', padding: '11px' }}
                 >
-                  Explore All 12 Maintenance Services <ArrowRight size={16} />
+                  Explore All  Maintenance Services <ArrowRight size={16} />
                 </Link>
               </div>
             </div>
@@ -413,13 +410,13 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 </h3>
 
                 <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.5, marginBottom: '20px' }}>
-                  Keeping vacant, estate, and bank-owned properties secure, code-compliant, and well-maintained across Greater Virginia.
+                  Keeping secured and code complien  vacant and bank-owned properties secure, code-compliant, and well-maintained across Greater Virginia.
                 </p>
 
                 {/* 6 Preservation Chips */}
                 <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '16px', marginBottom: '24px' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
-                    6 Core Preservation Capabilities:
+                     Core Preservation Capabilities:
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                     {preservationServices.map((s) => (
@@ -494,7 +491,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 {/* 4 Turnover Stages */}
                 <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '16px', marginBottom: '24px' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
-                    4-Stage Make-Ready System:
+                   Stage Make-Ready System:
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {turnoverSteps.map((step) => (
@@ -530,9 +527,9 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
         <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
           
           <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 28px' }}>
-            <span style={{ color: '#0063A6', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
+            {/* <span style={{ color: '#0063A6', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
               PROVEN CRAFTSMANSHIP
-            </span>
+            </span> */}
             <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, marginBottom: '10px' }}>
               Real Results You Can See
             </h2>
@@ -585,7 +582,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
               <BeforeAfterSlider
                 beforeImage={livingRoomBefore}
                 afterImage={livingRoomAfter}
-                title="Living Room Turnaround: Worn Carpet & Drywall Cracks to Fresh Hardwoods"
+                title="Living Room Turnaround"
                 subtitle="Untidy rental unit prepped, patched, painted, and refreshed with new floors in 4 days."
               />
             ) : (
@@ -653,9 +650,9 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
         <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px' }}>
           
           <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 40px' }}>
-            <span style={{ color: '#0F172A', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
+            {/* <span style={{ color: '#0F172A', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '8px' }}>
               TAILORED SOLUTIONS
-            </span>
+            </span> */}
             <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.5rem)', fontWeight: 800, color: '#0F172A', marginBottom: '10px' }}>
               Tailored Care for Every Property Type
             </h2>
@@ -777,7 +774,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 </div>
                 
                 <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.2, marginBottom: '18px' }}>
-                  Ready to check those repairs off your list?
+                  Ready to check those repairs from our list?
                 </h2>
 
                 <p style={{ fontSize: '1.1rem', color: '#CBD5E1', lineHeight: 1.6, marginBottom: '28px' }}>
@@ -803,7 +800,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   Request a Free Estimate
                 </h3>
                 <p style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '20px' }}>
-                  Tell us about your home project. Submitting opens your email client directly.
+                  Tell us about your home project. 
                 </p>
 
                 {estimateSent ? (

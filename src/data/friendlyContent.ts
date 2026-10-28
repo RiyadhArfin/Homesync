@@ -20,7 +20,7 @@ export const companyInfo = {
   legalName: 'Homesync LLC',
   phone: '(804) 292-2009',
   phoneRaw: '18042922009',
-  email: 'contact@homesyncllc.org',
+  email: 'info@homesyncllc.org',
   address: '3540 Pump Rd, Richmond, VA 23233',
   cityStateZip: 'Richmond, VA 23233',
   serviceRegion: 'Greater Virginia & Central Virginia',
