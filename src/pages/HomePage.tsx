@@ -359,7 +359,7 @@ export default function HomePage() {
                 </h3>
 
                 <p style={{ fontSize: '0.925rem', color: '#475569', lineHeight: 1.5, marginBottom: '20px' }}>
-                  Keeping secured and code complien vacant and bank-owned properties secure, code-compliant, and well-maintained across Greater Virginia.
+                  Securing, maintaining, and preserving vacant and bank-owned properties with dependable, code-compliant solutions.
                 </p>
 
                 {/* 6 Preservation Chips */}
