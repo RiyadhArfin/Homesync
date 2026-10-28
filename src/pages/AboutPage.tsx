@@ -84,7 +84,7 @@ export default function AboutPage() {
               </div>
 
               <h1 style={{ fontSize: 'clamp(2.25rem, 4.5vw, 3.25rem)', fontWeight: 800, color: '#0b1c30', lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '18px' }}>
-                Real Craftsmanship. Honest Service. Local to Richmond.
+                Real Craftsmanship. Quality Service. Local to Richmond.
               </h1>
 
               <p style={{ fontSize: '1.15rem', color: '#475569', lineHeight: 1.6, maxWidth: '640px', marginBottom: '24px' }}>
@@ -298,7 +298,7 @@ export default function AboutPage() {
                 <ul style={{ listStyle: 'none', padding: 0, margin: '20px 0 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   {[
                     'One trusted local team handling punch-lists, upkeep, and turnovers',
-                    'Clear, upfront written estimates before any work starts',
+                    'Clear, competitive written estimates before any work starts',
                     'Friendly punctual pros who respect your schedule and arrive on time',
                     'Clear photo proof of completed work delivered directly to your phone',
                     'Prompt walkthroughs and rapid turnarounds for landlord peace of mind',
@@ -405,7 +405,7 @@ export default function AboutPage() {
               },
               {
                 icon: Receipt,
-                title: 'Clear, Upfront Pricing',
+                title: 'Clear, Competitive Pricing',
                 desc: 'No hidden fees or surprise add-ons. What we estimate is what you pay. You always approve scope changes before any additional work begins.',
               },
               {
@@ -631,7 +631,7 @@ export default function AboutPage() {
             />
             <div style={{ position: 'relative', zIndex: 1, maxWidth: '780px', margin: '0 auto' }}>
               <blockquote style={{ fontSize: 'clamp(1.15rem, 2.2vw, 1.35rem)', fontWeight: 600, color: '#0b1c30', lineHeight: 1.55, margin: '0 auto 24px' }}>
-                “We treat every home like our own. From fixing a broken door to preparing a property for its next residents, we approach every job with care, integrity, and attention to detail. Our reputation is built on honest service, quality workmanship, and a commitment to treating every property as if it were our own.”
+                “We treat every home like our own. From fixing a broken door to preparing a property for its next residents, we approach every job with care, integrity, and attention to detail. Our reputation is built on quality service, quality workmanship, and a commitment to treating every property as if it were our own.”
               </blockquote>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ width: '48px', height: '4px', backgroundColor: '#0063a6', borderRadius: '9999px', marginBottom: '12px' }} />

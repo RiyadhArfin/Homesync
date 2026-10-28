@@ -152,7 +152,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
                     <DollarSign size={18} color="#0063A6" />
-                    <span>Competitive  Pricing</span>
+                    <span>Competitive Pricing</span>
                   </div>
                  
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#1E293B', fontWeight: 600 }}>
@@ -635,7 +635,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                   No Surprise Fees
                 </h4>
                 <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
-                  Itemized written estimates upfront. If unexpected repairs arise behind a wall, we discuss and get approval before proceeding.
+                  Clear itemized estimates with competitive pricing. If unexpected repairs arise behind a wall, we discuss and get approval before proceeding.
                 </p>
               </div>
             </div>
@@ -677,7 +677,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                 </p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.875rem', color: '#334155' }}>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <CheckCircle2 size={15} color="#0063A6" /> Clear, upfront price estimates
+                    <CheckCircle2 size={15} color="#0063A6" /> Clear, competitive price estimates
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <CheckCircle2 size={15} color="#0063A6" /> Respectful, clean technicians

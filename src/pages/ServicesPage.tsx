@@ -880,7 +880,7 @@ SMS Consent: ${estimateData.smsConsent ? 'Yes' : 'No'}`
                       <Send size={16} /> Send Estimate Request
                     </button>
                     <p style={{ fontSize: '0.75rem', color: '#64748B', textAlign: 'center', marginTop: '10px', marginBottom: 0 }}>
-                      Zero commitment. Upfront quotes provided prior to starting work.
+                      Zero commitment. Competitive quotes provided prior to starting work.
                     </p>
                   </form>
                 )}
